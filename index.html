@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="캠핑·백패킹부터 여행까지, 짐 챙기는 모든 나들이">
 <title>짐로그</title>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#2F6B4F">
@@ -60,6 +61,13 @@
   .ins-arrow { margin-top: 12px; text-align: center; color: var(--forest); font-weight: 700; }
   .ins-arrow b { display: block; font-size: 28px; line-height: 1; animation: insBounce 1.1s ease-in-out infinite; }
   @keyframes insBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
+  .act-row { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+  .act-row .ar-lb { font-size: 12px; font-weight: 600; color: var(--ink-2); }
+  .act-chips, .act-wrap { display: flex; flex-wrap: wrap; gap: 6px; }
+  #logAct { flex-wrap: nowrap; overflow-x: auto; margin-bottom: 12px; scrollbar-width: none; }
+  #logAct::-webkit-scrollbar { display: none; }
+  #logAct .chip, .act-row .chip { flex: 0 0 auto; white-space: nowrap; }
+  .act-reuse { flex: 1 0 100%; min-height: 36px; text-align: left; border-color: var(--line-strong); background: var(--surface); color: var(--forest-ink); font-weight: 600; }
   .g-menu { right: 24px; }
   .menu-grp { margin-top: 4px; padding-top: 4px; border-top: 1px solid var(--line); }
   .menu-grp:first-child { margin-top: 0; padding-top: 0; border-top: 0; }
@@ -322,7 +330,7 @@
   .td-edit { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 4px; }
   .td-x { min-width: 28px; min-height: 28px; padding: 0; border: 0; border-radius: 0; background: transparent; color: var(--ink-3); font-size: var(--fs-meta); }
 
-  /* 산행 기록 */
+  /* 나들이 기록 */
   .finish-btn { width: 100%; margin-top: 16px; }
   .t-sum, .t-opts { grid-column: 1 / -1; }
   .t-sum { color: var(--ink-2); }
@@ -689,6 +697,7 @@
       <div class="rec-banner" id="recBanner" hidden></div>
       <button type="button" id="btnNewPackTop">↺ 새 패킹 시작</button>
     </div>
+    <div class="act-row" id="actRow"></div>
     <div class="pk-cols">
     <div class="pk-left">
     <div id="statsWrap">
@@ -785,13 +794,14 @@
   <section class="tab" data-tab="log">
     <div class="card log-empty" id="logEmpty" hidden>
       <div class="le-fig" id="logEmptyFig"></div>
-      <div class="le-t">첫 산행을 기록하면 여기 쌓여요</div>
-      <div class="sub">패킹을 완료하면 산행 기록이 쌓여요</div>
+      <div class="le-t">첫 나들이를 기록하면 여기 쌓여요</div>
+      <div class="sub">패킹을 완료하면 나들이 기록이 쌓여요</div>
       <button class="primary" id="btnLogGoPack">패킹 탭으로 이동</button>
     </div>
     <div id="logMain">
       <div id="logPeriod"></div>
       <div class="hero" id="logHero" hidden></div>
+      <div class="act-chips" id="logAct" role="group" aria-label="종류 필터"></div>
       <div class="seg3 log-filter" id="logFilter" role="group" aria-label="일정 필터"></div>
       <div id="logStats"></div>
       <div class="log-cols">
@@ -859,7 +869,8 @@
     </div>
     <div class="sheet-grid" style="margin-top:8px">
       <label class="f"><span>출발일</span><input type="date" id="rDate"></label>
-      <label class="f"><span>산행 이름 (선택)</span><input id="rName" maxlength="30" placeholder="예: 지리산 1박" autocomplete="off"></label>
+      <label class="f"><span>나들이 이름 (선택)</span><input id="rName" maxlength="30" placeholder="예: 지리산 1박" autocomplete="off"></label>
+      <div class="f" style="grid-column:1/-1"><span>종류</span><div class="rec-chips act-wrap" id="rAct" style="margin-top:4px"></div></div>
       <div class="f" style="grid-column:1/-1"><span>일정</span><div class="rec-chips" id="rDays" style="margin-top:4px"></div></div>
       <label class="f" style="grid-column:1/-1"><span>메모 (선택)</span><input id="rMemo" maxlength="100" placeholder="예: 침낭 추웠음, 물 1L 남음" autocomplete="off"></label>
     </div>
@@ -907,8 +918,8 @@
   <div id="insBody"></div>
   <div class="sheet-ft"><button class="primary" id="insDone">확인했어요</button></div>
 </div>
-<div class="sheet dlg" id="logSheet" role="dialog" aria-modal="true" aria-label="산행 기록 상세">
-  <div class="sheet-hd"><b id="lTitle">산행 기록</b><button id="lClose" aria-label="닫기">✕</button></div>
+<div class="sheet dlg" id="logSheet" role="dialog" aria-modal="true" aria-label="나들이 기록 상세">
+  <div class="sheet-hd"><b id="lTitle">나들이 기록</b><button id="lClose" aria-label="닫기">✕</button></div>
   <div id="lBody"></div>
 </div>
 <div class="sheet dlg" id="wornSheet" role="dialog" aria-modal="true" aria-label="구분 착용이던 장비">
@@ -937,14 +948,22 @@
 </nav>
 
 <script>
-const CATS = ['쉘터', '수면', '수납', '의류/보온', '취사', '전자/편의', '안전', '위생/관리'];
-const CAT_COLORS = ['#2F6B4F', '#4F7FB8', '#5A5490', '#B8668F', '#D9822B', '#7B6BB5', '#B23A2E', '#8C8A80'];
+const CATS = ['쉘터', '수면', '수납', '의류/보온', '취사', '전자/편의', '안전', '위생/관리', '가구', '놀이/기타'];   // 새 분류는 맨 뒤에만 추가 (기존 데이터 영향 없음)
+const CAT_COLORS = ['#2F6B4F', '#4F7FB8', '#5A5490', '#B8668F', '#D9822B', '#7B6BB5', '#B23A2E', '#8C8A80', '#7A5C3E', '#3F8C8C'];
 const SUP_KEY = 'backpacking-supplies-v1';
 const TRIP_KEY = 'backpacking-trips-v1';
 const DAY = 86400000;
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const SUP_COLOR = '#A6763A';
-const CAT_EMOJI = ['⛺', '🛌', '🎒', '🧥', '🍳', '🔦', '⛑️', '🧴'], SUP_EMOJI = '🍙';   // CATS 순서와 같음
+// 나들이 종류 (trips.activity). "나들이"는 종류 이름이 아니라 전체를 부르는 말
+const ACTIVITIES = [{ k: 'picnic', n: '피크닉', e: '🧺' }, { k: 'hike', n: '등산', e: '🥾' }, { k: 'backpack', n: '백패킹', e: '🎒' },
+                    { k: 'camp', n: '캠핑', e: '🏕️' }, { k: 'carcamp', n: '차박', e: '🚗' }, { k: 'travel', n: '여행', e: '✈️' }];
+const ACT_KEY = 'backpacking-activity-v1', ACTF_KEY = 'backpacking-actfilter-v1';   // 이번 패킹 종류 / 기록 탭 종류 필터
+const actOf = k => ACTIVITIES.find(a => a.k === k) || ACTIVITIES[2];
+const isAct = k => ACTIVITIES.some(a => a.k === k);
+let curAct = 'backpack';
+try { const v = localStorage.getItem(ACT_KEY); if (isAct(v)) curAct = v; } catch (e) {}
+const CAT_EMOJI = ['⛺', '🛌', '🎒', '🧥', '🍳', '🔦', '⛑️', '🧴', '🪑', '🎲'], SUP_EMOJI = '🍙';   // CATS 순서와 같음
 const josaEulReul = w => {   // 마지막 글자 받침에 따라 을/를 (한글, 숫자, 영문 읽는 소리 기준)
   const ch = String(w).trim().slice(-1), c = ch.charCodeAt(0);
   if (c >= 0xAC00 && c <= 0xD7A3) return (c - 0xAC00) % 28 ? '을' : '를';
@@ -1092,7 +1111,7 @@ const SAMPLE = [
     contents: ['칫솔', '치약', '썬크림', '물티슈', '휴지'].map((name, i) => ({ id: i + 1, name, loaded: false })) }],
 ].map(([name, cat, w, p, sz], i) => ({ id: i + 1, name, cat, w, p, ...(sz || {}), packed: true, loaded: false }));
 
-// 이번 산행 식량·소모품 샘플
+// 이번 나들이 식량·소모품 샘플
 const SAMPLE_SUPPLIES = [
   ['가스 230g', 370, 1, 6000],
   ['물 1L', 1000, 2, 0],
@@ -1125,7 +1144,7 @@ function normalizePouchFields(o) {
   if (!o.packed) { o.loaded = false; o.contents.forEach(c => { c.loaded = false; }); }
   else if (o.contents.length) o.loaded = o.contents.every(c => c.loaded);
 }
-// 식량·소모품: 장비와 별도 배열 (packed 없음, 입력하면 바로 이번 산행에 포함)
+// 식량·소모품: 장비와 별도 배열 (packed 없음, 입력하면 바로 이번 나들이에 포함)
 function normalizeSupplies(arr) {
   const seen = new Set();
   let maxId = arr.reduce((m, x) => Math.max(m, Number(x.id) || 0), 0);
@@ -1153,7 +1172,7 @@ const pouchMigrated = migratePouchesToItems(items);   // 옛 별도 pouches 배�
 const needSave = pouchMigrated || (hadStored && JSON.stringify(items) !== rawJson) || split.moved.length > 0 || (hadSupplies && JSON.stringify(supplies) !== rawSup);
 let nextSid = supplies.reduce((m, x) => Math.max(m, x.id), 0) + 1;
 
-// 산행 기록 (JSON 불러오기에서도 normalizeTrips 사용)
+// 나들이 기록 (JSON 불러오기에서도 normalizeTrips 사용)
 function normalizeTrips(arr) {
   const seen = new Set();
   let maxId = arr.reduce((m, t) => Math.max(m, Number(t && t.id) || 0), 0);
@@ -1166,6 +1185,7 @@ function normalizeTrips(arr) {
              baseW: Number(t.baseW) || 0, packW: Number(t.packW) || 0,
              supplies: Array.isArray(t.supplies) ? t.supplies.map(x => ({ name: String(x.name || ''), w: Number(x.w) || 0, q: Number(x.q) || 1, p: Number(x.p) || 0 })) : [],
              pouches: Array.isArray(t.pouches) ? t.pouches.filter(q => q && q.name).map(q => ({ name: String(q.name), w: Number(q.w) || 0, contents: Array.isArray(q.contents) ? q.contents.map(String) : [] })) : [],
+             activity: isAct(t.activity) ? t.activity : 'backpack',   // 옛 기록·옛 백업은 백패킹으로 채움
              days: [0, 1, 2, 3].includes(Number(t.days)) && t.days !== null && t.days !== '' ? Number(t.days) : null,   // 일정: 0 당일, 1 1박, 2 2박, 3 3박 이상, null 미지정
              memo: String(t.memo || '').slice(0, 100),
              ...(Array.isArray(t.items) ? { items: t.items.filter(x => x && Number(x.id) > 0).map(x => ({ id: Number(x.id), name: String(x.name || ''), cat: CATS.includes(x.cat) ? x.cat : migrateCat(x.cat), w: Number(x.w) || 0 })) } : {}),   // 기록 당시 장비 스냅샷
@@ -1311,15 +1331,23 @@ function sumBy(field, values) {
 }
 
 // 베이스 무게 카드 하단: 같은 일정(마지막으로 고른 일정)의 가장 최근 기록과 비교
+function lastTripOf(act) {   // 같은 종류의 가장 최근 기록
+  return trips.filter(t => t.activity === act).sort((a, b) => b.date.localeCompare(a.date) || (b.recordedAt || '').localeCompare(a.recordedAt || ''))[0] || null;
+}
+function renderActRow() {
+  const a = actOf(curAct), last = lastTripOf(curAct);
+  $('actRow').innerHTML = `<span class="ar-lb">이번엔 어디로?</span>` + ACTIVITIES.map(x => `<button type="button" class="chip${x.k === curAct ? ' on' : ''}" data-act="${x.k}" title="${x.n}">${x.e}${x.k === curAct ? ' ' + x.n : ''}</button>`).join('')
+    + (last ? `<button type="button" class="act-reuse" data-actreuse="${last.id}">지난 ${a.e} ${a.n} 구성 불러오기 (${shortD(last.date)} · 장비 ${last.itemIds.length}품목)</button>` : '');
+}
 function baseCompareFoot(baseW, n) {   // n = 선택한 장비 수 (비교할 기록이 없을 때 "장비 n품목")
   const none = `<span style="color:#666B64">장비 ${n}품목</span>`;
   let d = null;
   try { const v = localStorage.getItem(DAYS_KEY); d = v === null || v === '' ? null : Number(v); } catch (e) {}
   if (d === null || isNaN(d)) return none;
   const mt = matchedTrip();   // 지금 상태가 이미 기록된 경우 그 기록은 비교 대상에서 제외
-  const prev = trips.filter(t => t.days === d && t !== mt && t.baseW > 0).sort((a, b) => b.date.localeCompare(a.date) || (b.recordedAt || '').localeCompare(a.recordedAt || ''))[0];
+  const prev = trips.filter(t => t.activity === curAct && t.days === d && t !== mt && t.baseW > 0).sort((a, b) => b.date.localeCompare(a.date) || (b.recordedAt || '').localeCompare(a.recordedAt || ''))[0];
   if (!prev) return none;
-  const lb = `지난 ${DAY_LABELS[d]}`, diff = Math.round(baseW - prev.baseW);
+  const lb = `지난 ${actOf(curAct).n} ${DAY_LABELS[d]}`, diff = Math.round(baseW - prev.baseW);
   if (!diff) return `<span class="stat-cmp">${lb}과 같음</span>`;
   return diff < 0 ? `<span class="stat-cmp down">${lb} 대비 −${comma(-diff)}g 👍</span>` : `<span class="stat-cmp">${lb} 대비 +${comma(diff)}g</span>`;
 }
@@ -1420,6 +1448,7 @@ function renderSummary() {
     warnEl.hidden = false;
   } else warnEl.hidden = true;
   renderStockHero(packedCount);
+  renderActRow();
 
   // 무게·부피 도넛: 분류(CATS 순) + 식량·소모품(무게만)
   anData = { segs: [...CATS.map((c, i) => ({ k: 'c' + i, name: c, color: CAT_COLORS[i], w: byCat[i].w, v: volByCat[i] })),
@@ -1437,7 +1466,7 @@ function renderSummary() {
   // 패킹 탭 상단: 현재 챙김 상태가 이미 기록돼 있으면 안내 띠
   const mt = matchedTrip();
   $('recBanner').hidden = !mt;
-  if (mt) $('recBanner').innerHTML = `<span>${esc(mt.name || '산행')} (${shortD(mt.date)}) 기록됨</span>`;
+  if (mt) $('recBanner').innerHTML = `<span>${esc(mt.name || '나들이')} (${shortD(mt.date)}) 기록됨</span>`;
   $('btnNewPackTop').disabled = !items.some(it => it.loaded || (it.contents || []).some(c => c.loaded)) && !supplies.length;   // 챙김 체크도 식량도 없으면 비활성
 
   // 장비 탭: 선택 합계 바
@@ -1495,7 +1524,7 @@ function renderPack() {   // 체크리스트 순서: ① 식량·소모품(supLi
   $('packList').querySelectorAll('[data-ind]').forEach(el => { el.indeterminate = true; });   // 일부만 체크된 파우치
 }
 
-/* ── 식량·소모품 (패킹 탭에서 입력, 이번 산행용) ── */
+/* ── 식량·소모품 (패킹 탭에서 입력, 이번 나들이용) ── */
 let editingSid = null;
 const supRowHTML = x => `<label class="pk-it sup${x.loaded ? ' done' : ''}" data-sid="${x.id}">
     <input type="checkbox"${x.loaded ? ' checked' : ''}>
@@ -1634,7 +1663,7 @@ const secHead = cat => { const st = secStat(cat);
     <span class="sec-st${st.full ? ' full' : ''}">선택 ${st.n}/${st.total}</span><span class="sec-sep">·</span><span class="sec-w${st.full ? ' full' : ''}">${comma(st.w)}g</span><span class="sec-vwrap">${secVol(st)}</span>
   </div>`; };
 
-const rowInner = it => `<label class="it-chk"><input type="checkbox" data-f="packed"${it.packed ? ' checked' : ''} aria-label="이번 산행에 선택"></label>
+const rowInner = it => `<label class="it-chk"><input type="checkbox" data-f="packed"${it.packed ? ' checked' : ''} aria-label="이번 나들이에 선택"></label>
     <div class="it-main"><div class="it-name"><span class="nmx">${esc(it.name)}</span></div><div class="it-meta">${useMeta(it)}</div></div>
     <div class="it-right"><div>${comma(it.w)}g${unitVol(it) > 0 ? `<span class="it-vol"> · ${fmtV(unitVol(it))}</span>` : ''}</div>${it.p ? `<div>${fmtP(it.p)}</div>` : ''}${hasSize(it) ? '' : '<span class="bd-warn">📏 크기 미입력</span>'}</div>`;
 
@@ -1657,7 +1686,7 @@ const cardM = it => `<div class="it${it.id === openId ? ' open' : ''}" data-id="
   </div>`;
 
 const rowPC = it => `<tr class="item" data-id="${it.id}">
-    <td class="chk"><input type="checkbox" data-f="packed"${it.packed ? ' checked' : ''} aria-label="이번 산행에 선택"></td>
+    <td class="chk"><input type="checkbox" data-f="packed"${it.packed ? ' checked' : ''} aria-label="이번 나들이에 선택"></td>
     <td><div class="nmwrap"><button type="button" class="pbtn${isPouch(it) ? ' on' : ''}" title="파우치 (내용물 목록 사용)" aria-pressed="${isPouch(it)}">파우치</button><input data-f="name" maxlength="18" value="${esc(it.name)}" title="${esc(it.name)}">${hasSize(it) ? '' : '<span class="bd-warn" title="크기 미입력">📏</span>'}${usageOf(it.id).n && relTime(usageOf(it.id).last).old ? `<span class="bd-warn" title="${monthsSince(usageOf(it.id).last)}개월째 안 썼어요">💤${monthsSince(usageOf(it.id).last)}개월</span>` : ''}</div></td>
     <td><select data-f="cat">${opts(CATS, it.cat)}</select></td>
     <td><input data-f="w" class="r ${it.w ? '' : 'zero'}" inputmode="numeric" value="${comma(it.w)}"></td>
@@ -1896,7 +1925,7 @@ function importBackup(file) {
     try { d = JSON.parse(rd.result); } catch (e) {}
     if (!d || d.app !== 'backpacking' || !Array.isArray(d.items) || !Array.isArray(d.trips)) { toast('백업 파일이 아니에요'); return; }
     const sd = new Date(d.savedAt), when = isNaN(sd) ? '' : ` (${slashDate(fmtDate(sd))} 백업)`;
-    if (!confirm(`장비 ${d.items.length}품목 · 산행 기록 ${d.trips.length}회${when}\n지금 데이터를 이 백업으로 바꿀까요?`)) return;
+    if (!confirm(`장비 ${d.items.length}품목 · 나들이 기록 ${d.trips.length}회${when}\n지금 데이터를 이 백업으로 바꿀까요?`)) return;
     applyBackupData(d, true);
     toast('백업을 불러왔어요');
   };
@@ -1909,7 +1938,7 @@ function importBackup(file) {
 var G_CLIENT_ID = '916038086813-g77hetlikb1uost64n6fsfuhqt5bkn1m.apps.googleusercontent.com';
 var G_SCOPES = 'https://www.googleapis.com/auth/drive.appdata openid email profile';
 var G_FILE = 'jimlog-data.json';
-var G_SAMPLE_TRIPS = ['지리산 1박', '설악산 당일', '오대산 1박', '북한산 당일', '덕유산 1박'];
+var G_SAMPLE_TRIPS = ['지리산 1박', '설악산 당일', '오대산 1박', '북한산 당일', '덕유산 1박', '한강 피크닉'];
 var G_STATES = { saved: '☁️ 저장됨', saving: '🔄 저장 중', offline: '📴 오프라인 · 나중에 저장', relogin: '⚠️ 다시 로그인 필요', conflict: '⚠️ 다른 기기 내용 확인 필요' };
 var gState = 'saved';
 
@@ -2394,7 +2423,11 @@ function openDlg(id) {
 const tomorrowStr = () => fmtDate(new Date(Date.now() + DAY));
 const DAYS_KEY = 'backpacking-lastdays-v1';   // 마지막으로 고른 일정
 const DAY_LABELS = ['당일', '1박', '2박', '3박+'];
-let recDays = null;
+let recDays = null, recAct = 'backpack';
+function setRecAct(k) {
+  recAct = k;
+  $('rAct').innerHTML = ACTIVITIES.map(a => `<button type="button" class="chip${a.k === recAct ? ' on' : ''}" data-ra="${a.k}">${a.e} ${a.n}</button>`).join('');
+}
 function setRecDays(v) {
   recDays = v;
   $('rDays').innerHTML = DAY_LABELS.map((l, i) => `<button type="button" class="chip${recDays === i ? ' on' : ''}" data-rd="${i}">${l}</button>`).join('');
@@ -2414,13 +2447,14 @@ function openRec(auto) {
   if (!rec.length) { toast('챙긴 장비가 없습니다'); return; }   // 기록 대상은 챙긴(loaded) 장비만 (파우치는 일반 장비처럼)
   const baseW = rec.reduce((sum, it) => sum + it.w, 0);
   $('rTitle').textContent = auto ? '패킹 완료!' : '패킹 완료 기록';
-  $('rSub').textContent = auto ? '이번 산행 기록을 남길까요?' : '';
+  $('rSub').textContent = auto ? '이번 나들이 기록을 남길까요?' : '';
   $('rLater').textContent = auto ? '나중에' : '취소';
   $('rForm').hidden = false; $('rConflict').hidden = true;
   $('rSum').innerHTML = `<div class="rec-sum3"><div><span class="sub">장비</span><b>${rec.length}품목</b></div><div><span class="sub">베이스</span><b>${fmtW(baseW)}</b></div><div><span class="sub">배낭</span><b>${fmtW(baseW + sups.reduce((sum, x) => sum + x.w * x.q, 0))}</b></div></div>`;
   $('rName').value = ''; $('rMemo').value = '';
   let last = null;
   try { const v = localStorage.getItem(DAYS_KEY); last = v === null || v === '' ? null : Number(v); } catch (e) {}
+  setRecAct(curAct);   // 기본값 = 이번 패킹 종류
   setRecDays([0, 1, 2, 3].includes(last) ? last : null);   // 마지막 선택값 기억
   setRecDate(tomorrowStr());   // 기본 출발일 = 내일
   openDlg('recSheet');
@@ -2446,13 +2480,14 @@ function saveRec() {
 function commitRec(mode) {
   const date = DATE_RE.test($('rDate').value) ? $('rDate').value : tomorrowStr();
   const name = $('rName').value.trim();
-  const rec = { ...buildRecord(date, name), days: recDays, memo: $('rMemo').value.trim().slice(0, 100) };
+  const rec = { ...buildRecord(date, name), activity: recAct, days: recDays, memo: $('rMemo').value.trim().slice(0, 100) };
   try { localStorage.setItem(DAYS_KEY, recDays === null ? '' : String(recDays)); } catch (e) {}
-  let label = name || '산행';
+  if (recAct !== curAct) { curAct = recAct; try { localStorage.setItem(ACT_KEY, curAct); } catch (e) {} }
+  let label = name || '나들이';
   if (mode === 'update' && trips.some(t => t.id === recDup)) {
     const t = trips.find(x => x.id === recDup);
     Object.assign(t, rec, { id: t.id, name: name || t.name, memo: rec.memo });   // 메모는 입력칸 값 그대로(빈 값이면 비움), 이름은 빈 값이면 기존 유지
-    label = (t.name || '산행') + ' 기록 업데이트됨';
+    label = (t.name || '나들이') + ' 기록 업데이트됨';
   } else {
     trips.push({ id: nextTid++, ...rec });
     label += ' 기록됨';
@@ -2506,16 +2541,19 @@ function periodRange() {   // { from, to } (YYYY-MM-DD, 양 끝 포함)
   if (f > t2) [f, t2] = [t2, f];   // 시작일이 종료일보다 늦으면 맞바꿈
   return { from: f, to: t2 };
 }
-const periodTrips = () => { const r = periodRange(); return trips.filter(t => t.date >= r.from && t.date <= r.to); };
+var actFilter = 'all';
+try { const v = localStorage.getItem(ACTF_KEY); if (v === 'all' || isAct(v)) actFilter = v; } catch (e) {}
+const actMatch = t => actFilter === 'all' || t.activity === actFilter;
+const periodTrips = () => { const r = periodRange(); return trips.filter(t => t.date >= r.from && t.date <= r.to && actMatch(t)); };   // 기간 + 종류 필터
 const dayMatch = t => logFilter === 'all' || (t.days !== null && (logFilter === 'd0' ? t.days === 0 : logFilter === 'd1' ? t.days === 1 : t.days >= 2));
 const tripsFiltered = () => periodTrips().filter(dayMatch);
 const fmtDot = d => d.replace(/-/g, '.');
-const dayBadge = t => t.days === null ? '' : `<span class="lg-bd ${t.days === 0 ? 'ember' : 'forest'}">${t.days === 0 ? '☀️' : '🌙'} ${DAY_LABELS[t.days]}</span>`;
+const dayBadge = t => { const a = actOf(t.activity); return `<span class="lg-bd ${t.days === 0 ? 'ember' : 'forest'}">${a.e} ${a.n}${t.days === null ? '' : ` · ${t.days === 0 ? '☀️' : '🌙'} ${DAY_LABELS[t.days]}`}</span>`; };
 function renderPeriodUI() {
   const r = periodRange(), n = periodTrips().length;
   $('logPeriod').innerHTML = `<div class="pr-chips">${PERIODS.map(([k, l]) => `<button type="button" class="chip${k === period ? ' on' : ''}" data-pr="${k}">${l}</button>`).join('')}</div>
     ${period === 'custom' ? `<div class="pr-custom"><label class="f"><span>시작일</span><input type="date" data-prd="from" value="${r.from}"></label><label class="f"><span>종료일</span><input type="date" data-prd="to" value="${r.to}"></label></div>` : ''}
-    <div class="pr-sum">${fmtDot(r.from)} ~ ${fmtDot(r.to)} · 산행 ${n}회</div>`;
+    <div class="pr-sum">${fmtDot(r.from)} ~ ${fmtDot(r.to)} · 나들이 ${n}회</div>`;
 }
 function renderLog() {
   const empty = trips.length === 0;
@@ -2523,6 +2561,7 @@ function renderLog() {
   $('logMain').hidden = empty;
   if (empty) return;
   renderPeriodUI();
+  $('logAct').innerHTML = `<button type="button" class="chip${actFilter === 'all' ? ' on' : ''}" data-af="all">전체</button>` + ACTIVITIES.map(a => `<button type="button" class="chip${actFilter === a.k ? ' on' : ''}" data-af="${a.k}" title="${a.n}">${a.e}${actFilter === a.k ? ' ' + a.n : ''}</button>`).join('');
   $('logFilter').innerHTML = LOG_FILTERS.map(([k, l]) => `<button type="button" data-lf="${k}" class="${k === logFilter ? 'on' : ''}">${l}</button>`).join('');
   const ft = tripsFiltered();
   const sorted = [...ft].sort(byDateAsc);
@@ -2532,9 +2571,9 @@ function renderLog() {
   const cnt = fn => ft.filter(fn).length;
   const mix = [`1박 ${cnt(t => t.days === 1)}`, `당일 ${cnt(t => t.days === 0)}`, ...(cnt(t => t.days !== null && t.days >= 2) ? [`2박+ ${cnt(t => t.days !== null && t.days >= 2)}`] : [])].join(' · ');
   $('logStats').innerHTML = [
-    ['🏔️ 총 산행', `${ft.length}회`, mix],
+    ['🏔️ 총 나들이', `${ft.length}회`, mix],
     ['⚖️ 평균 베이스', ft.length ? fmtW(avg) : '–', ft.length ? `최근 ${recent.length}회 ${fmtW(recentAvg)}` : '기록 없음'],
-    ['📍 최근 산행', latest ? shortD(latest.date) : '–', latest ? (latest.name ? esc(latest.name) : '이름 없음') : '기록 없음'],
+    ['📍 최근 나들이', latest ? shortD(latest.date) : '–', latest ? (latest.name ? esc(latest.name) : '이름 없음') : '기록 없음'],
   ].map(([label, value, foot]) => `<div class="card"><div class="stat-label">${label}</div><div class="stat-value"><span class="num">${String(value).replace(/(kg|g|L)$/, '<span class="u">$1</span>')}</span></div><div class="stat-foot">${foot}</div></div>`).join('');
   renderLogHero();
   renderTrend(); renderLogList(); renderRank();
@@ -2545,7 +2584,7 @@ function renderLogHero() {
   el.hidden = !pt.length;
   if (!pt.length) return;
   const name = period === 'custom' ? `${fmtDot(periodRange().from)} ~ ${fmtDot(periodRange().to)}` : PERIODS.find(x => x[0] === period)[2];
-  const latest = pt[pt.length - 1], all = [...trips].sort(byDateAsc), prev = all[all.indexOf(latest) - 1];
+  const latest = pt[pt.length - 1], all = trips.filter(actMatch).sort(byDateAsc), prev = all[all.indexOf(latest) - 1];
   let line = '';
   if (prev && latest.baseW > 0 && latest.baseW < prev.baseW) line = `베이스 무게는 지난번보다 ${comma(Math.round(prev.baseW - latest.baseW))}g 가벼워졌어요 ✨`;
   else {
@@ -2554,13 +2593,13 @@ function renderLogHero() {
     const top = [...cnt.entries()].sort((a, b) => b[1] - a[1])[0];
     if (top) { const it = items.find(x => x.id === top[0]) || (pt.map(t => (t.items || []).find(x => x.id === top[0])).find(Boolean)); if (it) line = `가장 많이 쓴 장비는 ${esc(it.name)}예요`; }
   }
-  el.innerHTML = `<div class="hr-sm">${name} 하이라이트</div><div class="hr-t">산에 ${pt.length}번 다녀왔어요 🎉</div>${line ? `<div class="hr-s">${line}</div>` : ''}
+  el.innerHTML = `<div class="hr-sm">${name} 하이라이트</div><div class="hr-t">${actFilter === 'all' ? `${pt.length}번 떠났어요 🎉` : `${actOf(actFilter).n}${josaEulReul(actOf(actFilter).n)} ${pt.length}번 다녀왔어요 🎉`}</div>${line ? `<div class="hr-s">${line}</div>` : ''}
     <svg class="hr-ridge" viewBox="0 0 360 36" preserveAspectRatio="none" aria-hidden="true"><path d="M0 24 L60 8 L110 22 L170 4 L230 24 L290 10 L360 22 V36 H0 Z" fill="#1F4D37"/></svg>`;
 }
 
-// 기록 그래프: [무게 추이] [부피 추이] [월별 산행] (SVG 직접 그리기, 일정 필터 기준, 선택 기억)
+// 기록 그래프: [무게 추이] [부피 추이] [월별 나들이] (SVG 직접 그리기, 일정 필터 기준, 선택 기억)
 const CH_KEY = 'backpacking-chart-v1';
-const CHARTS = [['w', '무게 추이'], ['v', '부피 추이'], ['m', '월별 산행']];
+const CHARTS = [['w', '무게 추이'], ['v', '부피 추이'], ['m', '월별 나들이']];
 let chartMode = 'w';
 try { const v = localStorage.getItem(CH_KEY); if (CHARTS.some(c => c[0] === v)) chartMode = v; } catch (e) {}
 const DAY_GROUPS = [['당일', t => t.days === 0], ['1박', t => t.days === 1], ['2박+', t => t.days !== null && t.days >= 2], ['미지정', t => t.days === null]];
@@ -2584,10 +2623,10 @@ function renderTrend() {
   const dateAxis = (pts, x) => `<text x="${x(0)}" y="${H - 6}" font-size="9" fill="#666B64" text-anchor="start">${pts[0].date}</text>
         <text x="${x(pts.length - 1)}" y="${H - 6}" font-size="9" fill="#666B64" text-anchor="end">${pts[pts.length - 1].date}</text>`;
   const msg = m => `<div class="empty">${m}</div>`;
-  if (!periodTrips().length) { $('logTrend').innerHTML = `<div class="card-title">기록 그래프</div><div class="empty">이 기간에는 산행 기록이 없어요<br><button type="button" class="primary" data-allperiod style="margin-top:12px">전체 보기</button></div>`; return; }
-  if (chartMode !== 'm' && ft.length < 2) { $('logTrend').innerHTML = head + msg('산행 기록이 2회 이상 쌓이면 표시돼요'); return; }
+  if (!periodTrips().length) { $('logTrend').innerHTML = `<div class="card-title">기록 그래프</div><div class="empty">이 기간·종류에는 나들이 기록이 없어요<br><button type="button" class="primary" data-allperiod style="margin-top:12px">전체 보기</button></div>`; return; }
+  if (chartMode !== 'm' && ft.length < 2) { $('logTrend').innerHTML = head + msg('나들이 기록이 2회 이상 쌓이면 표시돼요'); return; }
 
-  if (chartMode === 'm') {   // 월별 산행: 기간에 걸친 달의 총 산행 횟수 선 그래프 (기간이 24개월을 넘으면 분기별)
+  if (chartMode === 'm') {   // 월별 나들이: 기간에 걸친 달의 총 나들이 횟수 선 그래프 (기간이 24개월을 넘으면 분기별)
     const r = periodRange();
     const k0 = Number(r.from.slice(0, 4)) * 12 + Number(r.from.slice(5, 7)) - 1, k1 = Number(r.to.slice(0, 4)) * 12 + Number(r.to.slice(5, 7)) - 1;
     const quarterly = k1 - k0 + 1 > 24, bk = [], idx = new Map();
@@ -2613,7 +2652,7 @@ function renderTrend() {
     const line = bk.map((b, i) => `${mx(i).toFixed(1)},${my(b.list.length).toFixed(1)}`).join(' ');
     const dots = bk.map((b, i) => {
       const n = b.list.length;
-      if (!n) chartTips[i] = `${b.name} · ${specific ? fl + ' ' : ''}산행 없음`;
+      if (!n) chartTips[i] = `${b.name} · ${specific ? fl + ' ' : ''}나들이 없음`;
       else if (specific) chartTips[i] = `${b.name} · ${fl} ${n}회`;
       else {
         const parts = DAY_GROUPS.map(([l, fn]) => [l, b.list.filter(fn).length]).filter(([, c]) => c).map(([l, c]) => `${l} ${c}`);
@@ -2624,8 +2663,8 @@ function renderTrend() {
     const total = bk.reduce((sum, b) => sum + b.list.length, 0);
     const best = bk.reduce((bst, b) => b.list.length >= bst.list.length && b.list.length ? b : bst, { list: [] });
     const unit = quarterly ? '분기' : '달';
-    $('logTrend').innerHTML = head + box(`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${quarterly ? '분기별' : '월별'} 산행 횟수">${grid}<polyline points="${line}" fill="none" stroke="#2F6B4F" stroke-width="2" stroke-linejoin="round"/>${dots}${labels}</svg>`,
-      `<div class="ch-sum">${total ? `기간 내 ${total}회 · 가장 많이 간 ${unit} ${quarterly ? best.label : best.m + '월'}` : '이 기간·일정에는 산행이 없어요'}</div>`);
+    $('logTrend').innerHTML = head + box(`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${quarterly ? '분기별' : '월별'} 나들이 횟수">${grid}<polyline points="${line}" fill="none" stroke="#2F6B4F" stroke-width="2" stroke-linejoin="round"/>${dots}${labels}</svg>`,
+      `<div class="ch-sum">${total ? `기간 내 ${total}회 · 가장 많이 간 ${unit} ${quarterly ? best.label : best.m + '월'}` : '이 기간·일정에는 나들이가 없어요'}</div>`);
     return;
   }
 
@@ -2649,7 +2688,7 @@ function renderTrend() {
   // 부피 추이: 기록의 vol(장비 총 부피) 한 줄. vol이 0인 기록(크기 미입력 시절)은 점을 찍지 않고 선을 건너뜀
   const vv = pts.map(t => t.vol);
   const valid = vv.filter(v => v > 0);
-  if (!valid.length) { $('logTrend').innerHTML = head + msg('부피가 기록된 산행이 아직 없어요') + '<div class="ch-note">장비 크기 기준 · 식량·소모 제외</div>'; return; }
+  if (!valid.length) { $('logTrend').innerHTML = head + msg('부피가 기록된 나들이가 아직 없어요') + '<div class="ch-note">장비 크기 기준 · 식량·소모 제외</div>'; return; }
   const vax = niceAxis(Math.min(...valid), Math.max(...valid), [5, 10, 20, 50]), lo = vax.lo, hi = vax.hi;
   const y = v => pt + 6 + (H - pt - pb - 12) * (1 - (v - lo) / (hi - lo));
   const segs = []; let cur = [];
@@ -2664,7 +2703,7 @@ function renderTrend() {
   const recentV = pts.filter(t => t.vol > 0).slice(-3);   // 부피가 있는 기록 중 최근 3개
   const avg = recentV.length ? recentV.reduce((sum, t) => sum + t.vol, 0) / recentV.length : 0;
   $('logTrend').innerHTML = head + box(`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="부피 추이">${yAxis(vax.ticks, y, (v, top) => v + (top ? 'L' : ''))}${lines}${dots}${dateAxis(pts, x)}</svg>`,
-    `${recentV.length ? `<div class="ch-sum">최근 ${recentV.length}회 평균 ${fmtV(avg)} · 가장 컸던 산행 ${fmtV(Math.max(...valid))}</div>` : ''}<div class="ch-note">장비 크기 기준 · 식량·소모 제외</div>`);
+    `${recentV.length ? `<div class="ch-sum">최근 ${recentV.length}회 평균 ${fmtV(avg)} · 가장 컸던 나들이 ${fmtV(Math.max(...valid))}</div>` : ''}<div class="ch-note">장비 크기 기준 · 식량·소모 제외</div>`);
 }
 function showTip(i) {
   const box = $('trendBox'), svg = box && box.querySelector('svg');
@@ -2682,8 +2721,8 @@ function showTip(i) {
 
 function renderLogList() {
   const sorted = [...tripsFiltered()].sort((a, b) => -byDateAsc(a, b));
-  let html = '<div class="card-title">산행 기록</div>', yr = '';
-  if (!sorted.length) html += `<div class="empty">${periodTrips().length ? '해당 일정의 기록이 없어요' : '이 기간에는 산행 기록이 없어요'}</div>`;
+  let html = '<div class="card-title">나들이 기록</div>', yr = '';
+  if (!sorted.length) html += `<div class="empty">${periodTrips().length ? '해당 일정의 기록이 없어요' : '이 기간·종류에는 나들이 기록이 없어요'}</div>`;
   sorted.forEach(t => {
     const y = t.date.slice(0, 4);
     if (y !== yr) { yr = y; html += `<div class="yr-hd"><span>${y}</span><span class="sub">${sorted.filter(x => x.date.startsWith(y)).length}회</span></div>`; }
@@ -2757,7 +2796,8 @@ function renderLogDetail() {
   $('lBody').innerHTML = `<div class="trip-sub" style="margin-bottom:8px">베이스 ${fmtW(t.baseW)} · 배낭 ${fmtW(t.packW)} · 장비 ${t.itemIds.length}품목${t.vol > 0 ? ' · ' + fmtV(t.vol) : ''}</div>
     <div class="td-edit" data-tid="${t.id}">
       <label class="f"><span>출발일</span><input type="date" data-te="date" value="${t.date}"></label>
-      <label class="f"><span>산행 이름</span><input data-te="name" maxlength="30" value="${esc(t.name)}" placeholder="이름 (선택)"></label>
+      <label class="f"><span>나들이 이름</span><input data-te="name" maxlength="30" value="${esc(t.name)}" placeholder="이름 (선택)"></label>
+      <div class="f" style="grid-column:1/-1"><span>종류</span><div class="rec-chips act-wrap" style="margin-top:4px">${ACTIVITIES.map(a => `<button type="button" class="chip${t.activity === a.k ? ' on' : ''}" data-tact="${a.k}">${a.e} ${a.n}</button>`).join('')}</div></div>
       <div class="f" style="grid-column:1/-1"><span>일정</span><div class="rec-chips" style="margin-top:4px">${DAY_LABELS.map((l, i) => `<button type="button" class="chip${t.days === i ? ' on' : ''}" data-td="${i}">${l}</button>`).join('')}</div></div>
       <label class="f" style="grid-column:1/-1"><span>메모 (최대 100자)</span><textarea data-te="memo" rows="2" maxlength="100" placeholder="예: 침낭 추웠음, 물 1L 남음">${esc(t.memo)}</textarea></label>
     </div>
@@ -2779,7 +2819,7 @@ function reuseTrip(t) {
   goTab('pack');   // 복원한 구성으로 바로 패킹 시작
   toast('장비 선택을 복원했습니다');
 }
-function removeFromTrip(t, id) {   // 산행 취소·짐 변경 대비: 기록에서 장비 한 개 제외 (무게는 기록 당시 스냅샷 기준)
+function removeFromTrip(t, id) {   // 나들이 취소·짐 변경 대비: 기록에서 장비 한 개 제외 (무게는 기록 당시 스냅샷 기준)
   const it = items.find(x => x.id === id), snap = (t.items || []).find(x => x.id === id);
   t.itemIds = t.itemIds.filter(x => x !== id);
   if (t.items) t.items = t.items.filter(x => x.id !== id);
@@ -2795,6 +2835,8 @@ const GUIDE_ORDER = [
   ['먹고 마시는 도구', '취사', '(식량·물·가스는 패킹 탭에서 입력)'],
   ['사고·조난 때 쓰는 것', '안전'],
   ['몸 관리·장비 수리', '위생/관리'],
+  ['앉고 눕고 펼치는 가구', '가구'],
+  ['놀이·취미 도구', '놀이/기타'],
   ['그 외 도구·전자기기', '전자/편의'],
 ];
 const GUIDE_EX = {
@@ -2803,9 +2845,11 @@ const GUIDE_EX = {
   '수납': '배낭, 배낭커버, 드라이백, 스터프색',
   '의류/보온': '패딩, 레인재킷, 장갑, 모자, 선글라스, 등산화, 핫팩',
   '취사': '스토브, 코펠, 수저, 정수기, 물통',
-  '전자/편의': '헤드랜턴, 보조배터리, 케이블, 의자, 테이블, 트레킹폴',
+  '전자/편의': '헤드랜턴, 보조배터리, 케이블, 트레킹폴',
   '안전': '구급킷, 상비약, 호루라기, 지도·나침반, 비상담요',
   '위생/관리': '세면도구, 썬크림, 모기기피제, 휴지·물티슈, 칼·멀티툴, 리페어킷',
+  '가구': '의자, 테이블, 접이식 침대, 캠핑박스, 그늘막',
+  '놀이/기타': '보드게임, 카드, 공, 돗자리, 카메라, 책',
 };
 const guideHTML = () => `<div class="g-title">판단 순서</div>
   <ol class="g-ol">${GUIDE_ORDER.map(([q, c, note]) => `<li>${q} → <b>${c}</b>${note ? ' ' + note : ''}</li>`).join('')}</ol>
@@ -2913,7 +2957,7 @@ function addFromSupRow() {
 }
 $('btnSaAdd').onclick = addFromSupRow;
 document.querySelector('.sup-add').addEventListener('keydown', e => { if (e.key === 'Enter') addFromSupRow(); });
-// 품명 자동완성: 현재 식량·소모품 + 산행 기록의 식량·소모품 (최근 사용순), 고르면 무게·가격을 채움
+// 품명 자동완성: 현재 식량·소모품 + 나들이 기록의 식량·소모품 (최근 사용순), 고르면 무게·가격을 채움
 function supSuggestions() {
   const seen = new Map();
   [...supplies].reverse().forEach(x => seen.has(x.name) || seen.set(x.name, { name: x.name, w: x.w, p: x.p }));
@@ -3127,8 +3171,14 @@ $('sizePop').addEventListener('change', e => onEdit(e.target));
 document.addEventListener('click', e => { if (!$('sizePop').hidden && !e.target.closest('#sizePop') && !e.target.closest('.vol-btn')) hideSizePop(); });
 window.addEventListener('scroll', hideSizePop, { passive: true });
 
-// 패킹 완료 기록 / 새 패킹 시작 / 산행 기록
+// 패킹 완료 기록 / 새 패킹 시작 / 나들이 기록
 $('btnFinish').onclick = () => openRec(false);
+$('actRow').addEventListener('click', e => {
+  const c = e.target.closest('[data-act]'), r = e.target.closest('[data-actreuse]');
+  if (c) { curAct = c.dataset.act; try { localStorage.setItem(ACT_KEY, curAct); } catch (err) {} renderSummary(); return; }
+  if (r) { const t = trips.find(x => x.id === Number(r.dataset.actreuse)); if (t) reuseTrip(t); }
+});
+$('rAct').addEventListener('click', e => { const b = e.target.closest('[data-ra]'); if (b) setRecAct(b.dataset.ra); });
 $('rDays').addEventListener('click', e => { const b = e.target.closest('[data-rd]'); if (b) setRecDays(recDays === Number(b.dataset.rd) ? null : Number(b.dataset.rd)); });   // 다시 누르면 미지정
 $('rToday').onclick = () => setRecDate(todayStr());
 $('rTomorrow').onclick = () => setRecDate(tomorrowStr());
@@ -3168,6 +3218,13 @@ $('logPeriod').addEventListener('change', e => {
   if (periodFrom && periodTo && periodFrom > periodTo) [periodFrom, periodTo] = [periodTo, periodFrom];   // 시작일이 늦으면 자동 맞바꿈
   savePeriod(); renderLog();
 });
+$('logAct').addEventListener('click', e => {
+  const b = e.target.closest('[data-af]');
+  if (!b || b.dataset.af === actFilter) return;
+  actFilter = b.dataset.af;
+  try { localStorage.setItem(ACTF_KEY, actFilter); } catch (err) {}
+  renderLog();
+});
 $('logFilter').addEventListener('click', e => {
   const b = e.target.closest('[data-lf]');
   if (!b || b.dataset.lf === logFilter) return;
@@ -3202,6 +3259,8 @@ $('lBody').addEventListener('change', e => {   // 기록의 날짜·이름·메�
 });
 $('lBody').addEventListener('click', e => {
   const t = trips.find(x => x.id === openTrip);
+  const actBtn = e.target.closest('[data-tact]');
+  if (actBtn && t) { t.activity = actBtn.dataset.tact; saveTrips(); renderLogDetail(); refreshStats(); return; }
   const dayBtn = e.target.closest('[data-td]');
   if (dayBtn && t) { const v = Number(dayBtn.dataset.td); t.days = t.days === v ? null : v; saveTrips(); renderLogDetail(); refreshStats(); return; }
   const act = e.target.closest('[data-ta]');
@@ -3247,7 +3306,7 @@ $('catChips').addEventListener('click', e => {
   catFilter = b.dataset.cf;
   renderStockHero(); renderList();
 });
-function loadSampleGear() {   // 빈 화면 "샘플 장비로 둘러보기": 샘플 장비·식량(·기록이 없으면 샘플 산행)을 채운다
+function loadSampleGear() {   // 빈 화면 "샘플 장비로 둘러보기": 샘플 장비·식량(·기록이 없으면 샘플 나들이)을 채운다
   items = normalizeItems(JSON.parse(JSON.stringify(SAMPLE)));
   supplies = normalizeSupplies(JSON.parse(JSON.stringify(SAMPLE_SUPPLIES)));
   nextId = items.reduce((m, it) => Math.max(m, it.id), 0) + 1;
@@ -3293,15 +3352,15 @@ if ('IntersectionObserver' in window) {
 let startTab = 'stock';
 try { startTab = localStorage.getItem(TAB_KEY) || 'stock'; } catch (e) {}
 setTab(startTab, false);
-function initSampleTrips() {   // 처음 열었을 때 보여주는 샘플 산행 (이름으로 장비를 찾아 연결)
+function initSampleTrips() {   // 처음 열었을 때 보여주는 샘플 나들이 (이름으로 장비를 찾아 연결)
   const ids = names => names.map(n => (items.find(it => it.name === n) || {}).id).filter(Boolean);
   const sup = (...a) => a.map(([name, w, q, p]) => ({ name, w, q, p }));
-  const make = (daysAgo, name, names, sups, days, memo = '') => {
+  const make = (daysAgo, name, names, sups, days, memo = '', activity = 'backpack') => {
     const rec = items.filter(it => ids(names).includes(it.id));
     const baseW = rec.reduce((sum, it) => sum + it.w, 0);
     const sw = sups.reduce((sum, x) => sum + x.w * x.q, 0);
     const date = fmtDate(new Date(Date.now() - daysAgo * DAY));
-    trips.push({ id: nextTid++, date, name, days, memo, itemIds: rec.map(it => it.id), items: rec.map(it => ({ id: it.id, name: it.name, cat: it.cat, w: it.w })), baseW, packW: baseW + sw, recordedAt: date + 'T09:00:00',
+    trips.push({ id: nextTid++, date, name, activity, days, memo, itemIds: rec.map(it => it.id), items: rec.map(it => ({ id: it.id, name: it.name, cat: it.cat, w: it.w })), baseW, packW: baseW + sw, recordedAt: date + 'T09:00:00',
                  supplies: sups, vol: rec.reduce((sum, it) => sum + volOf(it), 0) });
   };
   make(10, '지리산 1박', ['2인용 텐트', '그라운드시트', '다운 침낭', '에어매트', '배낭 55L', '경량 패딩', '가스 스토브', '티타늄 코펠', '헤드랜턴', '구급킷', '위생 파우치'],
@@ -3309,6 +3368,7 @@ function initSampleTrips() {   // 처음 열었을 때 보여주는 샘플 산�
   make(40, '설악산 당일', ['배낭 55L', '헤드랜턴', '구급킷'], sup(['물 1L', 1000, 1, 0], ['행동식', 150, 2, 2000]), 0);
   make(75, '오대산 1박', ['2인용 텐트', '그라운드시트', '다운 침낭', '에어매트', '배낭 55L', '가스 스토브', '티타늄 코펠', '정수필터', '헤드랜턴', '구급킷'],
        sup(['가스 230g', 370, 1, 6000], ['물 1L', 1000, 1, 0], ['식사 1끼', 250, 3, 4000]), 1, '비 와서 텐트 결로가 심했음');
+  make(20, '한강 피크닉', ['배낭 55L', '경량 패딩'], sup(['물 1L', 1000, 1, 0], ['행동식', 150, 2, 2000]), 0, '돗자리 챙길 걸', 'picnic');
   make(150, '북한산 당일', ['배낭 55L', '헤드랜턴'], sup(['물 1L', 1000, 1, 0]), 0);
   make(230, '덕유산 1박', ['2인용 텐트', '다운 침낭', '에어매트', '배낭 55L', '경량 패딩', '가스 스토브', '티타늄 코펠', '헤드랜턴', '구급킷'],
        sup(['가스 230g', 370, 1, 6000], ['물 1L', 1000, 2, 0], ['식사 1끼', 250, 2, 4000]), 1);
