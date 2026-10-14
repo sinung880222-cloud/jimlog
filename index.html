@@ -75,6 +75,10 @@
   #logAct::-webkit-scrollbar { display: none; }
   #logAct .chip, .act-row .chip { flex: 0 0 auto; white-space: nowrap; }
   .act-reuse { flex: 1 0 100%; min-height: 36px; text-align: left; border-color: var(--line-strong); background: var(--surface); color: var(--forest-ink); font-weight: 600; }
+  .it-edit > .guide { grid-column: 1 / -1; }
+  .f > span .info { display: inline-block; flex: none; width: auto; min-height: 0; margin-left: 4px; padding: 0 4px; font-size: 12px; vertical-align: baseline; }
+  #sheet .it-edit { display: grid; margin: 0; }
+  #sheet .it { border: 0; }
   .g-menu { right: 24px; }
   .menu-grp { margin-top: 4px; padding-top: 4px; border-top: 1px solid var(--line); }
   .menu-grp:first-child { margin-top: 0; padding-top: 0; border-top: 0; }
@@ -829,20 +833,7 @@
 <div class="overlay" id="overlay"></div>
 <div class="sheet dlg" id="sheet" role="dialog" aria-modal="true" aria-label="장비 추가">
   <div class="sheet-hd"><b>장비 추가</b><button id="sClose" aria-label="닫기">✕</button></div>
-  <div class="sheet-grid">
-    <label class="f" style="grid-column:1/-1"><span>품명</span><input id="sName" maxlength="18" placeholder="품명 입력"></label>
-    <div class="f" style="grid-column:1/-1"><span>분류</span><div class="sel-row"><select id="sCat"></select><button type="button" class="info" id="sInfo" aria-label="분류 안내" aria-expanded="false">ⓘ</button></div></div>
-    <div class="guide" id="sGuide" hidden></div>
-    <label class="f"><span>무게(g)</span><input id="sW" inputmode="numeric" placeholder="0"></label>
-    <label class="f"><span>가격(원)</span><input id="sP" inputmode="numeric" placeholder="0"></label>
-    <div class="w-note" id="sWNote">여러 개는 한 세트로 · 예: 텐트용 팩 6개 → 60g</div>
-    <label class="pouch-tg" style="grid-column:1/-1"><input type="checkbox" id="sPouch"><span>파우치 (내용물 목록 사용)</span></label>
-    <label class="f" style="grid-column:1/-1"><span>구매일 (선택)</span><input type="date" id="sBuy"></label>
-    <div class="size-wrap">
-      <button type="button" class="size-toggle" id="sSizeToggle" aria-expanded="false">크기 (선택)<span class="sz-sum" id="sSizeSum">–</span></button>
-      <div class="size-body" id="sSizeBody" hidden></div>
-    </div>
-  </div>
+  <div class="it open"><div class="it-edit" id="sForm"></div></div>
   <div class="sheet-ft">
     <button id="sMore">저장 후 계속 추가</button>
     <button class="primary" id="sSave">저장</button>
@@ -1677,21 +1668,33 @@ const rowInner = it => `<label class="it-chk"><input type="checkbox" data-f="pac
     <div class="it-main"><div class="it-name"><span class="nmx">${esc(it.name)}</span></div><div class="it-meta">${useMeta(it)}</div></div>
     <div class="it-right"><div>${comma(it.w)}g${unitVol(it) > 0 ? `<span class="it-vol"> · ${fmtV(unitVol(it))}</span>` : ''}</div>${it.p ? `<div>${fmtP(it.p)}</div>` : ''}${hasSize(it) ? '' : '<span class="bd-warn">📏 크기 미입력</span>'}</div>`;
 
+// 장비 폼 (수정 화면과 추가 시트가 같은 코드를 쓴다): mode = 'edit'(펼침 편집, data-f) | 'add'(추가 시트, id)
+function itemFormHTML(it, mode) {
+  const add = mode === 'add';
+  const at = (f, id) => add ? `id="${id}"` : `data-f="${f}"`;
+  const v = (val) => add ? '' : val;
+  const cat = add ? `<div class="f s5"><span>분류<button type="button" class="info" id="sInfo" aria-label="분류 안내" aria-expanded="false">ⓘ</button></span><select id="sCat">${opts(CATS)}</select></div>`
+                  : `<label class="f s5"><span>분류</span><select data-f="cat">${opts(CATS, it.cat)}</select></label>`;
+  return `<label class="f s7"><span>품명</span><input ${at('name', 'sName')} maxlength="18"${add ? ' placeholder="품명 입력"' : ` value="${esc(it.name)}"`}></label>
+      ${cat}
+      ${add ? '<div class="guide" id="sGuide" hidden></div>' : ''}
+      <label class="f s6"><span>무게(g)</span><input ${at('w', 'sW')} inputmode="numeric"${add ? ' placeholder="0"' : ` value="${comma(it.w)}"`}></label>
+      <label class="f s6"><span>가격(원)</span><input ${at('p', 'sP')} inputmode="numeric"${add ? ' placeholder="0"' : ` value="${comma(it.p)}"`}></label>
+      <label class="pouch-tg" style="grid-column:1/-1"><input type="checkbox" ${at('pouch', 'sPouch')}${!add && isPouch(it) ? ' checked' : ''}><span>파우치 (내용물 목록 사용)</span></label>
+      ${add ? '<div class="w-note" id="sWNote">여러 개는 한 세트로 · 예: 텐트용 팩 6개 → 60g</div>'
+            : isPouch(it) ? '<div class="w-note">무게는 내용물까지 다 담은 총무게</div><button type="button" class="pk-editbtn" style="grid-column:1/-1" data-pedit="' + it.id + '">✎ 내용물 편집</button>' : ''}
+      <div class="size-wrap">
+        <div class="size-lb">크기 (선택)${add ? '<span class="sz-sum" id="sSizeSum" hidden></span>' : ''}</div>
+        <div class="size-body"${add ? ' id="sSizeBody"' : ''}>${sizeFormHTML(it)}</div>
+      </div>
+      <div class="f full buy-wrap"><span>구매일 (선택)</span><input type="date" ${at('buyDate', 'sBuy')}${add ? '' : ` value="${it.buyDate || ''}"`}></div>
+      ${add ? '' : '<button class="del-btn">삭제</button>'}`;
+}
+
 const cardM = it => `<div class="it${it.id === openId ? ' open' : ''}" data-id="${it.id}">
     <div class="it-row">${rowInner(it)}</div>
     <div class="it-edit">
-      <label class="f s7"><span>품명</span><input data-f="name" maxlength="18" value="${esc(it.name)}"></label>
-      <label class="f s5"><span>분류</span><select data-f="cat">${opts(CATS, it.cat)}</select></label>
-      <label class="f s6"><span>무게(g)</span><input data-f="w" inputmode="numeric" value="${comma(it.w)}"></label>
-      <label class="f s6"><span>가격(원)</span><input data-f="p" inputmode="numeric" value="${comma(it.p)}"></label>
-      <label class="pouch-tg" style="grid-column:1/-1"><input type="checkbox" data-f="pouch"${isPouch(it) ? ' checked' : ''}><span>파우치 (내용물 목록 사용)</span></label>
-      ${isPouch(it) ? '<div class="w-note">무게는 내용물까지 다 담은 총무게</div><button type="button" class="pk-editbtn" style="grid-column:1/-1" data-pedit="' + it.id + '">✎ 내용물 편집</button>' : ''}
-      <div class="size-wrap">
-        <div class="size-lb">크기 (선택)</div>
-        <div class="size-body">${sizeFormHTML(it)}</div>
-      </div>
-      <div class="f full buy-wrap"><span>구매일 (선택)</span><input type="date" data-f="buyDate" value="${it.buyDate || ''}"></div>
-      <button class="del-btn">삭제</button>
+      ${itemFormHTML(it, 'edit')}
     </div>
   </div>`;
 
@@ -2382,7 +2385,7 @@ function setTab(t, scroll) {
 /* ── 바텀시트 ── */
 let sheetSz = { shape: '박스' };
 function renderSheetSize() {
-  $('sSizeBody').innerHTML = sizeFormHTML(sheetSz);
+  $('sSizeBody').innerHTML = sizeFormHTML(sheetSz);   // 수정 화면처럼 항상 펼쳐 둔다
   $('sSizeSum').textContent = pvText(sheetSz);
 }
 function openSheet() {
@@ -2404,6 +2407,7 @@ const syncSheetNote = () => { $('sWNote').textContent = $('sPouch').checked ? '�
 function sheetAdd(close) {
   const name = $('sName').value.trim();
   if (!name) { $('sName').focus(); return; }
+  try { localStorage.setItem('backpacking-lastcat-v1', $('sCat').value); } catch (e) {}   // 다음 추가의 기본 분류
   addItem({ name, cat: $('sCat').value, w: $('sW').value, p: $('sP').value, buyDate: $('sBuy').value, size: sheetSz, pouch: $('sPouch').checked });
   $('sPouch').checked = false; syncSheetNote();
   $('sName').value = $('sW').value = $('sP').value = $('sBuy').value = '';
@@ -2883,7 +2887,8 @@ function togglePcGuide(btn) {
 }
 
 /* ── 초기화 / 이벤트 ── */
-['aCat', 'sCat'].forEach(id => $(id).innerHTML = opts(CATS));
+$('sForm').innerHTML = itemFormHTML(sheetSz, 'add');   // 추가 시트 = 수정 화면과 같은 폼
+['aCat'].forEach(id => $(id).innerHTML = opts(CATS));
 
 $('sGuide').innerHTML = $('pcGuide').innerHTML = guideHTML();
 $('sInfo').onclick = () => toggleSheetGuide();
@@ -3303,6 +3308,7 @@ $('aMore').onclick = () => {
   $('sW').value = $('aW').value; $('sP').value = $('aP').value;
   $('sPouch').checked = $('aPouch').checked; syncSheetNote();
 };
+try { const lc = localStorage.getItem('backpacking-lastcat-v1'); if (CATS.includes(lc)) $('sCat').value = lc; } catch (e) {}   // 마지막으로 고른 분류
 $('sPouch').addEventListener('change', syncSheetNote);
 $('sClose').onclick = $('overlay').onclick = closeSheet;
 $('sSave').onclick = () => sheetAdd(true);
