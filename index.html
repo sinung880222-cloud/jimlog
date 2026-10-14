@@ -35,7 +35,7 @@
   .pc-only { display: none; }
 
   /* ── 헤더 ── */
-  .hdr { position: sticky; top: 0; z-index: 20; height: calc(48px + env(safe-area-inset-top)); padding: env(safe-area-inset-top) 8px 0 16px;
+  .hdr { position: sticky; top: var(--top-off, 0px); z-index: 20; height: calc(48px + env(safe-area-inset-top)); padding: env(safe-area-inset-top) 8px 0 16px;
          background: var(--surface); border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; }
   .hdr h1 { font-size: 12px; font-weight: 700; margin: 0; }
   .hdr-btns { display: flex; gap: 8px; align-items: center; }
@@ -45,6 +45,21 @@
   .menu[hidden] { display: none; }
   .g-state { min-height: 0; margin-left: 8px; padding: 2px 8px; border: 0; border-radius: var(--radius-pill); background: var(--forest-tint); color: var(--forest-ink); font-size: var(--fs-meta); font-weight: 400; white-space: nowrap; max-width: 46vw; overflow: hidden; text-overflow: ellipsis; }
   .g-state.warn { background: var(--ember-tint); color: var(--ember-ink); cursor: pointer; }
+  .inapp-bar { position: fixed; top: 0; left: 0; right: 0; z-index: 70; display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 6px 12px; background: var(--ember-tint); color: var(--ember-ink); border-bottom: 1px solid var(--line); font-size: 12px; font-weight: 600; }
+  .inapp-bar[hidden] { display: none; }
+  .inapp-bar span { flex: 1 1 auto; min-width: 0; }
+  .inapp-bar button { flex: 0 0 auto; min-height: 32px; padding: 0 12px; border-color: var(--ember); background: var(--surface); color: var(--ember-ink); font-weight: 700; white-space: nowrap; }
+  body.has-inapp { padding-top: 44px; --top-off: 44px; }
+  .inst-card { order: 0; display: flex; align-items: center; gap: 10px; margin-bottom: 12px; padding: 10px 8px 10px 12px; border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--surface); }
+  .inst-card[hidden] { display: none; }
+  .inst-card .ic-t { flex: 1 1 auto; min-width: 0; font-size: 12px; font-weight: 600; line-height: 1.4; }
+  .inst-card .ic-t small { display: block; font-weight: 400; color: var(--ink-3); font-size: var(--fs-meta); }
+  .inst-card .ic-go { flex: 0 0 auto; min-height: 36px; padding: 0 12px; white-space: nowrap; }
+  .inst-card .ic-x { flex: 0 0 auto; min-height: 36px; width: 32px; padding: 0; border: 0; background: none; color: var(--ink-3); }
+  .ins-steps { margin: 0; padding-left: 20px; line-height: 1.8; }
+  .ins-arrow { margin-top: 12px; text-align: center; color: var(--forest); font-weight: 700; }
+  .ins-arrow b { display: block; font-size: 28px; line-height: 1; animation: insBounce 1.1s ease-in-out infinite; }
+  @keyframes insBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
   .g-menu { right: 24px; }
   .menu-grp { margin-top: 4px; padding-top: 4px; border-top: 1px solid var(--line); }
   .menu-grp:first-child { margin-top: 0; padding-top: 0; border-top: 0; }
@@ -62,7 +77,7 @@
   .menu button { display: block; width: 100%; text-align: left; border: none; background: none; padding: 0 12px; }
 
   /* 요약이 화면 밖으로 나가면 보이는 미니 합계 바 (모바일 · 패킹 탭) */
-  .mini { position: fixed; top: calc(48px + env(safe-area-inset-top)); left: 0; right: 0; z-index: 15; padding: 8px 16px; background: var(--surface);
+  .mini { position: fixed; top: calc(var(--top-off, 0px) + 48px + env(safe-area-inset-top)); left: 0; right: 0; z-index: 15; padding: 8px 16px; background: var(--surface);
           border-bottom: 1px solid var(--line); color: var(--ink-2); opacity: 0; transform: translateY(-6px); pointer-events: none;
           transition: opacity .15s, transform .15s; }
   .mini b { color: var(--ink); }
@@ -113,7 +128,7 @@
   .chip.on { background: var(--forest); border-color: var(--forest); color: var(--on-forest); font-weight: 700; }
   .tgl.on { background: var(--forest); border-color: var(--forest); color: var(--on-forest); font-weight: 700; }
   .tools > button[hidden] { display: none; }
-  .selbar { position: sticky; top: calc(48px + env(safe-area-inset-top)); z-index: 15; display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+  .selbar { position: sticky; top: calc(var(--top-off, 0px) + 48px + env(safe-area-inset-top)); z-index: 15; display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
             margin: 0 -16px 12px; padding: 8px 16px; background: var(--surface); border-bottom: 1px solid var(--line); }
   .sel-txt { flex: 1 1 auto; min-width: 0; color: var(--ink-2); }
   .sel-txt b { color: var(--ink); }
@@ -128,7 +143,7 @@
   .tools > button { flex: 0 0 auto; padding: 0 8px; }
   .pc-table { display: none; }
 
-  :root { --selbar-h: 57px; --stk: calc(48px + env(safe-area-inset-top) + var(--selbar-h)); }
+  :root { --selbar-h: 57px; --stk: calc(var(--top-off, 0px) + 48px + env(safe-area-inset-top) + var(--selbar-h)); }
   .m-list { margin-top: 16px; }
   div.sec { display: grid; grid-template-columns: 68px minmax(0, 1fr); margin-bottom: 12px; border: 1px solid var(--line); border-radius: 8px;
          background: linear-gradient(to right, var(--surface-sunken) 67px, var(--line) 67px, var(--line) 68px, var(--surface) 68px); }
@@ -557,7 +572,7 @@
     .stock-banner { height: 140px; }
     .sb-t b { font-size: 18px; }
     .sb-jim svg { width: 80px; height: 88px; }
-    .selbar { top: calc(48px + env(safe-area-inset-top)); margin: 0 0 16px; padding: 10px 16px; border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--surface); }
+    .selbar { top: calc(var(--top-off, 0px) + 48px + env(safe-area-inset-top)); margin: 0 0 16px; padding: 10px 16px; border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--surface); }
     .filter-row { order: 3; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; margin-bottom: 12px; }
     .filter-row .cat-chips { flex: 1 1 420px; min-width: 0; margin: 0; order: 0; }
     .filter-row .toolbar { flex: 0 0 auto; margin: 0; order: 0; display: flex; align-items: center; gap: 8px; }
@@ -632,6 +647,8 @@
 </style>
 </head>
 <body data-tab="stock">
+
+<div class="inapp-bar" id="inappBar" hidden></div>
 
 <header class="hdr">
   <h1><span class="h-logo" id="hLogo"></span>짐로그<button type="button" class="g-state" id="gState" hidden></button></h1>
@@ -711,6 +728,7 @@
   <section class="tab" data-tab="stock">
     <div class="card" id="stockCard">
       <div class="stock-banner" id="stockBanner"></div>
+      <div class="inst-card" id="instCard" hidden></div>
       <div class="stock-sum" id="stockSum"></div>
       <div class="selbar" id="selBar">
         <div class="sel-txt" id="selTxt"></div>
@@ -883,6 +901,11 @@
   <div class="sheet-hd"><b>버전 기록</b><button id="vrClose" aria-label="닫기">✕</button></div>
   <div class="t-sum">하루 첫 저장 전의 상태와, 충돌·되돌리기 때 밀려난 내용이 최근 30개까지 남아요.</div>
   <div class="ver-list" id="verList"></div>
+</div>
+<div class="sheet dlg" id="installSheet" role="dialog" aria-modal="true" aria-label="홈 화면에 추가">
+  <div class="sheet-hd"><b>홈 화면에 추가하기</b><button id="insClose" aria-label="닫기">✕</button></div>
+  <div id="insBody"></div>
+  <div class="sheet-ft"><button class="primary" id="insDone">확인했어요</button></div>
 </div>
 <div class="sheet dlg" id="logSheet" role="dialog" aria-modal="true" aria-label="산행 기록 상세">
   <div class="sheet-hd"><b id="lTitle">산행 기록</b><button id="lClose" aria-label="닫기">✕</button></div>
@@ -1908,7 +1931,8 @@ function gRenderMenus() {
   const top = gUser
     ? `<div class="g-mail">☁️ ${esc(gUser.email)}</div><button type="button" data-g="sync">지금 동기화</button><button type="button" data-g="ver">버전 기록</button><button type="button" data-g="logout">로그아웃</button>`
     : `<div class="g-tip">구글로 로그인하면 자동으로 저장돼요</div><button type="button" data-g="login">구글로 로그인 · 자동 저장</button>`;
-  const wipe = gUser ? '<button type="button" data-g="wipe">드라이브의 짐로그 데이터 삭제</button>' : '';
+  const inst = '<button type="button" data-g="install">📲 홈 화면에 설치</button>';
+  const wipe = inst + (gUser ? '<button type="button" data-g="wipe">드라이브의 짐로그 데이터 삭제</button>' : '');
   $('gBoxM').innerHTML = top;               // 모바일 메뉴 위쪽
   $('gBoxB').innerHTML = wipe + priv;       // 모바일 메뉴 맨 아래
   $('gBoxP').innerHTML = top + wipe + priv; // PC 계정 메뉴
@@ -2219,7 +2243,7 @@ document.addEventListener('click', e => {
   if (!b) return;
   $('menu').hidden = true; $('gMenu').hidden = true;
   const a = b.dataset.g;
-  if (a === 'login') gLogin(); else if (a === 'sync') gSyncNow(); else if (a === 'logout') gLogout(); else if (a === 'wipe') gWipe(); else if (a === 'ver') gShowVersions();
+  if (a === 'login') gLogin(); else if (a === 'sync') gSyncNow(); else if (a === 'logout') gLogout(); else if (a === 'wipe') gWipe(); else if (a === 'ver') gShowVersions(); else if (a === 'install') installApp();
 });
 $('gState').onclick = () => { if (gState === 'relogin') gLogin(); else if (gState === 'offline' || gState === 'conflict') gUpload(); };
 $('btnGoogle').onclick = () => { $('gMenu').hidden = !$('gMenu').hidden; };
@@ -2233,6 +2257,70 @@ $('verList').addEventListener('click', e => {
   if (!b) return;
   gRestoreVersion(b.dataset.ver, b.closest('.ver-row').querySelector('b').textContent);
 });
+/* ═══ 홈 화면 설치 안내 ═══════════════════════════════════════════════════
+   앱 안 브라우저(카톡 등)에서는 띠로 "브라우저로 열기", 안드로이드 크롬은 beforeinstallprompt 설치 카드,
+   아이폰은 "홈 화면에 추가" 방법 시트. 이미 홈 화면 앱(standalone)으로 열었으면 아무것도 안 띄운다. */
+var INST_KEY = 'backpacking-install-dismiss-v1';
+var instDeferred = null;
+var UA = navigator.userAgent || '';
+var inStandalone = (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
+var inKakao = /KAKAOTALK/i.test(UA);
+var inApp = /KAKAOTALK|Instagram|NAVER|FBAN|FBAV|\bLine\//i.test(UA);
+var isAndroid = /Android/i.test(UA);
+var isIOS = /iPad|iPhone|iPod/.test(UA) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+var isIOSChrome = isIOS && /CriOS/.test(UA);
+var instDismissed = () => { try { const t = Number(localStorage.getItem(INST_KEY)); return t && Date.now() - t < 7 * 86400000; } catch (e) { return false; } };
+function openExternal() {
+  const url = location.href;
+  if (inKakao) location.href = 'kakaotalk://web/openExternal?url=' + encodeURIComponent(url);
+  else if (isAndroid) location.href = 'intent://' + url.replace(/^https?:\/\//, '') + '#Intent;scheme=https;package=com.android.chrome;end';
+}
+function renderInAppBar() {
+  const bar = $('inappBar');
+  if (!inApp || inStandalone) { bar.hidden = true; document.body.classList.remove('has-inapp'); return; }
+  const who = inKakao ? '카톡' : '이 앱';
+  const canJump = inKakao || isAndroid;
+  bar.innerHTML = `<span>${who} 안에서는 설치·로그인이 안 돼요${canJump ? '' : ' · 오른쪽 위 ⋯ → 다른 브라우저로 열기'}</span>${canJump ? '<button type="button" id="inappGo">브라우저로 열기</button>' : ''}`;
+  bar.hidden = false;
+  document.body.classList.add('has-inapp');
+  if (canJump) $('inappGo').onclick = openExternal;
+}
+function renderInstCard() {
+  const card = $('instCard');
+  let show = false, text = '', btn = '', sub = '';
+  if (!inStandalone && !inApp && !instDismissed()) {
+    if (instDeferred) { show = true; text = '홈 화면에 짐로그를 설치하세요'; sub = '산에서도 열려요'; btn = '📲 설치'; }
+    else if (isIOS) { show = true; text = '홈 화면에 추가하면 앱처럼 쓸 수 있어요'; btn = '방법 보기'; }
+  }
+  card.hidden = !show;
+  if (!show) return;
+  card.innerHTML = `<span>${jimSVG('base', 28, true)}</span><div class="ic-t">${text}${sub ? `<small>${sub}</small>` : ''}</div><button type="button" class="primary ic-go" id="icGo">${btn}</button><button type="button" class="ic-x" id="icX" aria-label="닫기">✕</button>`;
+  $('icGo').onclick = installApp;
+  $('icX').onclick = () => { try { localStorage.setItem(INST_KEY, String(Date.now())); } catch (e) {} card.hidden = true; };
+}
+function showIosSheet() {
+  $('insBody').innerHTML = isIOSChrome
+    ? `<ol class="ins-steps"><li>크롬 오른쪽 위(또는 아래) <b>공유 버튼(□↑)</b>을 눌러요</li><li><b>'홈 화면에 추가'</b>를 골라요</li><li><b>'추가'</b>를 눌러요</li></ol><div class="sub" style="margin-top:8px">크롬에서는 "공유 버튼 → 홈 화면에 추가"로 설치해요. 안 보이면 사파리로 열어 주세요.</div>`
+    : `<ol class="ins-steps"><li>화면 아래 <b>공유 버튼(□↑)</b>을 눌러요</li><li><b>'홈 화면에 추가'</b>를 골라요</li><li>오른쪽 위 <b>'추가'</b>를 눌러요</li></ol><div class="ins-arrow"><b>↓</b>공유 버튼은 화면 맨 아래에 있어요</div>`;
+  openDlg('installSheet');
+}
+async function installApp() {
+  if (inStandalone) { toast('이미 홈 화면 앱으로 열었어요'); return; }
+  if (inApp) { renderInAppBar(); openExternal(); return; }
+  if (instDeferred) {
+    const ev = instDeferred; instDeferred = null;
+    try { ev.prompt(); await ev.userChoice; } catch (e) {}
+    renderInstCard();
+    return;
+  }
+  if (isIOS) { showIosSheet(); return; }
+  toast('브라우저 메뉴에서 "앱 설치" 또는 "홈 화면에 추가"를 골라 주세요');
+}
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); instDeferred = e; renderInstCard(); });
+window.addEventListener('appinstalled', () => { instDeferred = null; renderInstCard(); toast('홈 화면에 설치했어요'); });
+$('insClose').onclick = $('insDone').onclick = () => closeSheet();
+/* ═══ /홈 화면 설치 ═══════════════════════════════════════════════════════ */
+
 /* ═══ /구글 드라이브 ═════════════════════════════════════════════════════ */
 
 function clearAll() {
@@ -3232,6 +3320,8 @@ $('logEmptyFig').innerHTML = jimSVG('wait', 120);
 $('recCircle').innerHTML = jimSVG('happy', 80);
 renderBackupNote();
 gInit();
+renderInAppBar();
+renderInstCard();
 try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {}); } catch (e) {}   // 저장소 삭제 방지 요청 (결과 무시)
 renderAll();
 renderSheetSize();
