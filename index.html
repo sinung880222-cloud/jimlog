@@ -61,7 +61,8 @@
   .ins-arrow { margin-top: 12px; text-align: center; color: var(--forest); font-weight: 700; }
   .ins-arrow b { display: block; font-size: 28px; line-height: 1; animation: insBounce 1.1s ease-in-out infinite; }
   @keyframes insBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
-  .act-row { margin-bottom: 12px; }
+  .act-row { margin-bottom: 12px; scroll-margin-top: calc(var(--top-off, 0px) + 48px + env(safe-area-inset-top) + 12px); }
+  .act-now { flex: 0 0 auto; min-height: 32px; padding: 0 12px; border: 0; border-radius: var(--radius-pill); background: var(--forest-tint); color: var(--forest-ink); font-size: 12px; font-weight: 600; white-space: nowrap; }
   .act-row .ar-lb { margin-bottom: 4px; font-size: 11px; color: var(--ink-3); }
   .act-chips { display: flex; flex-wrap: wrap; gap: 6px; }
   .act-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 4px; width: 100%; }
@@ -707,10 +708,10 @@
   <!-- ② 패킹 탭 -->
   <section class="tab" data-tab="pack">
     <div class="np-row">
+      <button type="button" class="act-now" id="actNow"></button>
       <div class="rec-banner" id="recBanner" hidden></div>
       <button type="button" id="btnNewPackTop">↺ 새 패킹 시작</button>
     </div>
-    <div class="act-row" id="actRow"></div>
     <div class="pk-cols">
     <div class="pk-left">
     <div id="statsWrap">
@@ -750,6 +751,7 @@
   <section class="tab" data-tab="stock">
     <div class="card" id="stockCard">
       <div class="stock-banner" id="stockBanner"></div>
+      <div class="act-row" id="actRow"></div>
       <div class="inst-card" id="instCard" hidden></div>
       <div class="stock-sum" id="stockSum"></div>
       <div class="selbar" id="selBar">
@@ -1337,6 +1339,7 @@ function lastTripOf(act) {   // 같은 종류의 가장 최근 기록
 const actChips = (sel, attr) => ACTIVITIES.map(x => `<button type="button" class="chip${x.k === sel ? ' on' : ''}" ${attr}="${x.k}"><span class="ac-e">${x.e}</span><span class="ac-n">${x.n}</span></button>`).join('');
 function renderActRow() {
   const a = actOf(curAct), last = lastTripOf(curAct);
+  $('actNow').textContent = `${a.e} ${a.n} 짐 싸는 중`;
   $('actRow').innerHTML = `<div class="ar-lb">이번엔 어디로?</div><div class="act-grid">${actChips(curAct, 'data-act')}</div>`
     + (last ? `<button type="button" class="act-reuse" data-actreuse="${last.id}">지난 ${a.e} ${a.n} 구성 불러오기 (${shortD(last.date)} · 장비 ${last.itemIds.length}품목)</button>` : '');
 }
@@ -3188,6 +3191,10 @@ window.addEventListener('scroll', hideSizePop, { passive: true });
 
 // 패킹 완료 기록 / 새 패킹 시작 / 나들이 기록
 $('btnFinish').onclick = () => openRec(false);
+$('actNow').onclick = () => {   // 장비 탭으로 이동해 종류 칩 위치로 스크롤
+  goTab('stock');
+  setTimeout(() => $('actRow').scrollIntoView({ behavior: 'smooth', block: 'start' }), 60);
+};
 $('actRow').addEventListener('click', e => {
   const c = e.target.closest('[data-act]'), r = e.target.closest('[data-actreuse]');
   if (c) { curAct = c.dataset.act; try { localStorage.setItem(ACT_KEY, curAct); } catch (err) {} renderSummary(); return; }
