@@ -948,8 +948,8 @@
 </nav>
 
 <script>
-const CATS = ['쉘터', '수면', '수납', '의류/보온', '취사', '전자/편의', '안전', '위생/관리', '가구', '놀이/기타'];   // 새 분류는 맨 뒤에만 추가 (기존 데이터 영향 없음)
-const CAT_COLORS = ['#2F6B4F', '#4F7FB8', '#5A5490', '#B8668F', '#D9822B', '#7B6BB5', '#B23A2E', '#8C8A80', '#7A5C3E', '#3F8C8C'];
+const CATS = ['쉘터', '수면', '수납', '의류/보온', '취사', '전자', '편의', '안전', '위생/관리', '놀이/기타'];   // CATS · CAT_COLORS · CAT_EMOJI는 순서가 항상 같아야 한다
+const CAT_COLORS = ['#2F6B4F', '#4F7FB8', '#5A5490', '#B8668F', '#D9822B', '#7B6BB5', '#7A5C3E', '#B23A2E', '#8C8A80', '#3F8C8C'];
 const SUP_KEY = 'backpacking-supplies-v1';
 const TRIP_KEY = 'backpacking-trips-v1';
 const DAY = 86400000;
@@ -963,7 +963,7 @@ const actOf = k => ACTIVITIES.find(a => a.k === k) || ACTIVITIES[2];
 const isAct = k => ACTIVITIES.some(a => a.k === k);
 let curAct = 'backpack';
 try { const v = localStorage.getItem(ACT_KEY); if (isAct(v)) curAct = v; } catch (e) {}
-const CAT_EMOJI = ['⛺', '🛌', '🎒', '🧥', '🍳', '🔦', '⛑️', '🧴', '🪑', '🎲'], SUP_EMOJI = '🍙';   // CATS 순서와 같음
+const CAT_EMOJI = ['⛺', '🛌', '🎒', '🧥', '🍳', '🔦', '🪑', '⛑️', '🧴', '🎲'], SUP_EMOJI = '🍙';   // CATS 순서와 같음
 const josaEulReul = w => {   // 마지막 글자 받침에 따라 을/를 (한글, 숫자, 영문 읽는 소리 기준)
   const ch = String(w).trim().slice(-1), c = ch.charCodeAt(0);
   if (c >= 0xAC00 && c <= 0xD7A3) return (c - 0xAC00) % 28 ? '을' : '를';
@@ -1017,8 +1017,8 @@ const POUCH_KEY = 'backpacking-pouches-v1';   // (옛) 별도 파우치 배열 �
 const LEGACY_KEY = 'backpacking-pouch-legacy-v1';   // (옛) '파우치로 사용' 안내 보관 키 — 더 이상 쓰지 않음, 정리만
 const TAB_LEGACY = { summary: 'pack', items: 'stock', packing: 'pack', analysis: 'pack' };
 const CAT_MAP = { '배낭': '수납', '의류': '의류/보온', '취사/식량': '취사', '식량·물': '취사',
-                  '전자기기': '전자/편의', '전자': '전자/편의', '편의': '전자/편의', '기타': '전자/편의' };
-const migrateCat = c => CATS.includes(c) ? c : (CAT_MAP[c] || '전자/편의');
+                  '전자기기': '전자', '전자/편의': '전자', '가구': '편의', '기타': '전자' };   // 분류를 나누거나 바꾼 이력도 여기서 변환 (전자/편의 → 전자, 가구 → 편의)
+const migrateCat = c => CATS.includes(c) ? c : (CAT_MAP[c] || '전자');
 ['backpacking-analysis-open-v1', 'backpacking-supdefault-v1', 'backpacking-packview-v1', 'backpacking-collapsed-v1'].forEach(k => {
   try { localStorage.removeItem(k); } catch (e) {}   // 없어진 기능의 설정 키 정리
 });
@@ -1103,9 +1103,9 @@ const SAMPLE = [
   ['가스 스토브', '취사', 85, 68000, { shape: '박스', dx: 9, dy: 6, dz: 5 }],
   ['티타늄 코펠', '취사', 140, 55000, { shape: '박스', dx: 12, dy: 12, dz: 10, buyDate: '2025-08-20' }],
   ['정수필터', '취사', 85, 45000],
-  ['헤드랜턴', '전자/편의', 75, 60000, { shape: '박스', dx: 7, dy: 5, dz: 4 }],
-  ['보조배터리', '전자/편의', 190, 40000, { shape: '박스', dx: 15, dy: 7, dz: 2.5, buyDate: '2023-01-10' }],
-  ['케이블', '전자/편의', 40, 8000, { shape: '직접', vol: 0.1 }],
+  ['헤드랜턴', '전자', 75, 60000, { shape: '박스', dx: 7, dy: 5, dz: 4 }],
+  ['보조배터리', '전자', 190, 40000, { shape: '박스', dx: 15, dy: 7, dz: 2.5, buyDate: '2023-01-10' }],
+  ['케이블', '전자', 40, 8000, { shape: '직접', vol: 0.1 }],
   ['구급킷', '안전', 150, 25000, { shape: '박스', dx: 15, dy: 10, dz: 6 }],
   ['위생 파우치', '위생/관리', 300, 15000, { shape: '박스', dx: 20, dy: 12, dz: 8, pouch: true,
     contents: ['칫솔', '치약', '썬크림', '물티슈', '휴지'].map((name, i) => ({ id: i + 1, name, loaded: false })) }],
@@ -2849,9 +2849,9 @@ const GUIDE_ORDER = [
   ['먹고 마시는 도구', '취사', '(식량·물·가스는 패킹 탭에서 입력)'],
   ['사고·조난 때 쓰는 것', '안전'],
   ['몸 관리·장비 수리', '위생/관리'],
-  ['앉고 눕고 펼치는 가구', '가구'],
+  ['앉고 눕고 펼치는 편의 도구', '편의'],
   ['놀이·취미 도구', '놀이/기타'],
-  ['그 외 도구·전자기기', '전자/편의'],
+  ['그 외 도구·전자기기', '전자'],
 ];
 const GUIDE_EX = {
   '쉘터': '텐트, 타프, 그라운드시트, 팩·스트링',
@@ -2859,10 +2859,10 @@ const GUIDE_EX = {
   '수납': '배낭, 배낭커버, 드라이백, 스터프색',
   '의류/보온': '패딩, 레인재킷, 장갑, 모자, 선글라스, 등산화, 핫팩',
   '취사': '스토브, 코펠, 수저, 정수기, 물통',
-  '전자/편의': '헤드랜턴, 보조배터리, 케이블, 트레킹폴',
+  '전자': '헤드랜턴, 보조배터리, 케이블, 스피커',
+  '편의': '의자, 테이블, 접이식 침대, 캠핑박스, 그늘막, 트레킹폴',
   '안전': '구급킷, 상비약, 호루라기, 지도·나침반, 비상담요',
   '위생/관리': '세면도구, 썬크림, 모기기피제, 휴지·물티슈, 칼·멀티툴, 리페어킷',
-  '가구': '의자, 테이블, 접이식 침대, 캠핑박스, 그늘막',
   '놀이/기타': '보드게임, 카드, 공, 돗자리, 카메라, 책',
 };
 const guideHTML = () => `<div class="g-title">판단 순서</div>
