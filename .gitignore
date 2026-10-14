@@ -1,0 +1,4 @@
+*.csv
+백패킹_백업_*.json
+.DS_Store
+CLAUDE.md
