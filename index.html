@@ -61,9 +61,16 @@
   .ins-arrow { margin-top: 12px; text-align: center; color: var(--forest); font-weight: 700; }
   .ins-arrow b { display: block; font-size: 28px; line-height: 1; animation: insBounce 1.1s ease-in-out infinite; }
   @keyframes insBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
-  .act-row { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
-  .act-row .ar-lb { font-size: 12px; font-weight: 600; color: var(--ink-2); }
-  .act-chips, .act-wrap { display: flex; flex-wrap: wrap; gap: 6px; }
+  .act-row { margin-bottom: 12px; }
+  .act-row .ar-lb { margin-bottom: 4px; font-size: 11px; color: var(--ink-3); }
+  .act-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .act-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 4px; width: 100%; }
+  .act-grid .chip { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; height: 52px; min-height: 52px; padding: 0 2px; border-radius: var(--radius-md); color: var(--ink); font-size: 11px; font-weight: 600; }
+  .act-grid .chip.on { color: var(--on-forest); }
+  .act-grid .ac-e { font-size: 18px; line-height: 1; }
+  .act-grid .ac-n { font-size: 11px; line-height: 1.1; white-space: nowrap; }
+  input[type="date"] { display: block; width: 100%; min-width: 0; box-sizing: border-box; -webkit-appearance: none; appearance: none; height: 44px; min-height: 44px; text-align: left; }
+  input[type="date"]::-webkit-date-and-time-value { text-align: left; }
   #logAct { flex-wrap: nowrap; overflow-x: auto; margin-bottom: 12px; scrollbar-width: none; }
   #logAct::-webkit-scrollbar { display: none; }
   #logAct .chip, .act-row .chip { flex: 0 0 auto; white-space: nowrap; }
@@ -570,6 +577,7 @@
 
     /* 입력·버튼: 모바일 규칙에서 터치 40px만 36px로, 글자 14px */
     input, select, textarea { font-size: 14px; min-height: 36px; }
+    input[type="date"] { height: 36px; min-height: 36px; }
     .td-edit textarea { font-size: 14px; }
     button { font-size: 14px; min-height: 36px; padding: 0 12px; }
     .chip { padding: 0 14px; min-height: 36px; }
@@ -794,8 +802,8 @@
   <section class="tab" data-tab="log">
     <div class="card log-empty" id="logEmpty" hidden>
       <div class="le-fig" id="logEmptyFig"></div>
-      <div class="le-t">첫 나들이를 기록하면 여기 쌓여요</div>
-      <div class="sub">패킹을 완료하면 나들이 기록이 쌓여요</div>
+      <div class="le-t">첫 기록을 남기면 여기 쌓여요</div>
+      <div class="sub">패킹을 완료하면 다녀온 기록이 쌓여요</div>
       <button class="primary" id="btnLogGoPack">패킹 탭으로 이동</button>
     </div>
     <div id="logMain">
@@ -868,9 +876,9 @@
       <button type="button" class="chip" id="rTomorrow">내일</button>
     </div>
     <div class="sheet-grid" style="margin-top:8px">
-      <label class="f"><span>출발일</span><input type="date" id="rDate"></label>
-      <label class="f"><span>나들이 이름 (선택)</span><input id="rName" maxlength="30" placeholder="예: 지리산 1박" autocomplete="off"></label>
-      <div class="f" style="grid-column:1/-1"><span>종류</span><div class="rec-chips act-wrap" id="rAct" style="margin-top:4px"></div></div>
+      <label class="f" style="grid-column:1/-1"><span>출발일</span><input type="date" id="rDate"></label>
+      <label class="f" style="grid-column:1/-1"><span>제목 (선택)</span><input id="rName" maxlength="30" placeholder="예: 지리산 1박, 한강 피크닉" autocomplete="off"></label>
+      <div class="f" style="grid-column:1/-1"><span>종류</span><div class="act-grid" id="rAct" style="margin-top:4px"></div></div>
       <div class="f" style="grid-column:1/-1"><span>일정</span><div class="rec-chips" id="rDays" style="margin-top:4px"></div></div>
       <label class="f" style="grid-column:1/-1"><span>메모 (선택)</span><input id="rMemo" maxlength="100" placeholder="예: 침낭 추웠음, 물 1L 남음" autocomplete="off"></label>
     </div>
@@ -918,8 +926,8 @@
   <div id="insBody"></div>
   <div class="sheet-ft"><button class="primary" id="insDone">확인했어요</button></div>
 </div>
-<div class="sheet dlg" id="logSheet" role="dialog" aria-modal="true" aria-label="나들이 기록 상세">
-  <div class="sheet-hd"><b id="lTitle">나들이 기록</b><button id="lClose" aria-label="닫기">✕</button></div>
+<div class="sheet dlg" id="logSheet" role="dialog" aria-modal="true" aria-label="다녀온 기록 상세">
+  <div class="sheet-hd"><b id="lTitle">다녀온 기록</b><button id="lClose" aria-label="닫기">✕</button></div>
   <div id="lBody"></div>
 </div>
 <div class="sheet dlg" id="wornSheet" role="dialog" aria-modal="true" aria-label="구분 착용이던 장비">
@@ -1334,9 +1342,10 @@ function sumBy(field, values) {
 function lastTripOf(act) {   // 같은 종류의 가장 최근 기록
   return trips.filter(t => t.activity === act).sort((a, b) => b.date.localeCompare(a.date) || (b.recordedAt || '').localeCompare(a.recordedAt || ''))[0] || null;
 }
+const actChips = (sel, attr) => ACTIVITIES.map(x => `<button type="button" class="chip${x.k === sel ? ' on' : ''}" ${attr}="${x.k}"><span class="ac-e">${x.e}</span><span class="ac-n">${x.n}</span></button>`).join('');
 function renderActRow() {
   const a = actOf(curAct), last = lastTripOf(curAct);
-  $('actRow').innerHTML = `<span class="ar-lb">이번엔 어디로?</span>` + ACTIVITIES.map(x => `<button type="button" class="chip${x.k === curAct ? ' on' : ''}" data-act="${x.k}" title="${x.n}">${x.e}${x.k === curAct ? ' ' + x.n : ''}</button>`).join('')
+  $('actRow').innerHTML = `<div class="ar-lb">이번엔 어디로?</div><div class="act-grid">${actChips(curAct, 'data-act')}</div>`
     + (last ? `<button type="button" class="act-reuse" data-actreuse="${last.id}">지난 ${a.e} ${a.n} 구성 불러오기 (${shortD(last.date)} · 장비 ${last.itemIds.length}품목)</button>` : '');
 }
 function baseCompareFoot(baseW, n) {   // n = 선택한 장비 수 (비교할 기록이 없을 때 "장비 n품목")
@@ -1466,7 +1475,7 @@ function renderSummary() {
   // 패킹 탭 상단: 현재 챙김 상태가 이미 기록돼 있으면 안내 띠
   const mt = matchedTrip();
   $('recBanner').hidden = !mt;
-  if (mt) $('recBanner').innerHTML = `<span>${esc(mt.name || '나들이')} (${shortD(mt.date)}) 기록됨</span>`;
+  if (mt) $('recBanner').innerHTML = `<span>${esc(mt.name || '패킹')} (${shortD(mt.date)}) 기록됨</span>`;
   $('btnNewPackTop').disabled = !items.some(it => it.loaded || (it.contents || []).some(c => c.loaded)) && !supplies.length;   // 챙김 체크도 식량도 없으면 비활성
 
   // 장비 탭: 선택 합계 바
@@ -1663,7 +1672,7 @@ const secHead = cat => { const st = secStat(cat);
     <span class="sec-st${st.full ? ' full' : ''}">선택 ${st.n}/${st.total}</span><span class="sec-sep">·</span><span class="sec-w${st.full ? ' full' : ''}">${comma(st.w)}g</span><span class="sec-vwrap">${secVol(st)}</span>
   </div>`; };
 
-const rowInner = it => `<label class="it-chk"><input type="checkbox" data-f="packed"${it.packed ? ' checked' : ''} aria-label="이번 나들이에 선택"></label>
+const rowInner = it => `<label class="it-chk"><input type="checkbox" data-f="packed"${it.packed ? ' checked' : ''} aria-label="이번 패킹에 선택"></label>
     <div class="it-main"><div class="it-name"><span class="nmx">${esc(it.name)}</span></div><div class="it-meta">${useMeta(it)}</div></div>
     <div class="it-right"><div>${comma(it.w)}g${unitVol(it) > 0 ? `<span class="it-vol"> · ${fmtV(unitVol(it))}</span>` : ''}</div>${it.p ? `<div>${fmtP(it.p)}</div>` : ''}${hasSize(it) ? '' : '<span class="bd-warn">📏 크기 미입력</span>'}</div>`;
 
@@ -1686,7 +1695,7 @@ const cardM = it => `<div class="it${it.id === openId ? ' open' : ''}" data-id="
   </div>`;
 
 const rowPC = it => `<tr class="item" data-id="${it.id}">
-    <td class="chk"><input type="checkbox" data-f="packed"${it.packed ? ' checked' : ''} aria-label="이번 나들이에 선택"></td>
+    <td class="chk"><input type="checkbox" data-f="packed"${it.packed ? ' checked' : ''} aria-label="이번 패킹에 선택"></td>
     <td><div class="nmwrap"><button type="button" class="pbtn${isPouch(it) ? ' on' : ''}" title="파우치 (내용물 목록 사용)" aria-pressed="${isPouch(it)}">파우치</button><input data-f="name" maxlength="18" value="${esc(it.name)}" title="${esc(it.name)}">${hasSize(it) ? '' : '<span class="bd-warn" title="크기 미입력">📏</span>'}${usageOf(it.id).n && relTime(usageOf(it.id).last).old ? `<span class="bd-warn" title="${monthsSince(usageOf(it.id).last)}개월째 안 썼어요">💤${monthsSince(usageOf(it.id).last)}개월</span>` : ''}</div></td>
     <td><select data-f="cat">${opts(CATS, it.cat)}</select></td>
     <td><input data-f="w" class="r ${it.w ? '' : 'zero'}" inputmode="numeric" value="${comma(it.w)}"></td>
@@ -1925,7 +1934,7 @@ function importBackup(file) {
     try { d = JSON.parse(rd.result); } catch (e) {}
     if (!d || d.app !== 'backpacking' || !Array.isArray(d.items) || !Array.isArray(d.trips)) { toast('백업 파일이 아니에요'); return; }
     const sd = new Date(d.savedAt), when = isNaN(sd) ? '' : ` (${slashDate(fmtDate(sd))} 백업)`;
-    if (!confirm(`장비 ${d.items.length}품목 · 나들이 기록 ${d.trips.length}회${when}\n지금 데이터를 이 백업으로 바꿀까요?`)) return;
+    if (!confirm(`장비 ${d.items.length}품목 · 다녀온 기록 ${d.trips.length}회${when}\n지금 데이터를 이 백업으로 바꿀까요?`)) return;
     applyBackupData(d, true);
     toast('백업을 불러왔어요');
   };
@@ -2426,7 +2435,7 @@ const DAY_LABELS = ['당일', '1박', '2박', '3박+'];
 let recDays = null, recAct = 'backpack';
 function setRecAct(k) {
   recAct = k;
-  $('rAct').innerHTML = ACTIVITIES.map(a => `<button type="button" class="chip${a.k === recAct ? ' on' : ''}" data-ra="${a.k}">${a.e} ${a.n}</button>`).join('');
+  $('rAct').innerHTML = actChips(recAct, 'data-ra');
 }
 function setRecDays(v) {
   recDays = v;
@@ -2447,7 +2456,7 @@ function openRec(auto) {
   if (!rec.length) { toast('챙긴 장비가 없습니다'); return; }   // 기록 대상은 챙긴(loaded) 장비만 (파우치는 일반 장비처럼)
   const baseW = rec.reduce((sum, it) => sum + it.w, 0);
   $('rTitle').textContent = auto ? '패킹 완료!' : '패킹 완료 기록';
-  $('rSub').textContent = auto ? '이번 나들이 기록을 남길까요?' : '';
+  $('rSub').textContent = auto ? '이번 기록을 남길까요?' : '';
   $('rLater').textContent = auto ? '나중에' : '취소';
   $('rForm').hidden = false; $('rConflict').hidden = true;
   $('rSum').innerHTML = `<div class="rec-sum3"><div><span class="sub">장비</span><b>${rec.length}품목</b></div><div><span class="sub">베이스</span><b>${fmtW(baseW)}</b></div><div><span class="sub">배낭</span><b>${fmtW(baseW + sups.reduce((sum, x) => sum + x.w * x.q, 0))}</b></div></div>`;
@@ -2483,11 +2492,11 @@ function commitRec(mode) {
   const rec = { ...buildRecord(date, name), activity: recAct, days: recDays, memo: $('rMemo').value.trim().slice(0, 100) };
   try { localStorage.setItem(DAYS_KEY, recDays === null ? '' : String(recDays)); } catch (e) {}
   if (recAct !== curAct) { curAct = recAct; try { localStorage.setItem(ACT_KEY, curAct); } catch (e) {} }
-  let label = name || '나들이';
+  let label = name || '이번 패킹';
   if (mode === 'update' && trips.some(t => t.id === recDup)) {
     const t = trips.find(x => x.id === recDup);
     Object.assign(t, rec, { id: t.id, name: name || t.name, memo: rec.memo });   // 메모는 입력칸 값 그대로(빈 값이면 비움), 이름은 빈 값이면 기존 유지
-    label = (t.name || '나들이') + ' 기록 업데이트됨';
+    label = (t.name || '이번 패킹') + ' 기록 업데이트됨';
   } else {
     trips.push({ id: nextTid++, ...rec });
     label += ' 기록됨';
@@ -2553,7 +2562,7 @@ function renderPeriodUI() {
   const r = periodRange(), n = periodTrips().length;
   $('logPeriod').innerHTML = `<div class="pr-chips">${PERIODS.map(([k, l]) => `<button type="button" class="chip${k === period ? ' on' : ''}" data-pr="${k}">${l}</button>`).join('')}</div>
     ${period === 'custom' ? `<div class="pr-custom"><label class="f"><span>시작일</span><input type="date" data-prd="from" value="${r.from}"></label><label class="f"><span>종료일</span><input type="date" data-prd="to" value="${r.to}"></label></div>` : ''}
-    <div class="pr-sum">${fmtDot(r.from)} ~ ${fmtDot(r.to)} · 나들이 ${n}회</div>`;
+    <div class="pr-sum">${fmtDot(r.from)} ~ ${fmtDot(r.to)} · 기록 ${n}회</div>`;
 }
 function renderLog() {
   const empty = trips.length === 0;
@@ -2571,9 +2580,9 @@ function renderLog() {
   const cnt = fn => ft.filter(fn).length;
   const mix = [`1박 ${cnt(t => t.days === 1)}`, `당일 ${cnt(t => t.days === 0)}`, ...(cnt(t => t.days !== null && t.days >= 2) ? [`2박+ ${cnt(t => t.days !== null && t.days >= 2)}`] : [])].join(' · ');
   $('logStats').innerHTML = [
-    ['🏔️ 총 나들이', `${ft.length}회`, mix],
+    ['🏔️ 떠난 횟수', `${ft.length}회`, mix],
     ['⚖️ 평균 베이스', ft.length ? fmtW(avg) : '–', ft.length ? `최근 ${recent.length}회 ${fmtW(recentAvg)}` : '기록 없음'],
-    ['📍 최근 나들이', latest ? shortD(latest.date) : '–', latest ? (latest.name ? esc(latest.name) : '이름 없음') : '기록 없음'],
+    ['📍 최근 기록', latest ? shortD(latest.date) : '–', latest ? (latest.name ? esc(latest.name) : '이름 없음') : '기록 없음'],
   ].map(([label, value, foot]) => `<div class="card"><div class="stat-label">${label}</div><div class="stat-value"><span class="num">${String(value).replace(/(kg|g|L)$/, '<span class="u">$1</span>')}</span></div><div class="stat-foot">${foot}</div></div>`).join('');
   renderLogHero();
   renderTrend(); renderLogList(); renderRank();
@@ -2599,7 +2608,7 @@ function renderLogHero() {
 
 // 기록 그래프: [무게 추이] [부피 추이] [월별 나들이] (SVG 직접 그리기, 일정 필터 기준, 선택 기억)
 const CH_KEY = 'backpacking-chart-v1';
-const CHARTS = [['w', '무게 추이'], ['v', '부피 추이'], ['m', '월별 나들이']];
+const CHARTS = [['w', '무게 추이'], ['v', '부피 추이'], ['m', '월별 횟수']];
 let chartMode = 'w';
 try { const v = localStorage.getItem(CH_KEY); if (CHARTS.some(c => c[0] === v)) chartMode = v; } catch (e) {}
 const DAY_GROUPS = [['당일', t => t.days === 0], ['1박', t => t.days === 1], ['2박+', t => t.days !== null && t.days >= 2], ['미지정', t => t.days === null]];
@@ -2623,8 +2632,8 @@ function renderTrend() {
   const dateAxis = (pts, x) => `<text x="${x(0)}" y="${H - 6}" font-size="9" fill="#666B64" text-anchor="start">${pts[0].date}</text>
         <text x="${x(pts.length - 1)}" y="${H - 6}" font-size="9" fill="#666B64" text-anchor="end">${pts[pts.length - 1].date}</text>`;
   const msg = m => `<div class="empty">${m}</div>`;
-  if (!periodTrips().length) { $('logTrend').innerHTML = `<div class="card-title">기록 그래프</div><div class="empty">이 기간·종류에는 나들이 기록이 없어요<br><button type="button" class="primary" data-allperiod style="margin-top:12px">전체 보기</button></div>`; return; }
-  if (chartMode !== 'm' && ft.length < 2) { $('logTrend').innerHTML = head + msg('나들이 기록이 2회 이상 쌓이면 표시돼요'); return; }
+  if (!periodTrips().length) { $('logTrend').innerHTML = `<div class="card-title">기록 그래프</div><div class="empty">이 기간·종류에는 다녀온 기록이 없어요<br><button type="button" class="primary" data-allperiod style="margin-top:12px">전체 보기</button></div>`; return; }
+  if (chartMode !== 'm' && ft.length < 2) { $('logTrend').innerHTML = head + msg('기록이 2회 이상 쌓이면 표시돼요'); return; }
 
   if (chartMode === 'm') {   // 월별 나들이: 기간에 걸친 달의 총 나들이 횟수 선 그래프 (기간이 24개월을 넘으면 분기별)
     const r = periodRange();
@@ -2652,7 +2661,7 @@ function renderTrend() {
     const line = bk.map((b, i) => `${mx(i).toFixed(1)},${my(b.list.length).toFixed(1)}`).join(' ');
     const dots = bk.map((b, i) => {
       const n = b.list.length;
-      if (!n) chartTips[i] = `${b.name} · ${specific ? fl + ' ' : ''}나들이 없음`;
+      if (!n) chartTips[i] = `${b.name} · ${specific ? fl + ' ' : ''}기록 없음`;
       else if (specific) chartTips[i] = `${b.name} · ${fl} ${n}회`;
       else {
         const parts = DAY_GROUPS.map(([l, fn]) => [l, b.list.filter(fn).length]).filter(([, c]) => c).map(([l, c]) => `${l} ${c}`);
@@ -2663,8 +2672,8 @@ function renderTrend() {
     const total = bk.reduce((sum, b) => sum + b.list.length, 0);
     const best = bk.reduce((bst, b) => b.list.length >= bst.list.length && b.list.length ? b : bst, { list: [] });
     const unit = quarterly ? '분기' : '달';
-    $('logTrend').innerHTML = head + box(`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${quarterly ? '분기별' : '월별'} 나들이 횟수">${grid}<polyline points="${line}" fill="none" stroke="#2F6B4F" stroke-width="2" stroke-linejoin="round"/>${dots}${labels}</svg>`,
-      `<div class="ch-sum">${total ? `기간 내 ${total}회 · 가장 많이 간 ${unit} ${quarterly ? best.label : best.m + '월'}` : '이 기간·일정에는 나들이가 없어요'}</div>`);
+    $('logTrend').innerHTML = head + box(`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${quarterly ? '분기별' : '월별'} 떠난 횟수">${grid}<polyline points="${line}" fill="none" stroke="#2F6B4F" stroke-width="2" stroke-linejoin="round"/>${dots}${labels}</svg>`,
+      `<div class="ch-sum">${total ? `기간 내 ${total}회 · 가장 많이 간 ${unit} ${quarterly ? best.label : best.m + '월'}` : '이 기간·일정에는 기록이 없어요'}</div>`);
     return;
   }
 
@@ -2688,7 +2697,7 @@ function renderTrend() {
   // 부피 추이: 기록의 vol(장비 총 부피) 한 줄. vol이 0인 기록(크기 미입력 시절)은 점을 찍지 않고 선을 건너뜀
   const vv = pts.map(t => t.vol);
   const valid = vv.filter(v => v > 0);
-  if (!valid.length) { $('logTrend').innerHTML = head + msg('부피가 기록된 나들이가 아직 없어요') + '<div class="ch-note">장비 크기 기준 · 식량·소모 제외</div>'; return; }
+  if (!valid.length) { $('logTrend').innerHTML = head + msg('부피가 남은 기록이 아직 없어요') + '<div class="ch-note">장비 크기 기준 · 식량·소모 제외</div>'; return; }
   const vax = niceAxis(Math.min(...valid), Math.max(...valid), [5, 10, 20, 50]), lo = vax.lo, hi = vax.hi;
   const y = v => pt + 6 + (H - pt - pb - 12) * (1 - (v - lo) / (hi - lo));
   const segs = []; let cur = [];
@@ -2703,7 +2712,7 @@ function renderTrend() {
   const recentV = pts.filter(t => t.vol > 0).slice(-3);   // 부피가 있는 기록 중 최근 3개
   const avg = recentV.length ? recentV.reduce((sum, t) => sum + t.vol, 0) / recentV.length : 0;
   $('logTrend').innerHTML = head + box(`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="부피 추이">${yAxis(vax.ticks, y, (v, top) => v + (top ? 'L' : ''))}${lines}${dots}${dateAxis(pts, x)}</svg>`,
-    `${recentV.length ? `<div class="ch-sum">최근 ${recentV.length}회 평균 ${fmtV(avg)} · 가장 컸던 나들이 ${fmtV(Math.max(...valid))}</div>` : ''}<div class="ch-note">장비 크기 기준 · 식량·소모 제외</div>`);
+    `${recentV.length ? `<div class="ch-sum">최근 ${recentV.length}회 평균 ${fmtV(avg)} · 가장 컸던 짐 ${fmtV(Math.max(...valid))}</div>` : ''}<div class="ch-note">장비 크기 기준 · 식량·소모 제외</div>`);
 }
 function showTip(i) {
   const box = $('trendBox'), svg = box && box.querySelector('svg');
@@ -2721,8 +2730,8 @@ function showTip(i) {
 
 function renderLogList() {
   const sorted = [...tripsFiltered()].sort((a, b) => -byDateAsc(a, b));
-  let html = '<div class="card-title">나들이 기록</div>', yr = '';
-  if (!sorted.length) html += `<div class="empty">${periodTrips().length ? '해당 일정의 기록이 없어요' : '이 기간·종류에는 나들이 기록이 없어요'}</div>`;
+  let html = '<div class="card-title">다녀온 기록</div>', yr = '';
+  if (!sorted.length) html += `<div class="empty">${periodTrips().length ? '해당 일정의 기록이 없어요' : '이 기간·종류에는 다녀온 기록이 없어요'}</div>`;
   sorted.forEach(t => {
     const y = t.date.slice(0, 4);
     if (y !== yr) { yr = y; html += `<div class="yr-hd"><span>${y}</span><span class="sub">${sorted.filter(x => x.date.startsWith(y)).length}회</span></div>`; }
@@ -2795,9 +2804,9 @@ function renderLogDetail() {
   const label = x => esc(x.name) + (x.snap && x.gone ? ' <span class="gone">(삭제됨)</span>' : '');
   $('lBody').innerHTML = `<div class="trip-sub" style="margin-bottom:8px">베이스 ${fmtW(t.baseW)} · 배낭 ${fmtW(t.packW)} · 장비 ${t.itemIds.length}품목${t.vol > 0 ? ' · ' + fmtV(t.vol) : ''}</div>
     <div class="td-edit" data-tid="${t.id}">
-      <label class="f"><span>출발일</span><input type="date" data-te="date" value="${t.date}"></label>
-      <label class="f"><span>나들이 이름</span><input data-te="name" maxlength="30" value="${esc(t.name)}" placeholder="이름 (선택)"></label>
-      <div class="f" style="grid-column:1/-1"><span>종류</span><div class="rec-chips act-wrap" style="margin-top:4px">${ACTIVITIES.map(a => `<button type="button" class="chip${t.activity === a.k ? ' on' : ''}" data-tact="${a.k}">${a.e} ${a.n}</button>`).join('')}</div></div>
+      <label class="f" style="grid-column:1/-1"><span>출발일</span><input type="date" data-te="date" value="${t.date}"></label>
+      <label class="f" style="grid-column:1/-1"><span>제목</span><input data-te="name" maxlength="30" value="${esc(t.name)}" placeholder="제목 (선택)"></label>
+      <div class="f" style="grid-column:1/-1"><span>종류</span><div class="act-grid" style="margin-top:4px">${actChips(t.activity, 'data-tact')}</div></div>
       <div class="f" style="grid-column:1/-1"><span>일정</span><div class="rec-chips" style="margin-top:4px">${DAY_LABELS.map((l, i) => `<button type="button" class="chip${t.days === i ? ' on' : ''}" data-td="${i}">${l}</button>`).join('')}</div></div>
       <label class="f" style="grid-column:1/-1"><span>메모 (최대 100자)</span><textarea data-te="memo" rows="2" maxlength="100" placeholder="예: 침낭 추웠음, 물 1L 남음">${esc(t.memo)}</textarea></label>
     </div>
