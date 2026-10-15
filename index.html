@@ -93,6 +93,7 @@
   .ver-row { display: flex; align-items: center; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--line); }
   .ver-row .vr-t { flex: 1 1 auto; min-width: 0; }
   .ver-row .vr-n { font-size: var(--fs-meta); color: var(--ink-3); }
+  .ver-row .vr-n.hl { color: var(--forest-ink); font-weight: 600; }
   .ver-row button { flex: 0 0 auto; min-height: 32px; padding: 0 10px; }
   .g-box .g-mail { padding: 8px 12px 4px; font-size: var(--fs-meta); color: var(--ink-3); word-break: break-all; }
   .g-box button { display: block; width: 100%; text-align: left; border: none; background: none; padding: 0 12px; }
@@ -241,6 +242,8 @@
   .toast { position: fixed; left: 50%; bottom: calc(56px + env(safe-area-inset-bottom) + 24px); transform: translateX(-50%); z-index: 50;
            background: rgba(31,42,36,.92); color: var(--on-forest); padding: 8px 16px; border-radius: 20px; opacity: 0; pointer-events: none; transition: opacity .2s; }
   .toast.show { opacity: 1; }
+  .toast.act { pointer-events: auto; max-width: calc(100vw - 32px); white-space: normal; text-align: left; border-radius: var(--radius-lg); }
+  .toast-act { min-height: 28px; margin-left: 6px; padding: 0 10px; border: 1px solid rgba(255,255,255,.6); border-radius: var(--radius-pill); background: transparent; color: #fff; font-weight: 700; white-space: nowrap; }
   .tabbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; display: flex; background: var(--surface); border-top: 1px solid var(--line);
             height: calc(56px + env(safe-area-inset-bottom)); padding-bottom: env(safe-area-inset-bottom); }
   .tabbar button { flex: 1; min-height: 56px; border: 0; border-radius: 0; background: none; color: var(--ink-3); font-size: var(--fs-meta);
@@ -1862,8 +1865,20 @@ function addItem(v) {
   setTimeout(() => revealItem(it.id), 30);
 }
 
+function toastAction(msg, label, fn, ms = 6000) {   // 버튼이 있는 토스트 (기본 6초)
+  const t = $('toast');
+  t.textContent = msg + ' ';
+  const b = document.createElement('button');
+  b.type = 'button'; b.className = 'toast-act'; b.textContent = label;
+  b.onclick = () => { clearTimeout(toast.t); t.classList.remove('show', 'act'); fn(); };
+  t.appendChild(b);
+  t.classList.add('show', 'act');
+  clearTimeout(toast.t);
+  toast.t = setTimeout(() => t.classList.remove('show', 'act'), ms);
+}
 function toast(msg) {
   const t = $('toast');
+  t.classList.remove('act');
   t.textContent = msg;
   t.classList.add('show');
   clearTimeout(toast.t);
@@ -2081,14 +2096,14 @@ async function gSaveVersion(data, note, daily) {
     const name = gVerName(daily ? '' : hms);
     const props = { items: String((data.items || []).length), trips: String((data.trips || []).length), savedAt: String(data.savedAt || new Date().toISOString()), note: String(note || '') };
     const existing = (await gListVersions()).find(f => f.name === name);
-    await gPutFile(name, data, props, existing && existing.id);
+    const put = await gPutFile(name, data, props, existing && existing.id);
     const all = await gListVersions();
     for (const f of all.slice(G_VER_MAX)) { try { await gFetch(`${GD}/${f.id}`, { method: 'DELETE' }); } catch (e) {} }
-    return true;
+    return put.id || true;
   } catch (e) { return false; }
 }
 // 업로드 직전: 다른 기기가 그 사이에 저장했으면 덮어쓰지 않고 선택 → 'go'(이 기기 것으로 진행) | 'applied'(다른 기기 것을 불러옴) | 'cancel'
-var gForceNext = false;
+var gForceNext = false, gKeepToast = false;
 async function gResolveBeforeUpload() {
   if (gForceNext) { gForceNext = false; return 'go'; }
   if (!gmeta.fileId || !gmeta.remoteModified) return 'go';
@@ -2173,12 +2188,23 @@ async function gFirstSync() {
   const remote = await gDownload(f.id);
   if (!gValid(remote)) { const r = await gWriteFile(); gmeta.remoteModified = r.modifiedTime; gmeta.dirty = false; gSaveMeta(); toast('드라이브에 저장했어요 ☁️'); return; }
   const same = JSON.stringify(remote.items) === JSON.stringify(items) && JSON.stringify(remote.supplies || []) === JSON.stringify(supplies) && JSON.stringify(remote.trips) === JSON.stringify(trips);
-  if (same) { gmeta.remoteModified = f.modifiedTime; gmeta.dirty = false; gSaveMeta(); toast('드라이브와 같은 내용이에요 ☁️'); return; }
-  if (!gHasLocalData() || gSampleOnly()) { gApplyRemote(remote, f.modifiedTime); toast('드라이브에서 불러왔어요 ☁️'); return; }
-  const ch = await gAsk('드라이브에 저장된 데이터가 있어요', `${gDesc(remote)}\n\n이 기기: 장비 ${items.length} · 기록 ${trips.length}`, '드라이브 것 불러오기', '이 기기 것으로 덮어쓰기');
-  if (ch === 'a') { gApplyRemote(remote, f.modifiedTime); toast('드라이브에서 불러왔어요 ☁️'); }
-  else if (ch === 'b') { const r = await gWriteFile(); gmeta.remoteModified = r.modifiedTime; gmeta.dirty = false; gSaveMeta(); toast('드라이브에 저장했어요 ☁️'); }
-  else { gmeta.fileId = f.id; gmeta.remoteModified = ''; gmeta.dirty = true; gSaveMeta(); }   // 나중에 결정: 지금은 연결만
+  if (same) { gmeta.remoteModified = f.modifiedTime; gmeta.dirty = false; gSaveMeta(); return; }   // 같으면 토스트 없이 연결만
+  if (!gHasLocalData() || gSampleOnly()) { gApplyRemote(remote, f.modifiedTime); return; }   // 비었거나 샘플뿐이면 토스트 없이 조용히 불러옴
+  // 이 기기에 샘플이 아닌 데이터가 있고 드라이브와 다르면: 선택창 없이 → 이 기기 데이터를 버전 기록에 먼저 보관 → 드라이브 데이터로 교체
+  const d0 = new Date(), pad = n => String(n).padStart(2, '0');
+  const vname = `로그인 전 이 기기 데이터 · ${d0.getFullYear()}/${pad(d0.getMonth() + 1)}/${pad(d0.getDate())} ${pad(d0.getHours())}:${pad(d0.getMinutes())}`;
+  const vid = await gSaveVersion(gPayload(), vname, false);
+  if (!vid) {   // 보관하지 못했으면 이 기기 데이터를 잃지 않도록 불러오기를 멈춘다
+    gmeta.remoteModified = ''; gmeta.dirty = true; gSaveMeta();
+    toast('이 기기 데이터를 보관하지 못해 불러오기를 멈췄어요 · 나중에 다시 시도해 주세요');
+    return;
+  }
+  gApplyRemote(remote, f.modifiedTime);
+  const undoId = vid === true ? '' : vid;
+  gKeepToast = true;   // 뒤따르는 '동기화했어요' 토스트가 되돌리기 토스트를 덮지 않게
+  toastAction('드라이브 데이터를 불러왔어요 · 이 기기 데이터는 버전 기록에 보관했어요', '되돌리기', () => {
+    if (undoId) gRestoreVersion(undoId, vname, true); else gShowVersions();
+  });
 }
 // 앱을 열 때·화면으로 돌아올 때: 드라이브가 더 최신이고 이 기기에 안 올린 변경이 없으면 조용히 불러온다
 async function gCheckRemote() {
@@ -2228,7 +2254,8 @@ async function gSyncNow() {
         if (gValid(remote)) gApplyRemote(remote, m.modifiedTime);
       } else { gDirtyVer++; await gUpload(); }
     }
-    gSetState('saved'); toast('동기화했어요 ☁️');
+    gSetState('saved');
+    if (gKeepToast) gKeepToast = false; else toast('동기화했어요 ☁️');
   } catch (e) { gHandleErr(e); }
 }
 async function gShowVersions() {
@@ -2239,12 +2266,12 @@ async function gShowVersions() {
     const list = await gListVersions();
     $('verList').innerHTML = list.length ? list.map(f => {
       const pr = f.appProperties || {}, d = pr.savedAt && !isNaN(new Date(pr.savedAt)) ? slashDate(fmtDate(new Date(pr.savedAt))) : slashDate(f.modifiedTime.slice(0, 10));
-      return `<div class="ver-row"><div class="vr-t"><b>${d}</b> · 장비 ${esc(pr.items || '–')} · 기록 ${esc(pr.trips || '–')}<div class="vr-n">${esc(pr.note || '')}</div></div><button type="button" data-ver="${f.id}">이 버전으로 되돌리기</button></div>`;
+      return `<div class="ver-row"><div class="vr-t"><b>${d}</b> · 장비 ${esc(pr.items || '–')} · 기록 ${esc(pr.trips || '–')}<div class="vr-n${/^로그인 전/.test(pr.note || '') ? ' hl' : ''}">${esc(pr.note || '')}</div></div><button type="button" data-ver="${f.id}">이 버전으로 되돌리기</button></div>`;
     }).join('') : '<div class="empty">아직 저장된 버전이 없어요</div>';
   } catch (e) { $('verList').innerHTML = '<div class="empty">불러오지 못했어요 · 로그인과 연결을 확인해 주세요</div>'; gHandleErr(e); }
 }
-async function gRestoreVersion(id, label) {
-  if (!confirm(`${label} 버전으로 되돌릴까요?\n되돌리기 전 지금 상태도 버전 기록에 남겨 둬요.`)) return;
+async function gRestoreVersion(id, label, skipConfirm) {
+  if (!skipConfirm && !confirm(`${label} 버전으로 되돌릴까요?\n되돌리기 전 지금 상태도 버전 기록에 남겨 둬요.`)) return;
   try {
     await gSaveVersion(gPayload(), '되돌리기 전 상태', false);
     const d = await gDownload(id);
