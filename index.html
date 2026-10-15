@@ -26,6 +26,10 @@
 
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html { -webkit-text-size-adjust: 100%; }
+  /* 두 번 탭 확대 방지 (두 손가락 확대는 그대로 가능) */
+  html, body, * { touch-action: manipulation; }
+  /* 입력칸을 누를 때 아이폰이 화면을 확대하지 않게: 모바일(767px 이하)에서는 모든 입력칸 글꼴 16px 이상 */
+  @media (max-width: 767px) { input, select, textarea { font-size: 16px !important; } }
   body { font-variant-numeric: tabular-nums; margin: 0; background: var(--bg); color: var(--ink); font-size: 12px; font-weight: 400;
          font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
          padding-bottom: calc(56px + env(safe-area-inset-bottom) + 16px); }

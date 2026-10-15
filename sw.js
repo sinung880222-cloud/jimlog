@@ -1,5 +1,5 @@
 // 짐로그 서비스워커: 파일을 바꿀 때마다 CACHE 버전을 올린다 (v2, v3 …)
-const CACHE = 'jimlog-v10';
+const CACHE = 'jimlog-v11';
 const PRECACHE = ['./', 'index.html', 'manifest.webmanifest',
   'privacy.html', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/apple-touch-icon.png', 'icons/favicon-32.png'];
 
