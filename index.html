@@ -1026,7 +1026,7 @@ const POUCH_KEY = 'backpacking-pouches-v1';   // (옛) 별도 파우치 배열 �
 const LEGACY_KEY = 'backpacking-pouch-legacy-v1';   // (옛) '파우치로 사용' 안내 보관 키 — 더 이상 쓰지 않음, 정리만
 const TAB_LEGACY = { summary: 'pack', items: 'stock', packing: 'pack', analysis: 'pack' };
 const CAT_MAP = { '배낭': '수납', '의류': '의류/보온', '취사/식량': '취사', '식량·물': '취사',
-                  '전자기기': '전자', '전자/편의': '전자', '가구': '편의', '기타': '전자' };   // 분류를 나누거나 바꾼 이력도 여기서 변환 (전자/편의 → 전자, 가구 → 편의)
+                  '전자기기': '전자', '전자/편의': '전자', '가구': '편의', '기타': '놀이/기타' };   // 분류를 나누거나 바꾼 이력도 여기서 변환 (전자/편의 → 전자, 가구 → 편의)
 const migrateCat = c => CATS.includes(c) ? c : (CAT_MAP[c] || '전자');
 ['backpacking-analysis-open-v1', 'backpacking-supdefault-v1', 'backpacking-packview-v1', 'backpacking-collapsed-v1'].forEach(k => {
   try { localStorage.removeItem(k); } catch (e) {}   // 없어진 기능의 설정 키 정리
@@ -1974,7 +1974,7 @@ var G_CLIENT_ID = '916038086813-g77hetlikb1uost64n6fsfuhqt5bkn1m.apps.googleuser
 var G_SCOPES = 'https://www.googleapis.com/auth/drive.appdata openid email profile';
 var G_FILE = 'jimlog-data.json';
 var G_SAMPLE_TRIPS = ['지리산 1박', '설악산 당일', '오대산 1박', '북한산 당일', '덕유산 1박', '한강 피크닉'];
-var G_STATES = { saved: '☁️ 저장됨', saving: '🔄 저장 중', offline: '📴 오프라인 · 나중에 저장', relogin: '⚠️ 다시 로그인 필요', conflict: '⚠️ 다른 기기 내용 확인 필요' };
+var G_STATES = { saved: '☁️ 저장됨', saving: '🔄 저장 중', offline: '📴 오프라인 · 나중에 저장', relogin: '☁️ 탭해서 연결', connect: '☁️ 탭해서 연결', idle: '☁️ 연결됨', conflict: '⚠️ 다른 기기 내용 확인 필요' };
 var gState = 'saved';
 
 function gDeviceId() {
@@ -1982,18 +1982,23 @@ function gDeviceId() {
   if (!id) { id = 'd' + Math.random().toString(36).slice(2, 10) + Date.now().toString(36); lsSet(G_DEVICE_KEY, id); }
   return id;
 }
+function gTouchSync() {   // 마지막 동기화 시각을 기억 (로그인 상태와 함께 localStorage에)
+  if (!gUser) return;
+  gUser.connected = true; gUser.lastSync = new Date().toISOString();
+  try { localStorage.setItem(G_USER_KEY, JSON.stringify(gUser)); } catch (e) {}
+}
 function gSaveMeta() { try { localStorage.setItem(G_META_KEY, JSON.stringify(gmeta)); } catch (e) {} }
 function gSetState(st) {
   gState = st;
   const el = $('gState');
   el.hidden = !gUser;
-  if (gUser) { el.textContent = G_STATES[st] || ''; el.classList.toggle('warn', st === 'relogin' || st === 'offline' || st === 'conflict'); }
+  if (gUser) { el.textContent = G_STATES[st] || ''; el.classList.toggle('warn', st === 'relogin' || st === 'connect' || st === 'offline' || st === 'conflict'); }
   gRenderMenus();
 }
 function gRenderMenus() {
   const priv = '<a href="privacy.html" target="_blank" rel="noopener">개인정보처리방침</a>';
   const top = gUser
-    ? `<div class="g-mail">☁️ ${esc(gUser.email)}</div><button type="button" data-g="sync">지금 동기화</button><button type="button" data-g="ver">버전 기록</button><button type="button" data-g="logout">로그아웃</button>`
+    ? `<div class="g-mail">☁️ ${esc(gUser.email)}${gUser.lastSync && !isNaN(new Date(gUser.lastSync)) ? `<br>마지막 동기화 ${shortD(fmtDate(new Date(gUser.lastSync)))} ${String(new Date(gUser.lastSync).getHours()).padStart(2, '0')}:${String(new Date(gUser.lastSync).getMinutes()).padStart(2, '0')}` : ''}</div><button type="button" data-g="sync">지금 동기화</button><button type="button" data-g="ver">버전 기록</button><button type="button" data-g="logout">로그아웃</button>`
     : `<div class="g-tip">구글로 로그인하면 자동으로 저장돼요</div><button type="button" data-g="login">구글로 로그인 · 자동 저장</button>`;
   const inst = '<button type="button" data-g="install">📲 홈 화면에 설치</button>';
   const wipe = inst + (gUser ? '<button type="button" data-g="wipe">드라이브의 짐로그 데이터 삭제</button>' : '');
@@ -2038,11 +2043,11 @@ function gRequestToken(opts) {
   });
 }
 // 토큰: 살아 있으면 그대로, 아니면 조용히 다시 받기 (prompt: '', login_hint = 저장된 이메일)
+// 토큰은 사용자 동작 안에서만 요청한다(브라우저가 팝업을 막지 않게). 없거나 만료면 '탭해서 연결' 상태로 기다린다
 async function gEnsureToken() {
   if (gToken && gTokenExp - 60000 > Date.now()) return gToken;
   if (!gUser) throw { type: 'nouser' };
-  if (!(window.google && google.accounts)) { if (!(await gLoadGis())) throw { type: 'net' }; }
-  return gRequestToken({ prompt: '', login_hint: gUser.email });
+  throw { type: 'needgesture' };
 }
 async function gFetch(url, opt = {}, retry = true) {
   const tok = await gEnsureToken();
@@ -2103,7 +2108,7 @@ async function gSaveVersion(data, note, daily) {
   } catch (e) { return false; }
 }
 // 업로드 직전: 다른 기기가 그 사이에 저장했으면 덮어쓰지 않고 선택 → 'go'(이 기기 것으로 진행) | 'applied'(다른 기기 것을 불러옴) | 'cancel'
-var gForceNext = false, gKeepToast = false;
+var gForceNext = false, gKeepToast = false, gFailed = false, gLastCheck = 0, gConnecting = false;
 async function gResolveBeforeUpload() {
   if (gForceNext) { gForceNext = false; return 'go'; }
   if (!gmeta.fileId || !gmeta.remoteModified) return 'go';
@@ -2125,12 +2130,14 @@ async function gResolveBeforeUpload() {
   return 'cancel';
 }
 function gHandleErr(e) {
-  if (e && (e.type === 'auth' || e.type === 'denied' || e.type === 'scope' || e.error || e.type === 'popup_failed_to_open' || e.type === 'popup_closed' || e.type === 'nouser' || e.type === 'nogis')) gSetState('relogin');
-  else gSetState(navigator.onLine ? 'offline' : 'offline');
+  if (e && e.type === 'needgesture') { gSetState('connect'); return; }   // 토큰이 없어 사용자 동작을 기다리는 중
+  if (e && (e.type === 'auth' || e.type === 'denied' || e.type === 'scope' || e.error || e.type === 'popup_failed_to_open' || e.type === 'popup_closed' || e.type === 'nouser' || e.type === 'nogis')) { gFailed = true; gSetState('connect'); }
+  else gSetState('offline');
 }
 async function gUpload() {
   if (!gUser || gUploading || gApplying) return;
   if (!navigator.onLine) { gSetState('offline'); return; }
+  if (!(gToken && gTokenExp - 60000 > Date.now())) { gSetState('connect'); return; }   // 토큰이 없으면 요청하지 않고 사용자 동작을 기다림
   gUploading = true; gSetState('saving');
   const ver = gDirtyVer;
   try {
@@ -2146,12 +2153,12 @@ async function gUpload() {
       const r = await gWriteFile();
       gmeta.fileId = r.id; gmeta.remoteModified = r.modifiedTime;
       if (ver === gDirtyVer) gmeta.dirty = false;
-      gSaveMeta();
+      gSaveMeta(); gTouchSync(); gFailed = false;
       gSetState('saved');
     }
   } catch (e) { gHandleErr(e); }
   gUploading = false;
-  if (gUser && gmeta.dirty && ver !== gDirtyVer && gState !== 'relogin') { clearTimeout(gTimer); gTimer = setTimeout(gUpload, 3000); }
+  if (gUser && gmeta.dirty && ver !== gDirtyVer && gState !== 'relogin' && gState !== 'connect') { clearTimeout(gTimer); gTimer = setTimeout(gUpload, 3000); }
 }
 function gHasLocalData() { return items.length > 0 || supplies.length > 0 || trips.length > 0; }
 function gSampleOnly() {   // 처음 열었을 때 채워지는 샘플뿐이면 true
@@ -2208,15 +2215,19 @@ async function gFirstSync() {
 }
 // 앱을 열 때·화면으로 돌아올 때: 드라이브가 더 최신이고 이 기기에 안 올린 변경이 없으면 조용히 불러온다
 async function gCheckRemote() {
-  if (!gUser || gUploading || gApplying || !navigator.onLine) return;
+  if (!gUser || gUploading || gApplying) return;
+  if (!navigator.onLine) { gSetState('offline'); return; }
+  if (!(gToken && gTokenExp - 60000 > Date.now())) { gSetState(gFailed || gmeta.dirty ? 'connect' : 'idle'); return; }   // 토큰 요청은 사용자 동작에서만
   try {
-    if (!gmeta.fileId) { await gFirstSync(); gSetState('saved'); return; }
+    if (!gmeta.fileId) { await gFirstSync(); gLastCheck = Date.now(); gTouchSync(); gSetState('saved'); return; }
     const m = await gFileMeta(gmeta.fileId);
+    gLastCheck = Date.now();
     if (gmeta.remoteModified && new Date(m.modifiedTime) > new Date(gmeta.remoteModified) && !gmeta.dirty) {
       const remote = await gDownload(gmeta.fileId);
       if (gValid(remote) && remote.deviceId !== gDeviceId()) { gApplyRemote(remote, m.modifiedTime); toast('다른 기기에서 바뀐 내용을 불러왔어요'); }
       else { gmeta.remoteModified = m.modifiedTime; gSaveMeta(); }
     } else if (gmeta.dirty) { await gUpload(); return; }
+    gTouchSync(); gFailed = false;
     gSetState('saved');
   } catch (e) {
     if (e && e.type === 'http' && e.status === 404) { gmeta.fileId = ''; gSaveMeta(); return; }
@@ -2230,9 +2241,12 @@ async function gLogin() {   // 버튼을 직접 눌렀을 때만 호출
     const ui = await (await fetch('https://www.googleapis.com/oauth2/v3/userinfo', { headers: { Authorization: 'Bearer ' + gToken } })).json();
     if (!ui.email) throw { type: 'auth' };
     gUser = { email: ui.email, name: ui.name || '' };
+    gUser.connected = true;
     lsSet(G_USER_KEY, JSON.stringify(gUser));
+    gFailed = false;
     gSetState('saving');
     await gFirstSync();
+    gLastCheck = Date.now(); gTouchSync();
     gSetState('saved');
   } catch (e) {
     if (e && (e.type === 'popup_closed' || e.type === 'popup_failed_to_open')) { toast('로그인 창이 닫혔어요'); if (gUser) gSetState('relogin'); }
@@ -2306,13 +2320,36 @@ async function gWipe() {
     toast(`드라이브 데이터를 삭제했어요 (${(j.files || []).length}개)`);
   } catch (e) { toast('삭제하지 못했어요 · 로그인과 연결을 확인해 주세요'); gHandleErr(e); }
 }
+// 사용자 동작(첫 터치·클릭·키 입력) 안에서 한 번 조용히 다시 연결: requestAccessToken({ prompt: '', login_hint })
+//  - 올릴 변경이 없고 드라이브를 1분 안에 확인했으면 요청하지 않는다 / 오프라인이면 요청하지 않는다
+//  - 실패하면 헤더 "☁️ 탭해서 연결"만 남기고(경고창·로그인 화면 없음), 그 뒤로는 헤더를 눌러야 다시 시도한다
+const gTokenOk = (margin) => !!(gToken && gTokenExp - (margin || 0) > Date.now());
+function gConnectFromGesture(force) {
+  if (!gUser || gConnecting) return;
+  if (!navigator.onLine) { gSetState('offline'); return; }
+  const expiring = !!gToken && !gTokenOk(120000);                      // 만료 1~2분 전(또는 이미 만료)
+  const pending = gmeta.dirty || Date.now() - gLastCheck > 60000;     // 올릴 변경이 있거나 확인한 지 1분 넘음
+  if (!force) {
+    if (gFailed) return;                                               // 이미 한 번 실패했으면 자동 재시도 안 함
+    if (gTokenOk(120000)) { if (pending) gCheckRemote(); return; }     // 토큰이 살아 있으면 요청 없이 확인만
+    if (!(pending || expiring)) return;                                // 토큰을 꼭 필요할 때만 요청
+    if (document.visibilityState !== 'visible') return;
+  }
+  if (!(window.google && google.accounts && google.accounts.oauth2)) { gLoadGis(); if (force) toast('구글 연결을 준비 중이에요 · 잠시 후 다시 눌러 주세요'); return; }
+  gConnecting = true;
+  const p = gRequestToken({ prompt: '', login_hint: gUser.email });    // 사용자 동작 안에서 동기적으로 호출
+  p.then(() => { gFailed = false; return gCheckRemote(); })
+   .catch(() => { gFailed = true; gSetState('connect'); })
+   .then(() => { gConnecting = false; });
+}
 function gInit() {
   gRenderMenus();
-  gSetState('saved');
-  gLoadGis().then(ok => { if (ok && gUser) gCheckRemote(); });
-  addEventListener('online', () => { if (gUser && gmeta.dirty) gUpload(); else if (gUser) gCheckRemote(); });
+  gSetState(gUser ? (gmeta.dirty ? 'connect' : 'idle') : 'saved');   // 다시 열면 토큰이 없어도 "로그인된 상태"로 표시
+  gLoadGis();
+  ['click', 'touchend', 'keydown'].forEach(ev => document.addEventListener(ev, () => gConnectFromGesture(false), { capture: true, passive: true }));
+  addEventListener('online', () => { if (!gUser) return; if (gmeta.dirty && gTokenOk(60000)) gUpload(); else gSetState(gTokenOk(60000) ? 'saved' : 'connect'); });
   addEventListener('offline', () => { if (gUser) gSetState('offline'); });
-  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && gUser) gCheckRemote(); });
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && gUser && gTokenOk(120000) && (gmeta.dirty || Date.now() - gLastCheck > 60000)) gCheckRemote(); });
 }
 document.addEventListener('click', e => {
   const b = e.target.closest('[data-g]');
@@ -2321,7 +2358,7 @@ document.addEventListener('click', e => {
   const a = b.dataset.g;
   if (a === 'login') gLogin(); else if (a === 'sync') gSyncNow(); else if (a === 'logout') gLogout(); else if (a === 'wipe') gWipe(); else if (a === 'ver') gShowVersions(); else if (a === 'install') installApp();
 });
-$('gState').onclick = () => { if (gState === 'relogin') gLogin(); else if (gState === 'offline' || gState === 'conflict') gUpload(); };
+$('gState').onclick = () => { if (gState === 'relogin' || gState === 'connect') gConnectFromGesture(true); else if (gState === 'offline' || gState === 'conflict') gUpload(); };
 $('btnGoogle').onclick = () => { $('gMenu').hidden = !$('gMenu').hidden; };
 document.addEventListener('click', e => { if (!$('gMenu').hidden && !e.target.closest('#gMenu') && !e.target.closest('#btnGoogle')) $('gMenu').hidden = true; });
 $('syA').onclick = () => gPick('a');
