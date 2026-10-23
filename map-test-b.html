@@ -7,7 +7,7 @@
 <title>지도 테스트 B: ncpClientId</title>
 <style>
   html, body { margin: 0; height: 100%; font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif; font-size: 12px; }
-  #map { position: absolute; inset: 0; background: #EFECE4; }
+  #map { position: relative; width: 100%; height: 100vh; background: #EFECE4; }   /* 네이버 지도는 컨테이너를 relative로 바꾸므로 높이를 직접 줘야 보인다 */
   #st { position: absolute; left: 6px; bottom: 6px; z-index: 20; max-width: calc(100% - 12px); padding: 4px 8px; border-radius: 6px; background: rgba(255,255,255,.92); line-height: 1.5; }
   #fail { display: none; position: absolute; inset: 0; z-index: 30; align-items: center; justify-content: center; background: rgba(255,255,255,.85); color: #d00000; font-size: 28px; font-weight: 700; }
 </style>
