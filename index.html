@@ -93,7 +93,7 @@
   .place-row .pl-go { flex: 0 0 auto; color: var(--forest); font-weight: 700; }
   .pl-x { flex: 0 0 44px; width: 44px; padding: 0; color: var(--ink-3); }
   .route-btns { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-  .route-btn { flex: 1 1 0; min-width: 0; min-height: 40px; padding: 0 6px; white-space: nowrap; font-weight: 600; }
+  .route-btn { flex: 1 1 0; min-width: 0; min-height: 40px; padding: 0 12px; white-space: nowrap; font-weight: 600; }
   .mart-link { display: block; margin-top: 8px; font-size: var(--fs-meta); color: var(--ink-3); text-decoration: underline; }
   .pl-search { display: flex; gap: 8px; margin-bottom: 8px; }
   .pl-search input { flex: 1 1 auto; min-width: 0; }
@@ -114,9 +114,6 @@
   .lm-card .lc-t small { display: block; font-size: var(--fs-meta); color: var(--ink-3); }
   .lm-card .lc-row button { flex: 0 0 auto; min-height: 32px; padding: 0 10px; }
   .view-seg { margin-bottom: 12px; }
-  .nav-opts { display: grid; gap: 8px; }
-  .nav-opts button { min-height: 44px; text-align: left; font-weight: 600; }
-  .nav-opts button.on { background: var(--forest); border-color: var(--forest); color: var(--on-forest); }
   .g-menu { right: 24px; }
   .menu-grp { margin-top: 4px; padding-top: 4px; border-top: 1px solid var(--line); }
   .menu-grp:first-child { margin-top: 0; padding-top: 0; border-top: 0; }
@@ -969,11 +966,6 @@
   <div class="pl-tools"><button type="button" id="plGps">📍 지금 위치</button><div class="pl-addr" id="plAddr">지도를 눌러 핀을 옮겨요</div></div>
   <label class="f"><span>장소 이름</span><input id="plName" maxlength="30" placeholder="예: 난지캠핑장" autocomplete="off"></label>
   <div class="sheet-ft"><button type="button" id="plClear">장소 지우기</button><button type="button" class="primary" id="plSave">저장</button></div>
-</div>
-<div class="sheet dlg" id="navSheet" role="dialog" aria-modal="true" aria-label="기본 길찾기 앱">
-  <div class="sheet-hd"><b>기본 길찾기 앱</b><button id="nvClose" aria-label="닫기">✕</button></div>
-  <div class="nav-opts" id="navOpts"></div>
-  <div class="t-sum" style="margin-top:8px">하나를 정하면 길찾기 버튼이 그 앱 하나만 나와요. "매번 묻기"는 세 앱을 모두 보여줘요.</div>
 </div>
 <div class="sheet dlg" id="logSheet" role="dialog" aria-modal="true" aria-label="다녀온 기록 상세">
   <div class="sheet-hd"><b id="lTitle">다녀온 기록</b><button id="lClose" aria-label="닫기">✕</button></div>
@@ -2053,8 +2045,7 @@ function gRenderMenus() {
     ? `<div class="g-mail">☁️ ${esc(gUser.email)}</div><button type="button" data-g="sync">지금 동기화</button><button type="button" data-g="ver">버전 기록</button><button type="button" data-g="logout">로그아웃</button>`
     : `<div class="g-tip">구글로 로그인하면 자동으로 저장돼요</div><button type="button" data-g="login">구글로 로그인 · 자동 저장</button>`;
   const inst = '<button type="button" data-g="install">📲 홈 화면에 설치</button>';
-  const navBtn = `<button type="button" data-g="navapp">🧭 기본 길찾기 앱: ${navLabel()}</button>`;
-  const wipe = inst + navBtn + (gUser ? '<button type="button" data-g="wipe">드라이브의 짐로그 데이터 삭제</button>' : '');
+  const wipe = inst + (gUser ? '<button type="button" data-g="wipe">드라이브의 짐로그 데이터 삭제</button>' : '');
   $('gBoxM').innerHTML = top;               // 모바일 메뉴 위쪽
   $('gBoxB').innerHTML = wipe + priv;       // 모바일 메뉴 맨 아래
   $('gBoxP').innerHTML = top + wipe + priv; // PC 계정 메뉴
@@ -2377,7 +2368,7 @@ document.addEventListener('click', e => {
   if (!b) return;
   $('menu').hidden = true; $('gMenu').hidden = true;
   const a = b.dataset.g;
-  if (a === 'login') gLogin(); else if (a === 'sync') gSyncNow(); else if (a === 'logout') gLogout(); else if (a === 'wipe') gWipe(); else if (a === 'ver') gShowVersions(); else if (a === 'install') installApp(); else if (a === 'navapp') openNavSheet();
+  if (a === 'login') gLogin(); else if (a === 'sync') gSyncNow(); else if (a === 'logout') gLogout(); else if (a === 'wipe') gWipe(); else if (a === 'ver') gShowVersions(); else if (a === 'install') installApp();
 });
 $('gState').onclick = () => { if (gState === 'relogin') gLogin(); else if (gState === 'offline' || gState === 'conflict') gUpload(); };
 $('btnGoogle').onclick = () => { $('gMenu').hidden = !$('gMenu').hidden; };
@@ -2394,13 +2385,11 @@ $('verList').addEventListener('click', e => {
 /* ═══ 장소 · 네이버 지도 · 길찾기 ═════════════════════════════════════════
    장소(trips.place)를 저장하고, 다녀온 곳 지도와 길찾기 버튼을 보여준다. 지도 스크립트는 처음 지도를 열 때만 불러온다.
    오프라인이거나 불러오지 못해도 앱은 그대로 동작한다. */
-var PLACE_KEY = 'backpacking-place-v1', NAV_KEY = 'backpacking-navapp-v1', LV_KEY = 'backpacking-logview-v1', NAVER_PARAM_KEY = 'backpacking-naverparam-v1';
+var PLACE_KEY = 'backpacking-place-v1', LV_KEY = 'backpacking-logview-v1', NAVER_PARAM_KEY = 'backpacking-naverparam-v1';
 var NAVER_ID = 'lr2ynr45hu', APP_URL = 'https://sinung880222-cloud.github.io';
-var NAV_APPS = [['tmap', '🔵', '티맵'], ['naver', '🟢', '네이버지도'], ['kakao', '🟡', '카카오맵']];
 var curPlace = null;
 try { curPlace = normPlace(JSON.parse(localStorage.getItem(PLACE_KEY))); } catch (e) {}
-var navApp = 'ask';
-try { const v = localStorage.getItem(NAV_KEY); if (['tmap', 'naver', 'kakao', 'ask'].includes(v)) navApp = v; } catch (e) {}
+try { localStorage.removeItem('backpacking-navapp-v1'); } catch (e) {}   // (옛) 기본 길찾기 앱 설정 키 정리
 var logView = 'list';
 try { if (localStorage.getItem(LV_KEY) === 'map') logView = 'map'; } catch (e) {}
 const MAP_OFFLINE = '<div class="map-msg"><div style="font-size:28px">🗺️</div>인터넷이 연결되면 지도를 볼 수 있어요</div>';
@@ -2448,28 +2437,21 @@ function loadNaverMaps() {
 
 // 길찾기: 앱 스킴으로 열고, 앱이 없으면(또는 PC면) 웹 주소로 대체
 const isMobileUA = () => /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-function routeLinks(app, p) {
+function routeLinks(p) {   // 길찾기는 네이버지도 하나만
   const nm = encodeURIComponent(p.name || p.addr || '목적지');
-  if (app === 'tmap') return { scheme: `tmap://route?goalname=${nm}&goalx=${p.lng}&goaly=${p.lat}&rGoName=${nm}&rGoX=${p.lng}&rGoY=${p.lat}`,
-    web: '', store: /Android/i.test(navigator.userAgent) ? 'https://play.google.com/store/apps/details?id=com.skt.tmap.ku' : 'https://apps.apple.com/kr/app/id431589174' };
-  if (app === 'naver') return { scheme: `nmap://route/car?dlat=${p.lat}&dlng=${p.lng}&dname=${nm}&appname=${encodeURIComponent(APP_URL)}`,
-    web: `https://map.naver.com/p/directions/-/${p.lng},${p.lat},${nm}/-/car` };
-  return { scheme: `kakaomap://route?ep=${p.lat},${p.lng}&by=CAR`, web: `https://map.kakao.com/link/to/${nm},${p.lat},${p.lng}` };
+  return { scheme: `nmap://route/car?dlat=${p.lat}&dlng=${p.lng}&dname=${nm}&appname=${encodeURIComponent(APP_URL)}`,
+           web: `https://map.naver.com/p/directions/-/${p.lng},${p.lat},${nm}/-/car` };
 }
-function openRoute(app, p) {
-  const L = routeLinks(app, p);
-  if (!isMobileUA()) {   // PC: 웹 길찾기 (티맵은 웹 길찾기가 없어 안내만)
-    if (L.web) window.open(L.web, '_blank', 'noopener'); else toast('티맵은 휴대폰 앱에서만 열려요');
-    return;
-  }
-  const t = setTimeout(() => { if (!document.hidden) { const f = L.web || L.store; if (f) window.open(f, '_blank', 'noopener'); } }, 1600);   // 앱이 안 열리면 웹/스토어로
+function openRoute(p) {
+  const L = routeLinks(p);
+  if (!isMobileUA()) { window.open(L.web, '_blank', 'noopener'); return; }   // PC: 웹 길찾기
+  const t = setTimeout(() => { if (!document.hidden) window.open(L.web, '_blank', 'noopener'); }, 1600);   // 앱이 안 열리면 웹으로
   document.addEventListener('visibilitychange', () => { if (document.hidden) clearTimeout(t); }, { once: true });
   location.href = L.scheme;
 }
 function routeButtonsHTML(p) {
-  const apps = navApp === 'ask' ? NAV_APPS : NAV_APPS.filter(a => a[0] === navApp);
   const at = `data-lat="${p.lat}" data-lng="${p.lng}" data-name="${esc(p.name || p.addr || '목적지')}"`;
-  return `<div class="route-btns">${apps.map(([k, e, n]) => `<button type="button" class="route-btn" data-route="${k}" ${at}>${e} ${navApp === 'ask' ? n : n + '으로 길찾기'}</button>`).join('')}</div>`;
+  return `<div class="route-btns"><button type="button" class="route-btn" data-route="naver" ${at}>🟢 네이버지도로 길찾기</button></div>`;
 }
 const martURL = p => `https://map.naver.com/p/search/${encodeURIComponent((p.name || p.addr || '') + ' 마트 편의점')}`;
 const placeActionsHTML = p => routeButtonsHTML(p) + `<a class="mart-link" href="${martURL(p)}" target="_blank" rel="noopener">네이버지도에서 이 주변 마트·편의점 보기</a>`;
@@ -2603,15 +2585,9 @@ async function renderLogMap() {
   setTimeout(() => { naver.maps.Event.trigger(map, 'resize'); }, 300);
 }
 
-// 기본 길찾기 앱 설정
-function openNavSheet() {
-  $('navOpts').innerHTML = [...NAV_APPS.map(a => [a[0], `${a[1]} ${a[2]}`]), ['ask', '매번 묻기']].map(([k, l]) => `<button type="button" data-navset="${k}" class="${k === navApp ? 'on' : ''}">${l}</button>`).join('');
-  openDlg('navSheet');
-}
-const navLabel = () => navApp === 'ask' ? '매번 묻기' : NAV_APPS.find(a => a[0] === navApp)[2];
 document.addEventListener('click', e => {
   const r = e.target.closest('[data-route]');
-  if (r) { openRoute(r.dataset.route, { lat: Number(r.dataset.lat), lng: Number(r.dataset.lng), name: r.dataset.name }); return; }
+  if (r) { openRoute({ lat: Number(r.dataset.lat), lng: Number(r.dataset.lng), name: r.dataset.name }); return; }
   const pe = e.target.closest('[data-placeedit]');
   if (pe) { openPlaceSheet(pe.dataset.placeedit); return; }
   const pc = e.target.closest('[data-placeclear]');
@@ -2620,8 +2596,6 @@ document.addEventListener('click', e => {
   if (lv && lv.dataset.lv !== logView) { logView = lv.dataset.lv; lsSet(LV_KEY, logView); renderLogViewSeg(); renderLogList(); return; }
   const ot = e.target.closest('[data-opentrip]');
   if (ot) { openLog(Number(ot.dataset.opentrip)); return; }
-  const ns = e.target.closest('[data-navset]');
-  if (ns) { navApp = ns.dataset.navset; lsSet(NAV_KEY, navApp); closeSheet(); gRenderMenus(); renderPlaceBox(); if (!$('logSheet').classList.contains('open')) renderLog(); toast('기본 길찾기 앱을 바꿨어요'); }
 });
 $('plClose').onclick = () => { const t = plTarget; plFinish(t); };
 $('plFind').onclick = plFind;
@@ -2629,7 +2603,6 @@ $('plQuery').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preve
 $('plGps').onclick = plGps;
 $('plSave').onclick = plSave;
 $('plClear').onclick = () => { const t = plTarget; placeClear(t); plFinish(t); };
-$('nvClose').onclick = () => closeSheet();
 /* ═══ /장소 · 지도 ═══════════════════════════════════════════════════════ */
 
 /* ═══ 홈 화면 설치 안내 ═══════════════════════════════════════════════════
