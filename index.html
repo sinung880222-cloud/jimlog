@@ -84,6 +84,39 @@
   .f > span .info { display: inline-block; flex: none; width: auto; min-height: 0; margin-left: 4px; padding: 0 4px; font-size: 12px; vertical-align: baseline; }
   #sheet .it-edit { display: grid; margin: 0; }
   #sheet .it { border: 0; }
+  /* 장소 · 지도 · 길찾기 */
+  .place-box { margin-bottom: 12px; }
+  .place-line { display: flex; gap: 6px; }
+  .place-row { flex: 1 1 auto; min-width: 0; display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 6px 12px; text-align: left; background: var(--surface); border: 1px solid var(--line-strong); border-radius: var(--radius-md); }
+  .place-row .pl-t { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
+  .place-row .pl-t small { display: block; overflow: hidden; text-overflow: ellipsis; font-weight: 400; font-size: var(--fs-meta); color: var(--ink-3); }
+  .place-row .pl-go { flex: 0 0 auto; color: var(--forest); font-weight: 700; }
+  .pl-x { flex: 0 0 44px; width: 44px; padding: 0; color: var(--ink-3); }
+  .route-btns { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .route-btn { flex: 1 1 0; min-width: 0; min-height: 40px; padding: 0 6px; white-space: nowrap; font-weight: 600; }
+  .mart-link { display: block; margin-top: 8px; font-size: var(--fs-meta); color: var(--ink-3); text-decoration: underline; }
+  .pl-search { display: flex; gap: 8px; margin-bottom: 8px; }
+  .pl-search input { flex: 1 1 auto; min-width: 0; }
+  .pl-map, .lm-map { position: relative; width: 100%; height: 300px; border-radius: var(--radius-md); overflow: hidden; background: var(--surface-sunken); }
+  .lm-map { height: 360px; }
+  .map-msg { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; height: 100%; padding: 16px; text-align: center; color: var(--ink-3); }
+  .pl-tools { display: flex; align-items: center; gap: 8px; margin: 8px 0; }
+  .pl-tools button { flex: 0 0 auto; }
+  .pl-addr { flex: 1 1 auto; min-width: 0; font-size: var(--fs-meta); color: var(--ink-3); }
+  .pin { position: relative; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: #fff; border: 2px solid #2F6B4F; font-size: 18px; box-shadow: 0 2px 6px rgba(0,0,0,.25); }
+  .pin-n { position: absolute; top: -7px; right: -7px; min-width: 18px; height: 18px; padding: 0 4px; display: flex; align-items: center; justify-content: center; border-radius: 9px; background: #D9822B; color: #fff; font-size: 11px; font-weight: 700; }
+  .lm-card { margin-top: 8px; padding: 12px; border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--surface); }
+  .lm-card[hidden] { display: none; }
+  .lm-card .lc-pl { font-weight: 700; margin-bottom: 6px; }
+  .lm-card .lc-row { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-top: 1px solid var(--line); }
+  .lm-card .lc-row:first-of-type { border-top: 0; }
+  .lm-card .lc-t { flex: 1 1 auto; min-width: 0; }
+  .lm-card .lc-t small { display: block; font-size: var(--fs-meta); color: var(--ink-3); }
+  .lm-card .lc-row button { flex: 0 0 auto; min-height: 32px; padding: 0 10px; }
+  .view-seg { margin-bottom: 12px; }
+  .nav-opts { display: grid; gap: 8px; }
+  .nav-opts button { min-height: 44px; text-align: left; font-weight: 600; }
+  .nav-opts button.on { background: var(--forest); border-color: var(--forest); color: var(--on-forest); }
   .g-menu { right: 24px; }
   .menu-grp { margin-top: 4px; padding-top: 4px; border-top: 1px solid var(--line); }
   .menu-grp:first-child { margin-top: 0; padding-top: 0; border-top: 0; }
@@ -759,6 +792,7 @@
     <div class="card" id="stockCard">
       <div class="stock-banner" id="stockBanner"></div>
       <div class="act-row" id="actRow"></div>
+      <div class="place-box" id="placeBox"></div>
       <div class="inst-card" id="instCard" hidden></div>
       <div class="stock-sum" id="stockSum"></div>
       <div class="selbar" id="selBar">
@@ -829,6 +863,7 @@
       <div class="log-cols">
         <div class="log-left">
           <div class="card" id="logTrend"></div>
+          <div class="seg3 view-seg" id="logView" role="group" aria-label="기록 보기 방식"></div>
           <div class="card" id="logList"></div>
         </div>
         <div class="card" id="logRank"></div>
@@ -926,6 +961,19 @@
   <div class="sheet-hd"><b>홈 화면에 추가하기</b><button id="insClose" aria-label="닫기">✕</button></div>
   <div id="insBody"></div>
   <div class="sheet-ft"><button class="primary" id="insDone">확인했어요</button></div>
+</div>
+<div class="sheet dlg" id="placeSheet" role="dialog" aria-modal="true" aria-label="장소 정하기">
+  <div class="sheet-hd"><b>장소 정하기</b><button id="plClose" aria-label="닫기">✕</button></div>
+  <div class="pl-search"><input id="plQuery" placeholder="주소로 찾기" enterkeyhint="search" autocomplete="off"><button type="button" class="primary" id="plFind">찾기</button></div>
+  <div class="pl-map" id="plMap"></div>
+  <div class="pl-tools"><button type="button" id="plGps">📍 지금 위치</button><div class="pl-addr" id="plAddr">지도를 눌러 핀을 옮겨요</div></div>
+  <label class="f"><span>장소 이름</span><input id="plName" maxlength="30" placeholder="예: 난지캠핑장" autocomplete="off"></label>
+  <div class="sheet-ft"><button type="button" id="plClear">장소 지우기</button><button type="button" class="primary" id="plSave">저장</button></div>
+</div>
+<div class="sheet dlg" id="navSheet" role="dialog" aria-modal="true" aria-label="기본 길찾기 앱">
+  <div class="sheet-hd"><b>기본 길찾기 앱</b><button id="nvClose" aria-label="닫기">✕</button></div>
+  <div class="nav-opts" id="navOpts"></div>
+  <div class="t-sum" style="margin-top:8px">하나를 정하면 길찾기 버튼이 그 앱 하나만 나와요. "매번 묻기"는 세 앱을 모두 보여줘요.</div>
 </div>
 <div class="sheet dlg" id="logSheet" role="dialog" aria-modal="true" aria-label="다녀온 기록 상세">
   <div class="sheet-hd"><b id="lTitle">다녀온 기록</b><button id="lClose" aria-label="닫기">✕</button></div>
@@ -1182,6 +1230,13 @@ const needSave = pouchMigrated || (hadStored && JSON.stringify(items) !== rawJso
 let nextSid = supplies.reduce((m, x) => Math.max(m, x.id), 0) + 1;
 
 // 나들이 기록 (JSON 불러오기에서도 normalizeTrips 사용)
+// 장소: { name, lat, lng, addr } 또는 null (좌표는 소수점 4자리까지)
+function normPlace(p) {
+  if (!p || typeof p !== 'object') return null;
+  const lat = Number(p.lat), lng = Number(p.lng);
+  if (!isFinite(lat) || !isFinite(lng) || (lat === 0 && lng === 0) || Math.abs(lat) > 90 || Math.abs(lng) > 180) return null;
+  return { name: String(p.name || '').slice(0, 30), lat: Math.round(lat * 1e4) / 1e4, lng: Math.round(lng * 1e4) / 1e4, addr: String(p.addr || '').slice(0, 100) };
+}
 function normalizeTrips(arr) {
   const seen = new Set();
   let maxId = arr.reduce((m, t) => Math.max(m, Number(t && t.id) || 0), 0);
@@ -1194,6 +1249,7 @@ function normalizeTrips(arr) {
              baseW: Number(t.baseW) || 0, packW: Number(t.packW) || 0,
              supplies: Array.isArray(t.supplies) ? t.supplies.map(x => ({ name: String(x.name || ''), w: Number(x.w) || 0, q: Number(x.q) || 1, p: Number(x.p) || 0 })) : [],
              pouches: Array.isArray(t.pouches) ? t.pouches.filter(q => q && q.name).map(q => ({ name: String(q.name), w: Number(q.w) || 0, contents: Array.isArray(q.contents) ? q.contents.map(String) : [] })) : [],
+             place: normPlace(t.place),   // 옛 기록·옛 백업은 null
              activity: isAct(t.activity) ? t.activity : 'backpack',   // 옛 기록·옛 백업은 백패킹으로 채움
              days: [0, 1, 2, 3].includes(Number(t.days)) && t.days !== null && t.days !== '' ? Number(t.days) : null,   // 일정: 0 당일, 1 1박, 2 2박, 3 3박 이상, null 미지정
              memo: String(t.memo || '').slice(0, 100),
@@ -1347,6 +1403,7 @@ const actChips = (sel, attr) => ACTIVITIES.map(x => `<button type="button" class
 function renderActRow() {
   const a = actOf(curAct), last = lastTripOf(curAct);
   $('actNow').textContent = `${a.e} ${a.n} 짐 싸는 중`;
+  renderPlaceBox();
   $('actRow').innerHTML = `<div class="ar-lb">이번엔 어디로?</div><div class="act-grid">${actChips(curAct, 'data-act')}</div>`
     + (last ? `<button type="button" class="act-reuse" data-actreuse="${last.id}">지난 ${a.e} ${a.n} 구성 불러오기 (${shortD(last.date)} · 장비 ${last.itemIds.length}품목)</button>` : '');
 }
@@ -1996,7 +2053,8 @@ function gRenderMenus() {
     ? `<div class="g-mail">☁️ ${esc(gUser.email)}</div><button type="button" data-g="sync">지금 동기화</button><button type="button" data-g="ver">버전 기록</button><button type="button" data-g="logout">로그아웃</button>`
     : `<div class="g-tip">구글로 로그인하면 자동으로 저장돼요</div><button type="button" data-g="login">구글로 로그인 · 자동 저장</button>`;
   const inst = '<button type="button" data-g="install">📲 홈 화면에 설치</button>';
-  const wipe = inst + (gUser ? '<button type="button" data-g="wipe">드라이브의 짐로그 데이터 삭제</button>' : '');
+  const navBtn = `<button type="button" data-g="navapp">🧭 기본 길찾기 앱: ${navLabel()}</button>`;
+  const wipe = inst + navBtn + (gUser ? '<button type="button" data-g="wipe">드라이브의 짐로그 데이터 삭제</button>' : '');
   $('gBoxM').innerHTML = top;               // 모바일 메뉴 위쪽
   $('gBoxB').innerHTML = wipe + priv;       // 모바일 메뉴 맨 아래
   $('gBoxP').innerHTML = top + wipe + priv; // PC 계정 메뉴
@@ -2319,7 +2377,7 @@ document.addEventListener('click', e => {
   if (!b) return;
   $('menu').hidden = true; $('gMenu').hidden = true;
   const a = b.dataset.g;
-  if (a === 'login') gLogin(); else if (a === 'sync') gSyncNow(); else if (a === 'logout') gLogout(); else if (a === 'wipe') gWipe(); else if (a === 'ver') gShowVersions(); else if (a === 'install') installApp();
+  if (a === 'login') gLogin(); else if (a === 'sync') gSyncNow(); else if (a === 'logout') gLogout(); else if (a === 'wipe') gWipe(); else if (a === 'ver') gShowVersions(); else if (a === 'install') installApp(); else if (a === 'navapp') openNavSheet();
 });
 $('gState').onclick = () => { if (gState === 'relogin') gLogin(); else if (gState === 'offline' || gState === 'conflict') gUpload(); };
 $('btnGoogle').onclick = () => { $('gMenu').hidden = !$('gMenu').hidden; };
@@ -2333,6 +2391,247 @@ $('verList').addEventListener('click', e => {
   if (!b) return;
   gRestoreVersion(b.dataset.ver, b.closest('.ver-row').querySelector('b').textContent);
 });
+/* ═══ 장소 · 네이버 지도 · 길찾기 ═════════════════════════════════════════
+   장소(trips.place)를 저장하고, 다녀온 곳 지도와 길찾기 버튼을 보여준다. 지도 스크립트는 처음 지도를 열 때만 불러온다.
+   오프라인이거나 불러오지 못해도 앱은 그대로 동작한다. */
+var PLACE_KEY = 'backpacking-place-v1', NAV_KEY = 'backpacking-navapp-v1', LV_KEY = 'backpacking-logview-v1', NAVER_PARAM_KEY = 'backpacking-naverparam-v1';
+var NAVER_ID = 'lr2ynr45hu', APP_URL = 'https://sinung880222-cloud.github.io';
+var NAV_APPS = [['tmap', '🔵', '티맵'], ['naver', '🟢', '네이버지도'], ['kakao', '🟡', '카카오맵']];
+var curPlace = null;
+try { curPlace = normPlace(JSON.parse(localStorage.getItem(PLACE_KEY))); } catch (e) {}
+var navApp = 'ask';
+try { const v = localStorage.getItem(NAV_KEY); if (['tmap', 'naver', 'kakao', 'ask'].includes(v)) navApp = v; } catch (e) {}
+var logView = 'list';
+try { if (localStorage.getItem(LV_KEY) === 'map') logView = 'map'; } catch (e) {}
+const MAP_OFFLINE = '<div class="map-msg"><div style="font-size:28px">🗺️</div>인터넷이 연결되면 지도를 볼 수 있어요</div>';
+const savePlace = () => { try { if (curPlace) localStorage.setItem(PLACE_KEY, JSON.stringify(curPlace)); else localStorage.removeItem(PLACE_KEY); } catch (e) {} };
+
+// 네이버 지도 스크립트: 처음 필요할 때만. 인증 오류면 ncpKeyId ↔ ncpClientId 를 바꿔 한 번 더 시도하고, 된 쪽을 기억한다
+var naverPromise = null;
+function loadNaverMaps() {
+  if (window.naver && naver.maps && naver.maps.Service) return Promise.resolve(true);
+  if (naverPromise) return naverPromise;
+  naverPromise = new Promise(resolve => {
+    const first = lsGet(NAVER_PARAM_KEY) === 'ncpClientId' ? 'ncpClientId' : 'ncpKeyId';
+    const order = [first, first === 'ncpKeyId' ? 'ncpClientId' : 'ncpKeyId'];
+    const attempt = i => {
+      if (i >= order.length) { resolve(false); return; }
+      let settled = false, sc = null, poll = 0;
+      const fail = (retry) => {
+        if (settled) return; settled = true; clearInterval(poll);
+        if (sc) sc.remove();
+        document.querySelectorAll('script[src*="maps-geocoder"]').forEach(x => x.remove());
+        try { delete window.naver; } catch (e) { window.naver = undefined; }
+        retry ? attempt(i + 1) : resolve(false);
+      };
+      const ok = () => { if (settled) return; settled = true; clearInterval(poll); lsSet(NAVER_PARAM_KEY, order[i]); resolve(true); };
+      window.navermap_authFailure = () => fail(true);   // 인증 오류 → 다른 파라미터로 재시도
+      sc = document.createElement('script');
+      sc.src = `https://oapi.map.naver.com/openapi/v3/maps.js?${order[i]}=${NAVER_ID}&submodules=geocoder`;
+      sc.async = true;
+      sc.onload = () => {   // geocoder 서브모듈은 maps.js 뒤에 따로 불려 오므로 준비될 때까지 기다린다 (최대 8초)
+        let waited = 0;
+        poll = setInterval(() => {
+          waited += 150;
+          if (window.naver && naver.maps && naver.maps.Service) ok();
+          else if (waited >= 8000) { if (window.naver && naver.maps) ok(); else fail(true); }   // 주소 검색 없이도 지도는 쓸 수 있게
+        }, 150);
+      };
+      sc.onerror = () => fail(false);   // 오프라인 등
+      document.head.appendChild(sc);
+    };
+    attempt(0);
+  });
+  naverPromise.then(ok => { if (!ok) naverPromise = null; });   // 실패하면 다음에 다시 시도할 수 있게
+  return naverPromise;
+}
+
+// 길찾기: 앱 스킴으로 열고, 앱이 없으면(또는 PC면) 웹 주소로 대체
+const isMobileUA = () => /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+function routeLinks(app, p) {
+  const nm = encodeURIComponent(p.name || p.addr || '목적지');
+  if (app === 'tmap') return { scheme: `tmap://route?goalname=${nm}&goalx=${p.lng}&goaly=${p.lat}&rGoName=${nm}&rGoX=${p.lng}&rGoY=${p.lat}`,
+    web: '', store: /Android/i.test(navigator.userAgent) ? 'https://play.google.com/store/apps/details?id=com.skt.tmap.ku' : 'https://apps.apple.com/kr/app/id431589174' };
+  if (app === 'naver') return { scheme: `nmap://route/car?dlat=${p.lat}&dlng=${p.lng}&dname=${nm}&appname=${encodeURIComponent(APP_URL)}`,
+    web: `https://map.naver.com/p/directions/-/${p.lng},${p.lat},${nm}/-/car` };
+  return { scheme: `kakaomap://route?ep=${p.lat},${p.lng}&by=CAR`, web: `https://map.kakao.com/link/to/${nm},${p.lat},${p.lng}` };
+}
+function openRoute(app, p) {
+  const L = routeLinks(app, p);
+  if (!isMobileUA()) {   // PC: 웹 길찾기 (티맵은 웹 길찾기가 없어 안내만)
+    if (L.web) window.open(L.web, '_blank', 'noopener'); else toast('티맵은 휴대폰 앱에서만 열려요');
+    return;
+  }
+  const t = setTimeout(() => { if (!document.hidden) { const f = L.web || L.store; if (f) window.open(f, '_blank', 'noopener'); } }, 1600);   // 앱이 안 열리면 웹/스토어로
+  document.addEventListener('visibilitychange', () => { if (document.hidden) clearTimeout(t); }, { once: true });
+  location.href = L.scheme;
+}
+function routeButtonsHTML(p) {
+  const apps = navApp === 'ask' ? NAV_APPS : NAV_APPS.filter(a => a[0] === navApp);
+  const at = `data-lat="${p.lat}" data-lng="${p.lng}" data-name="${esc(p.name || p.addr || '목적지')}"`;
+  return `<div class="route-btns">${apps.map(([k, e, n]) => `<button type="button" class="route-btn" data-route="${k}" ${at}>${e} ${navApp === 'ask' ? n : n + '으로 길찾기'}</button>`).join('')}</div>`;
+}
+const martURL = p => `https://map.naver.com/p/search/${encodeURIComponent((p.name || p.addr || '') + ' 마트 편의점')}`;
+const placeActionsHTML = p => routeButtonsHTML(p) + `<a class="mart-link" href="${martURL(p)}" target="_blank" rel="noopener">네이버지도에서 이 주변 마트·편의점 보기</a>`;
+function placeRowHTML(p, target) {   // 장소 줄 (누르면 장소 정하기 시트) + 지우기
+  const label = p ? esc(p.name || p.addr || '선택한 위치') : '장소 정하기 (선택)';
+  return `<div class="place-line"><button type="button" class="place-row" data-placeedit="${target}"><span>📍</span><span class="pl-t">${label}${p && p.name && p.addr ? `<small>${esc(p.addr)}</small>` : ''}</span><span class="pl-go">${p ? '바꾸기' : '정하기'}</span></button>${p ? `<button type="button" class="pl-x" data-placeclear="${target}" aria-label="장소 지우기">✕</button>` : ''}</div>`;
+}
+function renderPlaceBox() {
+  $('placeBox').innerHTML = placeRowHTML(curPlace, 'cur') + (curPlace ? placeActionsHTML(curPlace) : '');
+}
+
+// 장소 정하기 시트
+var plMap = null, plMarker = null, plPos = null, plAddr = '', plTarget = null, plToken = 0;
+const placeOf = target => target === 'cur' ? curPlace : ((trips.find(t => t.id === Number(target)) || {}).place || null);
+async function openPlaceSheet(target) {
+  plTarget = target;
+  const init = placeOf(target), tok = ++plToken;
+  plPos = init ? { lat: init.lat, lng: init.lng } : null; plAddr = init ? init.addr : '';
+  $('plName').value = init ? init.name : ''; $('plQuery').value = '';
+  $('plAddr').textContent = plAddr || '지도를 눌러 핀을 옮겨요';
+  $('plClear').hidden = !init;
+  if (target !== 'cur') $('logSheet').classList.remove('open');   // 기록 상세 위에 겹치지 않게
+  openDlg('placeSheet');
+  const box = $('plMap');
+  box.innerHTML = '<div class="map-msg">지도를 불러오는 중…</div>';
+  plMap = null; plMarker = null;
+  if (!navigator.onLine) { box.innerHTML = MAP_OFFLINE; return; }
+  const ok = await loadNaverMaps();
+  if (tok !== plToken) return;
+  if (!ok) { box.innerHTML = MAP_OFFLINE; return; }
+  box.innerHTML = '';
+  plMap = new naver.maps.Map(box, { center: new naver.maps.LatLng(plPos ? plPos.lat : 37.5665, plPos ? plPos.lng : 126.978), zoom: plPos ? 15 : 11, zoomControl: true, zoomControlOptions: { position: naver.maps.Position.TOP_RIGHT } });
+  if (plPos) plSetPin(plPos.lat, plPos.lng, false, false);
+  naver.maps.Event.addListener(plMap, 'click', e => plSetPin(e.coord.lat(), e.coord.lng(), true, false));
+  setTimeout(() => { if (plMap) naver.maps.Event.trigger(plMap, 'resize'); }, 350);
+}
+function plSetPin(lat, lng, reverse, center) {
+  if (!plMap) return;
+  plPos = { lat, lng };
+  const ll = new naver.maps.LatLng(lat, lng);
+  if (!plMarker) plMarker = new naver.maps.Marker({ position: ll, map: plMap }); else plMarker.setPosition(ll);
+  if (center) { plMap.setCenter(ll); if (plMap.getZoom() < 14) plMap.setZoom(15); }
+  if (reverse && naver.maps.Service) {
+    $('plAddr').textContent = '주소를 찾는 중…';
+    try {
+      naver.maps.Service.reverseGeocode({ coords: ll, orders: [naver.maps.Service.OrderType.ROAD_ADDR, naver.maps.Service.OrderType.ADDR].join(',') }, (status, res) => {
+        let a = '';
+        if (status === naver.maps.Service.Status.OK && res && res.v2 && res.v2.address) a = res.v2.address.roadAddress || res.v2.address.jibunAddress || '';
+        plAddr = a; $('plAddr').textContent = a || '주소를 찾지 못했어요 (이름만 적어도 돼요)';
+      });
+    } catch (e) { plAddr = ''; $('plAddr').textContent = '주소를 찾지 못했어요'; }
+  }
+}
+function plFind() {
+  const q = $('plQuery').value.trim();
+  if (!q) { $('plQuery').focus(); return; }
+  if (!plMap) { toast('지도가 준비되면 다시 눌러 주세요'); return; }
+  if (!naver.maps.Service) { toast('주소 검색을 준비 중이에요 · 잠시 후 다시 눌러 주세요'); return; }
+  naver.maps.Service.geocode({ query: q }, (status, res) => {
+    const list = status === naver.maps.Service.Status.OK && res && res.v2 && res.v2.addresses || [];
+    if (!list.length) { toast('주소를 찾지 못했어요'); return; }
+    const a = list[0];
+    plSetPin(Number(a.y), Number(a.x), false, true);
+    plAddr = a.roadAddress || a.jibunAddress || q;
+    $('plAddr').textContent = plAddr;
+  });
+}
+function plGps() {
+  if (!plMap) { toast('지도가 준비되면 다시 눌러 주세요'); return; }
+  if (!navigator.geolocation) { toast('이 기기에서는 위치를 쓸 수 없어요'); return; }
+  navigator.geolocation.getCurrentPosition(
+    pos => plSetPin(pos.coords.latitude, pos.coords.longitude, true, true),   // 버튼을 눌렀을 때만 위치 권한을 요청
+    () => toast('위치를 가져오지 못했어요 · 권한을 확인해 주세요'),
+    { enableHighAccuracy: true, timeout: 10000, maximumAge: 30000 });
+}
+function plFinish(target) {   // 시트를 닫고, 기록 상세에서 열었으면 상세로 돌아간다
+  closeSheet(); plToken++;
+  if (target !== 'cur') { renderLogDetail(); $('logSheet').classList.add('open'); $('overlay').classList.add('open'); document.body.style.overflow = 'hidden'; }
+}
+function plSave() {
+  if (!plPos) { toast('지도를 눌러 핀을 먼저 찍어 주세요'); return; }
+  const target = plTarget;
+  const pl = normPlace({ name: $('plName').value.trim(), lat: plPos.lat, lng: plPos.lng, addr: plAddr });
+  if (target === 'cur') { curPlace = pl; savePlace(); renderPlaceBox(); }
+  else { const t = trips.find(x => x.id === Number(target)); if (t) { t.place = pl; saveTrips(); refreshStats(); } }
+  plFinish(target);
+  toast('장소를 저장했어요 📍');
+}
+function placeClear(target) {
+  if (target === 'cur') { curPlace = null; savePlace(); renderPlaceBox(); }
+  else { const t = trips.find(x => x.id === Number(target)); if (t) { t.place = null; saveTrips(); renderLogDetail(); refreshStats(); } }
+}
+
+// 기록 탭: [📋 목록 | 🗺️ 지도]
+function renderLogViewSeg() {
+  $('logView').innerHTML = [['list', '📋 목록'], ['map', '🗺️ 지도']].map(([k, l]) => `<button type="button" data-lv="${k}" class="${k === logView ? 'on' : ''}">${l}</button>`).join('');
+}
+var lmToken = 0;
+async function renderLogMap() {
+  const tok = ++lmToken;
+  const list = tripsFiltered().filter(t => t.place);
+  if (!list.length) {
+    $('logList').innerHTML = `<div class="card-title">다녀온 곳</div><div class="empty">${jimSVG('wait', 96)}<div style="margin-top:8px">다녀온 기록에 장소를 넣으면 여기 모여요</div></div>`;
+    return;
+  }
+  $('logList').innerHTML = `<div class="card-title">다녀온 곳</div><div class="lm-map" id="lmMap"><div class="map-msg">지도를 불러오는 중…</div></div><div class="lm-card" id="lmCard" hidden></div>`;
+  if (!navigator.onLine) { $('lmMap').innerHTML = MAP_OFFLINE; return; }
+  const ok = await loadNaverMaps();
+  if (tok !== lmToken || !$('lmMap')) return;
+  if (!ok) { $('lmMap').innerHTML = MAP_OFFLINE; return; }
+  const box = $('lmMap'); box.innerHTML = '';
+  // 같은 장소(약 100m 안)는 한 핀으로 묶고 횟수 배지
+  const groups = new Map();
+  list.forEach(t => { const k = t.place.lat.toFixed(3) + ',' + t.place.lng.toFixed(3); if (!groups.has(k)) groups.set(k, []); groups.get(k).push(t); });
+  const map = new naver.maps.Map(box, { center: new naver.maps.LatLng(list[0].place.lat, list[0].place.lng), zoom: 10, zoomControl: true, zoomControlOptions: { position: naver.maps.Position.TOP_RIGHT } });
+  const bounds = new naver.maps.LatLngBounds();
+  groups.forEach(g => {
+    g.sort((a, b) => -byDateAsc(a, b));
+    const p = g[0].place, ll = new naver.maps.LatLng(p.lat, p.lng);
+    bounds.extend(ll);
+    const m = new naver.maps.Marker({ position: ll, map, icon: { content: `<div class="pin"><span>${actOf(g[0].activity).e}</span>${g.length > 1 ? `<span class="pin-n">${g.length}</span>` : ''}</div>`, anchor: new naver.maps.Point(18, 18) } });
+    naver.maps.Event.addListener(m, 'click', () => {
+      const rows = g.slice(0, 4).map(t => `<div class="lc-row"><div class="lc-t"><b>${shortD(t.date)}</b> · ${t.name ? esc(t.name) : '이름 없음'}<small>${actOf(t.activity).e} ${actOf(t.activity).n}${t.days === null ? '' : ' · ' + DAY_LABELS[t.days]} · 베이스 ${fmtW(t.baseW)}</small></div><button type="button" data-opentrip="${t.id}">기록 보기</button></div>`).join('');
+      const card = $('lmCard');
+      card.innerHTML = `<div class="lc-pl">📍 ${esc(p.name || p.addr || '장소')}${g.length > 1 ? ` · ${g.length}번` : ''}</div>${rows}${g.length > 4 ? `<div class="sub">외 ${g.length - 4}건</div>` : ''}${routeButtonsHTML(p)}`;
+      card.hidden = false;
+    });
+  });
+  if (groups.size > 1) map.fitBounds(bounds, { top: 40, right: 40, bottom: 40, left: 40 });
+  else { const only = [...groups.values()][0][0].place; map.setCenter(new naver.maps.LatLng(only.lat, only.lng)); map.setZoom(13); }
+  setTimeout(() => { naver.maps.Event.trigger(map, 'resize'); }, 300);
+}
+
+// 기본 길찾기 앱 설정
+function openNavSheet() {
+  $('navOpts').innerHTML = [...NAV_APPS.map(a => [a[0], `${a[1]} ${a[2]}`]), ['ask', '매번 묻기']].map(([k, l]) => `<button type="button" data-navset="${k}" class="${k === navApp ? 'on' : ''}">${l}</button>`).join('');
+  openDlg('navSheet');
+}
+const navLabel = () => navApp === 'ask' ? '매번 묻기' : NAV_APPS.find(a => a[0] === navApp)[2];
+document.addEventListener('click', e => {
+  const r = e.target.closest('[data-route]');
+  if (r) { openRoute(r.dataset.route, { lat: Number(r.dataset.lat), lng: Number(r.dataset.lng), name: r.dataset.name }); return; }
+  const pe = e.target.closest('[data-placeedit]');
+  if (pe) { openPlaceSheet(pe.dataset.placeedit); return; }
+  const pc = e.target.closest('[data-placeclear]');
+  if (pc) { placeClear(pc.dataset.placeclear); return; }
+  const lv = e.target.closest('[data-lv]');
+  if (lv && lv.dataset.lv !== logView) { logView = lv.dataset.lv; lsSet(LV_KEY, logView); renderLogViewSeg(); renderLogList(); return; }
+  const ot = e.target.closest('[data-opentrip]');
+  if (ot) { openLog(Number(ot.dataset.opentrip)); return; }
+  const ns = e.target.closest('[data-navset]');
+  if (ns) { navApp = ns.dataset.navset; lsSet(NAV_KEY, navApp); closeSheet(); gRenderMenus(); renderPlaceBox(); if (!$('logSheet').classList.contains('open')) renderLog(); toast('기본 길찾기 앱을 바꿨어요'); }
+});
+$('plClose').onclick = () => { const t = plTarget; plFinish(t); };
+$('plFind').onclick = plFind;
+$('plQuery').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); plFind(); } });
+$('plGps').onclick = plGps;
+$('plSave').onclick = plSave;
+$('plClear').onclick = () => { const t = plTarget; placeClear(t); plFinish(t); };
+$('nvClose').onclick = () => closeSheet();
+/* ═══ /장소 · 지도 ═══════════════════════════════════════════════════════ */
+
 /* ═══ 홈 화면 설치 안내 ═══════════════════════════════════════════════════
    앱 안 브라우저(카톡 등)에서는 띠로 "브라우저로 열기", 안드로이드 크롬은 beforeinstallprompt 설치 카드,
    아이폰은 "홈 화면에 추가" 방법 시트. 이미 홈 화면 앱(standalone)으로 열었으면 아무것도 안 띄운다. */
@@ -2512,7 +2811,7 @@ function buildRecord(date, name) {
   const baseW = rec.reduce((sum, it) => sum + it.w, 0);
   return { date, name, itemIds: rec.map(it => it.id), items: rec.map(it => ({ id: it.id, name: it.name, cat: it.cat, w: it.w })), baseW, packW: baseW + sups.reduce((sum, x) => sum + x.w * x.q, 0),
            supplies: sups.map(x => ({ name: x.name, w: x.w, q: x.q, p: x.p })),
-           vol: rec.reduce((sum, it) => sum + volOf(it), 0), recordedAt: new Date().toISOString() };
+           vol: rec.reduce((sum, it) => sum + volOf(it), 0), recordedAt: new Date().toISOString(), place: curPlace };   // 이번 나들이 장소가 기록의 place로
 }
 function saveRec() {
   const date = DATE_RE.test($('rDate').value) ? $('rDate').value : tomorrowStr();
@@ -2534,7 +2833,7 @@ function commitRec(mode) {
   let label = name || '이번 패킹';
   if (mode === 'update' && trips.some(t => t.id === recDup)) {
     const t = trips.find(x => x.id === recDup);
-    Object.assign(t, rec, { id: t.id, name: name || t.name, memo: rec.memo });   // 메모는 입력칸 값 그대로(빈 값이면 비움), 이름은 빈 값이면 기존 유지
+    Object.assign(t, rec, { id: t.id, name: name || t.name, memo: rec.memo, place: rec.place || t.place || null });   // 메모는 입력칸 값 그대로(빈 값이면 비움), 이름은 빈 값이면 기존 유지
     label = (t.name || '이번 패킹') + ' 기록 업데이트됨';
   } else {
     trips.push({ id: nextTid++, ...rec });
@@ -2624,6 +2923,7 @@ function renderLog() {
     ['📍 최근 기록', latest ? shortD(latest.date) : '–', latest ? (latest.name ? esc(latest.name) : '이름 없음') : '기록 없음'],
   ].map(([label, value, foot]) => `<div class="card"><div class="stat-label">${label}</div><div class="stat-value"><span class="num">${String(value).replace(/(kg|g|L)$/, '<span class="u">$1</span>')}</span></div><div class="stat-foot">${foot}</div></div>`).join('');
   renderLogHero();
+  renderLogViewSeg();
   renderTrend(); renderLogList(); renderRank();
 }
 // 기록 탭 하이라이트 카드 (기간 칩 아래, 모바일 전용): 선택 기간 기준, 기간 안 기록이 없으면 숨김
@@ -2768,6 +3068,8 @@ function showTip(i) {
 }
 
 function renderLogList() {
+  if (logView === 'map') { renderLogMap(); return; }
+  lmToken++;
   const sorted = [...tripsFiltered()].sort((a, b) => -byDateAsc(a, b));
   let html = '<div class="card-title">다녀온 기록</div>', yr = '';
   if (!sorted.length) html += `<div class="empty">${periodTrips().length ? '해당 일정의 기록이 없어요' : '이 기간·종류에는 다녀온 기록이 없어요'}</div>`;
@@ -2845,6 +3147,7 @@ function renderLogDetail() {
     <div class="td-edit" data-tid="${t.id}">
       <label class="f" style="grid-column:1/-1"><span>출발일</span><input type="date" data-te="date" value="${t.date}"></label>
       <label class="f" style="grid-column:1/-1"><span>제목</span><input data-te="name" maxlength="30" value="${esc(t.name)}" placeholder="제목 (선택)"></label>
+      <div class="f" style="grid-column:1/-1"><span>장소</span><div style="margin-top:4px">${placeRowHTML(t.place, t.id)}${t.place ? placeActionsHTML(t.place) : ''}</div></div>
       <div class="f" style="grid-column:1/-1"><span>종류</span><div class="act-grid" style="margin-top:4px">${actChips(t.activity, 'data-tact')}</div></div>
       <div class="f" style="grid-column:1/-1"><span>일정</span><div class="rec-chips" style="margin-top:4px">${DAY_LABELS.map((l, i) => `<button type="button" class="chip${t.days === i ? ' on' : ''}" data-td="${i}">${l}</button>`).join('')}</div></div>
       <label class="f" style="grid-column:1/-1"><span>메모 (최대 100자)</span><textarea data-te="memo" rows="2" maxlength="100" placeholder="예: 침낭 추웠음, 물 1L 남음">${esc(t.memo)}</textarea></label>
