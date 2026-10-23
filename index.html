@@ -95,6 +95,15 @@
   .route-btns { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
   .route-btn { flex: 1 1 0; min-width: 0; min-height: 40px; padding: 0 12px; white-space: nowrap; font-weight: 600; }
   .mart-link { display: block; margin-top: 8px; font-size: var(--fs-meta); color: var(--ink-3); text-decoration: underline; }
+  .mini-map { position: relative; width: 100%; height: 160px; border-radius: var(--radius-md); overflow: hidden; background: var(--surface-sunken); }
+  .mini-map .map-msg { font-size: 12px; }
+  .mm-tap { position: absolute; inset: 0; z-index: 10; width: 100%; min-height: 0; padding: 0; border: 0; border-radius: 0; background: transparent; }
+  .mm-hint { position: absolute; right: 8px; bottom: 8px; z-index: 11; padding: 3px 10px; border-radius: var(--radius-pill); background: rgba(255,255,255,.92); color: var(--forest-ink); font-size: 12px; font-weight: 700; pointer-events: none; box-shadow: 0 1px 4px rgba(0,0,0,.2); }
+  .map-slot { position: relative; margin-bottom: 8px; }
+  .place-empty { display: flex; align-items: center; gap: 14px; width: 100%; min-height: 92px; padding: 12px 16px; text-align: left; border: 1.5px dashed var(--forest); border-radius: var(--radius-lg); background: var(--forest-tint); }
+  .place-empty .pe-t { flex: 1 1 auto; min-width: 0; font-weight: 700; color: var(--forest-ink); font-size: 14px; line-height: 1.4; }
+  .place-empty .pe-t small { display: block; margin-top: 2px; font-weight: 400; font-size: var(--fs-meta); color: var(--ink-2); }
+  .place-empty svg { flex: 0 0 auto; }
   .pl-search { display: flex; gap: 8px; margin-bottom: 8px; }
   .pl-search input { flex: 1 1 auto; min-width: 0; }
   .pl-map, .lm-map { position: relative; width: 100%; height: 300px; border-radius: var(--radius-md); overflow: hidden; background: var(--surface-sunken); }
@@ -2459,8 +2468,45 @@ function placeRowHTML(p, target) {   // 장소 줄 (누르면 장소 정하기 �
   const label = p ? esc(p.name || p.addr || '선택한 위치') : '장소 정하기 (선택)';
   return `<div class="place-line"><button type="button" class="place-row" data-placeedit="${target}"><span>📍</span><span class="pl-t">${label}${p && p.name && p.addr ? `<small>${esc(p.addr)}</small>` : ''}</span><span class="pl-go">${p ? '바꾸기' : '정하기'}</span></button>${p ? `<button type="button" class="pl-x" data-placeclear="${target}" aria-label="장소 지우기">✕</button>` : ''}</div>`;
 }
+// 저장한 장소는 눌러 보지 않아도 작은 지도로 바로 보인다 (누르면 장소 정하기 시트)
+var pbEl = null, pbMap = null, pbMarker = null, pbKey = '';
+function miniMapOptions(p) {
+  return { center: new naver.maps.LatLng(p.lat, p.lng), zoom: 15, draggable: false, pinchZoom: false, scrollWheel: false, keyboardShortcuts: false,
+           disableDoubleClickZoom: true, disableDoubleTapZoom: true, disableTwoFingerTapZoom: true, zoomControl: false, scaleControl: false, mapDataControl: false };
+}
+async function showMiniMap(el, p, state) {   // state = { map, marker } 를 넘기면 같은 지도를 다시 쓴다
+  if (!navigator.onLine) { el.innerHTML = MAP_OFFLINE; return null; }
+  if (!(window.naver && naver.maps)) el.innerHTML = '<div class="map-msg">지도를 불러오는 중…</div>';
+  const ok = await loadNaverMaps();
+  if (!ok) { el.innerHTML = MAP_OFFLINE; return null; }
+  const ll = new naver.maps.LatLng(p.lat, p.lng);
+  if (state && state.map && state.el === el) { state.map.setCenter(ll); state.marker.setPosition(ll); setTimeout(() => naver.maps.Event.trigger(state.map, 'resize'), 100); return state; }
+  el.innerHTML = '';
+  const map = new naver.maps.Map(el, miniMapOptions(p));
+  const marker = new naver.maps.Marker({ position: ll, map });
+  setTimeout(() => naver.maps.Event.trigger(map, 'resize'), 350);
+  return { map, marker, el };
+}
 function renderPlaceBox() {
-  $('placeBox').innerHTML = placeRowHTML(curPlace, 'cur') + (curPlace ? placeActionsHTML(curPlace) : '');
+  const p = curPlace, box = $('placeBox');
+  if (!p) {   // 장소가 없으면 눈에 띄는 안내 카드 (지도 그림 + "지도에서 장소를 골라요")
+    box.innerHTML = `<button type="button" class="place-empty" data-placeedit="cur"><svg width="72" height="60" viewBox="0 0 72 60" aria-hidden="true"><rect width="72" height="60" rx="10" fill="#fff"/><path d="M0 40 L18 26 L30 36 L46 18 L72 38 V60 H0Z" fill="#A9DDC1"/><path d="M0 50 L22 38 L40 48 L58 34 L72 44 V60 H0Z" fill="#2F6B4F" fill-opacity=".85"/><circle cx="46" cy="16" r="9" fill="#D9822B"/><circle cx="46" cy="16" r="3.5" fill="#fff"/></svg><span class="pe-t">📍 지도에서 장소를 골라요<small>캠핑장·산 이름을 찾거나 지도를 눌러 핀을 꽂아요 (선택)</small></span></button>`;
+    return;
+  }
+  box.innerHTML = `<div class="map-slot" id="pbSlot"></div>` + placeRowHTML(p, 'cur') + placeActionsHTML(p);
+  const slot = $('pbSlot');
+  if (!pbEl) { pbEl = document.createElement('div'); pbEl.className = 'mini-map'; }
+  slot.appendChild(pbEl);
+  slot.insertAdjacentHTML('beforeend', '<button type="button" class="mm-tap" data-placeedit="cur" aria-label="지도를 눌러 장소 바꾸기"></button><span class="mm-hint">눌러서 바꾸기</span>');
+  const key = p.lat + ',' + p.lng;
+  if (pbKey === key && pbMap) { setTimeout(() => naver.maps.Event.trigger(pbMap.map, 'resize'), 100); return; }
+  pbKey = key;
+  showMiniMap(pbEl, p, pbMap).then(st => { if (st) pbMap = st; else pbKey = ''; });
+}
+function mountDetailMap(t) {   // 기록 상세: 장소가 있으면 작은 지도
+  const slot = document.querySelector('#lBody .dt-map');
+  if (!slot || !t.place) return;
+  showMiniMap(slot, t.place, null);
 }
 
 // 장소 정하기 시트
@@ -3120,7 +3166,7 @@ function renderLogDetail() {
     <div class="td-edit" data-tid="${t.id}">
       <label class="f" style="grid-column:1/-1"><span>출발일</span><input type="date" data-te="date" value="${t.date}"></label>
       <label class="f" style="grid-column:1/-1"><span>제목</span><input data-te="name" maxlength="30" value="${esc(t.name)}" placeholder="제목 (선택)"></label>
-      <div class="f" style="grid-column:1/-1"><span>장소</span><div style="margin-top:4px">${placeRowHTML(t.place, t.id)}${t.place ? placeActionsHTML(t.place) : ''}</div></div>
+      <div class="f" style="grid-column:1/-1"><span>장소</span><div style="margin-top:4px">${t.place ? `<div class="map-slot"><div class="mini-map dt-map"></div><button type="button" class="mm-tap" data-placeedit="${t.id}" aria-label="지도를 눌러 장소 바꾸기"></button><span class="mm-hint">눌러서 바꾸기</span></div>` : ''}${placeRowHTML(t.place, t.id)}${t.place ? placeActionsHTML(t.place) : ''}</div></div>
       <div class="f" style="grid-column:1/-1"><span>종류</span><div class="act-grid" style="margin-top:4px">${actChips(t.activity, 'data-tact')}</div></div>
       <div class="f" style="grid-column:1/-1"><span>일정</span><div class="rec-chips" style="margin-top:4px">${DAY_LABELS.map((l, i) => `<button type="button" class="chip${t.days === i ? ' on' : ''}" data-td="${i}">${l}</button>`).join('')}</div></div>
       <label class="f" style="grid-column:1/-1"><span>메모 (최대 100자)</span><textarea data-te="memo" rows="2" maxlength="100" placeholder="예: 침낭 추웠음, 물 1L 남음">${esc(t.memo)}</textarea></label>
@@ -3132,6 +3178,7 @@ function renderLogDetail() {
     <div class="td-title">식량·소모품 ${t.supplies.length}품목</div>
     <div class="td-list">${t.supplies.map(x => `<span>${esc(x.name)} ${comma(x.w)}g × ${comma(x.q)}</span>`).join('') || '<span class="gone">없음</span>'}</div>
     <div class="td-btns"><button type="button" class="primary" data-ta="reuse">이 장비 구성으로 다시 선택</button><button type="button" class="danger" data-ta="del">삭제</button></div>`;
+  mountDetailMap(t);
 }
 const refreshStats = () => { renderSummary(); renderList(); renderLog(); };   // 사용 횟수·마지막 사용일·배지·순위 즉시 재계산
 function reuseTrip(t) {
