@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>지도 테스트 A: ncpKeyId</title>
+<style>
+  html, body { margin: 0; height: 100%; font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif; font-size: 12px; }
+  #map { position: absolute; inset: 0; background: #EFECE4; }
+  #st { position: absolute; left: 6px; bottom: 6px; z-index: 20; max-width: calc(100% - 12px); padding: 4px 8px; border-radius: 6px; background: rgba(255,255,255,.92); line-height: 1.5; }
+  #fail { display: none; position: absolute; inset: 0; z-index: 30; align-items: center; justify-content: center; background: rgba(255,255,255,.85); color: #d00000; font-size: 28px; font-weight: 700; }
+</style>
+</head>
+<body>
+<div id="map"></div>
+<div id="st">A: ncpKeyId<br>주소: <span id="u"></span><br>스크립트: <b id="s1">불러오는 중…</b> · 지도: <b id="s2">–</b></div>
+<div id="fail">인증 실패</div>
+<script>
+  document.getElementById('u').textContent = location.href;
+  // 네이버 지도가 인증에 실패하면 이 함수를 부른다 → 빨간 글씨로 표시
+  window.navermap_authFailure = function () { document.getElementById('fail').style.display = 'flex'; document.getElementById('s2').textContent = '인증 실패'; };
+  window.addEventListener('error', function (e) { document.getElementById('s1').textContent = '오류: ' + (e.message || '로드 실패'); }, true);
+</script>
+<script src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=lr2ynr45hu" onload="document.getElementById('s1').textContent = '로드됨'; try { new naver.maps.Map('map', { center: new naver.maps.LatLng(37.5666, 126.9784), zoom: 15 }); document.getElementById('s2').textContent = '생성됨 (서울시청)'; } catch (e) { document.getElementById('s2').textContent = '오류: ' + e.message; }" onerror="document.getElementById('s1').textContent = '로드 실패 (네트워크)'"></script>
+</body>
+</html>
