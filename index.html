@@ -2394,53 +2394,53 @@ $('verList').addEventListener('click', e => {
 /* ═══ 장소 · 네이버 지도 · 길찾기 ═════════════════════════════════════════
    장소(trips.place)를 저장하고, 다녀온 곳 지도와 길찾기 버튼을 보여준다. 지도 스크립트는 처음 지도를 열 때만 불러온다.
    오프라인이거나 불러오지 못해도 앱은 그대로 동작한다. */
-var PLACE_KEY = 'backpacking-place-v1', LV_KEY = 'backpacking-logview-v1', NAVER_PARAM_KEY = 'backpacking-naverparam-v1';
-var NAVER_ID = 'lr2ynr45hu', APP_URL = 'https://sinung880222-cloud.github.io';
+var PLACE_KEY = 'backpacking-place-v1', LV_KEY = 'backpacking-logview-v1';
+var NAVER_PARAM = 'ncpKeyId', NAVER_ID = 'lr2ynr45hu', APP_URL = 'https://sinung880222-cloud.github.io';
 var curPlace = null;
 try { curPlace = normPlace(JSON.parse(localStorage.getItem(PLACE_KEY))); } catch (e) {}
 try { localStorage.removeItem('backpacking-navapp-v1'); } catch (e) {}   // (옛) 기본 길찾기 앱 설정 키 정리
 var logView = 'list';
 try { if (localStorage.getItem(LV_KEY) === 'map') logView = 'map'; } catch (e) {}
+try { localStorage.removeItem('backpacking-naverparam-v1'); } catch (e) {}   // (옛) 자동 재시도로 기억하던 파라미터 정리
+const MAP_AUTH_FAIL = '<div class="map-msg"><div style="font-size:28px">🗺️</div>지도 인증에 실패했어요 · 잠시 후 다시 시도해 주세요</div>';
 const MAP_OFFLINE = '<div class="map-msg"><div style="font-size:28px">🗺️</div>인터넷이 연결되면 지도를 볼 수 있어요</div>';
 const savePlace = () => { try { if (curPlace) localStorage.setItem(PLACE_KEY, JSON.stringify(curPlace)); else localStorage.removeItem(PLACE_KEY); } catch (e) {} };
 
-// 네이버 지도 스크립트: 처음 필요할 때만. 인증 오류면 ncpKeyId ↔ ncpClientId 를 바꿔 한 번 더 시도하고, 된 쪽을 기억한다
-var naverPromise = null;
+var naverPromise = null, naverFail = '';   // naverFail: '' | 'auth'(인증 실패) | 'net'(불러오기 실패)
+const mapFailHTML = () => naverFail === 'auth' ? MAP_AUTH_FAIL : MAP_OFFLINE;
+// 네이버가 인증에 실패하면 이 함수를 부른다 → 열려 있는 모든 지도 영역에 안내를 보여준다 (앱은 정상 동작)
+window.navermap_authFailure = function () {
+  naverFail = 'auth';
+  ['plMap', 'lmMap'].forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = MAP_AUTH_FAIL; });
+  document.querySelectorAll('.mini-map').forEach(el => { el.innerHTML = MAP_AUTH_FAIL; });
+  if (naverFailHook) naverFailHook();
+};
+var naverFailHook = null;
+// 네이버 지도 스크립트: 처음 필요할 때만 한 번. 파라미터는 NAVER_PARAM 하나로 고정(자동 재시도 없음)
 function loadNaverMaps() {
   if (window.naver && naver.maps && naver.maps.Service) return Promise.resolve(true);
   if (naverPromise) return naverPromise;
+  naverFail = '';
   naverPromise = new Promise(resolve => {
-    const first = lsGet(NAVER_PARAM_KEY) === 'ncpClientId' ? 'ncpClientId' : 'ncpKeyId';
-    const order = [first, first === 'ncpKeyId' ? 'ncpClientId' : 'ncpKeyId'];
-    const attempt = i => {
-      if (i >= order.length) { resolve(false); return; }
-      let settled = false, sc = null, poll = 0;
-      const fail = (retry) => {
-        if (settled) return; settled = true; clearInterval(poll);
-        if (sc) sc.remove();
-        document.querySelectorAll('script[src*="maps-geocoder"]').forEach(x => x.remove());
-        try { delete window.naver; } catch (e) { window.naver = undefined; }
-        retry ? attempt(i + 1) : resolve(false);
-      };
-      const ok = () => { if (settled) return; settled = true; clearInterval(poll); lsSet(NAVER_PARAM_KEY, order[i]); resolve(true); };
-      window.navermap_authFailure = () => fail(true);   // 인증 오류 → 다른 파라미터로 재시도
-      sc = document.createElement('script');
-      sc.src = `https://oapi.map.naver.com/openapi/v3/maps.js?${order[i]}=${NAVER_ID}&submodules=geocoder`;
-      sc.async = true;
-      sc.onload = () => {   // geocoder 서브모듈은 maps.js 뒤에 따로 불려 오므로 준비될 때까지 기다린다 (최대 8초)
-        let waited = 0;
-        poll = setInterval(() => {
-          waited += 150;
-          if (window.naver && naver.maps && naver.maps.Service) ok();
-          else if (waited >= 8000) { if (window.naver && naver.maps) ok(); else fail(true); }   // 주소 검색 없이도 지도는 쓸 수 있게
-        }, 150);
-      };
-      sc.onerror = () => fail(false);   // 오프라인 등
-      document.head.appendChild(sc);
+    let done = false, poll = 0;
+    const finish = ok => { if (done) return; done = true; clearInterval(poll); naverFailHook = null; resolve(ok); };
+    naverFailHook = () => finish(false);   // 인증 실패
+    const sc = document.createElement('script');
+    sc.src = `https://oapi.map.naver.com/openapi/v3/maps.js?${NAVER_PARAM}=${NAVER_ID}&submodules=geocoder`;
+    sc.async = true;
+    sc.onload = () => {   // geocoder 서브모듈은 maps.js 뒤에 따로 불려 오므로 준비될 때까지 기다린다 (최대 8초)
+      let waited = 0;
+      poll = setInterval(() => {
+        waited += 150;
+        if (naverFail === 'auth') finish(false);
+        else if (window.naver && naver.maps && naver.maps.Service) finish(true);
+        else if (waited >= 8000) { if (window.naver && naver.maps) finish(true); else { naverFail = 'net'; finish(false); } }   // 주소 검색 없이도 지도는 쓸 수 있게
+      }, 150);
     };
-    attempt(0);
+    sc.onerror = () => { naverFail = 'net'; finish(false); };   // 오프라인 등
+    document.head.appendChild(sc);
   });
-  naverPromise.then(ok => { if (!ok) naverPromise = null; });   // 실패하면 다음에 다시 시도할 수 있게
+  naverPromise.then(ok => { if (!ok) { naverPromise = null; document.querySelectorAll('script[src*="oapi.map.naver.com"]').forEach(x => x.remove()); try { delete window.naver; } catch (e) { window.naver = undefined; } } });   // 실패하면 다음에 다시 시도할 수 있게
   return naverPromise;
 }
 
@@ -2478,7 +2478,7 @@ async function showMiniMap(el, p, state) {   // state = { map, marker } 를 넘�
   if (!navigator.onLine) { el.innerHTML = MAP_OFFLINE; return null; }
   if (!(window.naver && naver.maps)) el.innerHTML = '<div class="map-msg">지도를 불러오는 중…</div>';
   const ok = await loadNaverMaps();
-  if (!ok) { el.innerHTML = MAP_OFFLINE; return null; }
+  if (!ok) { el.innerHTML = mapFailHTML(); return null; }
   const ll = new naver.maps.LatLng(p.lat, p.lng);
   if (state && state.map && state.el === el) { state.map.setCenter(ll); state.marker.setPosition(ll); setTimeout(() => naver.maps.Event.trigger(state.map, 'resize'), 100); return state; }
   el.innerHTML = '';
@@ -2527,7 +2527,7 @@ async function openPlaceSheet(target) {
   if (!navigator.onLine) { box.innerHTML = MAP_OFFLINE; return; }
   const ok = await loadNaverMaps();
   if (tok !== plToken) return;
-  if (!ok) { box.innerHTML = MAP_OFFLINE; return; }
+  if (!ok) { box.innerHTML = mapFailHTML(); return; }
   box.innerHTML = '';
   plMap = new naver.maps.Map(box, { center: new naver.maps.LatLng(plPos ? plPos.lat : 37.5665, plPos ? plPos.lng : 126.978), zoom: plPos ? 15 : 11, zoomControl: true, zoomControlOptions: { position: naver.maps.Position.TOP_RIGHT } });
   if (plPos) plSetPin(plPos.lat, plPos.lng, false, false);
@@ -2607,7 +2607,7 @@ async function renderLogMap() {
   if (!navigator.onLine) { $('lmMap').innerHTML = MAP_OFFLINE; return; }
   const ok = await loadNaverMaps();
   if (tok !== lmToken || !$('lmMap')) return;
-  if (!ok) { $('lmMap').innerHTML = MAP_OFFLINE; return; }
+  if (!ok) { $('lmMap').innerHTML = mapFailHTML(); return; }
   const box = $('lmMap'); box.innerHTML = '';
   // 같은 장소(약 100m 안)는 한 핀으로 묶고 횟수 배지
   const groups = new Map();
