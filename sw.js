@@ -1,5 +1,5 @@
 // 짐로그 서비스워커: 파일을 바꿀 때마다 CACHE 버전을 올린다 (v2, v3 …)
-const CACHE = 'jimlog-v19';
+const CACHE = 'jimlog-v20';
 const PRECACHE = ['./', 'index.html', 'manifest.webmanifest',
   'privacy.html', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/apple-touch-icon.png', 'icons/favicon-32.png'];
 
@@ -15,7 +15,7 @@ self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET') return;
   // 구글 로그인·드라이브, 네이버 지도(oapi.map.naver.com, *.pstatic.net 등) 요청은 캐시하지 않고 그대로 통과
-  if (/(^|\.)(accounts\.google\.com|googleapis\.com|gstatic\.com|naver\.com|naver\.net|pstatic\.net)$/.test(new URL(req.url).hostname)) return;
+  if (/(^|\.)(accounts\.google\.com|googleapis\.com|gstatic\.com|naver\.com|naver\.net|pstatic\.net|openstreetmap\.org)$/.test(new URL(req.url).hostname)) return;
   const url = new URL(req.url);
   if (/\/map-test[^/]*\.html$/.test(url.pathname)) return;   // 지도 인증 테스트 페이지(map-test*.html)는 캐시하지 않고 그대로 통과
   if (req.mode === 'navigate') {   // 페이지: 네트워크 먼저(새 버전 바로 반영) → 실패하면 캐시

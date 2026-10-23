@@ -106,6 +106,11 @@
   .place-empty svg { flex: 0 0 auto; }
   .pl-search { display: flex; gap: 8px; margin-bottom: 8px; }
   .pl-search input { flex: 1 1 auto; min-width: 0; }
+  .pl-results { margin-bottom: 8px; max-height: 180px; overflow-y: auto; border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--surface); }
+  .pl-results[hidden] { display: none; }
+  .pl-results button { display: block; width: 100%; min-height: 44px; padding: 6px 12px; border: 0; border-top: 1px solid var(--line); border-radius: 0; background: none; text-align: left; font-weight: 600; }
+  .pl-results button:first-child { border-top: 0; }
+  .pl-results small { display: block; font-weight: 400; font-size: var(--fs-meta); color: var(--ink-3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .pl-map, .lm-map { position: relative; width: 100%; height: 300px; border-radius: var(--radius-md); overflow: hidden; background: var(--surface-sunken); }
   .lm-map { height: 360px; }
   .map-msg { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; height: 100%; padding: 16px; text-align: center; color: var(--ink-3); }
@@ -970,7 +975,8 @@
 </div>
 <div class="sheet dlg" id="placeSheet" role="dialog" aria-modal="true" aria-label="장소 정하기">
   <div class="sheet-hd"><b>장소 정하기</b><button id="plClose" aria-label="닫기">✕</button></div>
-  <div class="pl-search"><input id="plQuery" placeholder="주소로 찾기" enterkeyhint="search" autocomplete="off"><button type="button" class="primary" id="plFind">찾기</button></div>
+  <div class="pl-search"><input id="plQuery" placeholder="주소·장소 이름으로 찾기" enterkeyhint="search" autocomplete="off"><button type="button" class="primary" id="plFind">찾기</button></div>
+  <div class="pl-results" id="plResults" hidden></div>
   <div class="pl-map" id="plMap"></div>
   <div class="pl-tools"><button type="button" id="plGps">📍 지금 위치</button><div class="pl-addr" id="plAddr">지도를 눌러 핀을 옮겨요</div></div>
   <label class="f"><span>장소 이름</span><input id="plName" maxlength="30" placeholder="예: 난지캠핑장" autocomplete="off"></label>
@@ -2518,7 +2524,7 @@ async function openPlaceSheet(target) {
   plPos = init ? { lat: init.lat, lng: init.lng } : null; plAddr = init ? init.addr : '';
   $('plName').value = init ? init.name : ''; $('plQuery').value = '';
   $('plAddr').textContent = plAddr || '지도를 눌러 핀을 옮겨요';
-  $('plClear').hidden = !init;
+  $('plClear').hidden = !init; $('plResults').hidden = true;
   if (target !== 'cur') $('logSheet').classList.remove('open');   // 기록 상세 위에 겹치지 않게
   openDlg('placeSheet');
   const box = $('plMap');
@@ -2551,20 +2557,50 @@ function plSetPin(lat, lng, reverse, center) {
     } catch (e) { plAddr = ''; $('plAddr').textContent = '주소를 찾지 못했어요'; }
   }
 }
-function plFind() {
+// 이름으로 찾기: 주소 검색(네이버)에서 못 찾으면 OpenStreetMap 장소 검색(Nominatim)으로 이어서 찾는다
+async function plNameSearch(q) {
+  const r = await fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&q=${encodeURIComponent(q)}&countrycodes=kr&accept-language=ko&limit=6`);
+  if (!r.ok) throw new Error('http ' + r.status);
+  return (await r.json()).filter(x => isFinite(Number(x.lat)) && isFinite(Number(x.lon)));
+}
+function plPick(item) {   // 이름 검색 결과 하나를 고름 → 핀 + 주소(네이버 역지오코딩) + 이름 채우기
+  $('plResults').hidden = true;
+  plSetPin(Number(item.lat), Number(item.lon), true, true);
+  const nm = item.name || String(item.display_name || '').split(',')[0];
+  if (!$('plName').value.trim() && nm) $('plName').value = nm.slice(0, 30);
+}
+async function plFind() {
   const q = $('plQuery').value.trim();
+  $('plResults').hidden = true;
   if (!q) { $('plQuery').focus(); return; }
   if (!plMap) { toast('지도가 준비되면 다시 눌러 주세요'); return; }
-  if (!naver.maps.Service) { toast('주소 검색을 준비 중이에요 · 잠시 후 다시 눌러 주세요'); return; }
-  naver.maps.Service.geocode({ query: q }, (status, res) => {
-    const list = status === naver.maps.Service.Status.OK && res && res.v2 && res.v2.addresses || [];
-    if (!list.length) { toast('주소를 찾지 못했어요'); return; }
-    const a = list[0];
-    plSetPin(Number(a.y), Number(a.x), false, true);
-    plAddr = a.roadAddress || a.jibunAddress || q;
+  // 1) 주소로 찾기
+  let found = null;
+  if (naver.maps.Service) {
+    found = await new Promise(res => naver.maps.Service.geocode({ query: q }, (status, resp) => {
+      const list = status === naver.maps.Service.Status.OK && resp && resp.v2 && resp.v2.addresses || [];
+      res(list[0] || null);
+    }));
+  }
+  if (found) {
+    plSetPin(Number(found.y), Number(found.x), false, true);
+    plAddr = found.roadAddress || found.jibunAddress || q;
     $('plAddr').textContent = plAddr;
-  });
+    return;
+  }
+  // 2) 장소 이름으로 찾기
+  $('plAddr').textContent = '장소 이름으로 찾는 중…';
+  let list = [];
+  try { list = await plNameSearch(q); } catch (e) { $('plAddr').textContent = plAddr || '지도를 눌러 핀을 옮겨요'; toast('이름 검색에 연결하지 못했어요 · 주소로 찾거나 지도를 눌러 주세요'); return; }
+  $('plAddr').textContent = plAddr || '지도를 눌러 핀을 옮겨요';
+  if (!list.length) { toast('찾지 못했어요 · 주소를 넣거나 지도를 눌러 핀을 찍어 주세요'); return; }
+  if (list.length === 1) { plPick(list[0]); return; }
+  const box = $('plResults');
+  box.innerHTML = list.map((x, i) => { const parts = String(x.display_name || '').split(','); return `<button type="button" data-plpick="${i}">${esc(x.name || parts[0])}<small>${esc(parts.slice(1, 4).join(',').trim())}</small></button>`; }).join('');
+  box.hidden = false;
+  box._list = list;
 }
+$('plResults').addEventListener('click', e => { const b = e.target.closest('[data-plpick]'); if (!b) return; const l = $('plResults')._list || []; if (l[Number(b.dataset.plpick)]) plPick(l[Number(b.dataset.plpick)]); });
 function plGps() {
   if (!plMap) { toast('지도가 준비되면 다시 눌러 주세요'); return; }
   if (!navigator.geolocation) { toast('이 기기에서는 위치를 쓸 수 없어요'); return; }
