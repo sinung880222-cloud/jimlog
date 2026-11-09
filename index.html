@@ -84,6 +84,92 @@
   .f > span .info { display: inline-block; flex: none; width: auto; min-height: 0; margin-left: 4px; padding: 0 4px; font-size: 12px; vertical-align: baseline; }
   #sheet .it-edit { display: grid; margin: 0; }
   #sheet .it { border: 0; }
+  /* 나들이 탭 · 한 줄 요약 · 나들이 정하기 시트 */
+  .trip-line { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; padding: 6px 6px 6px 12px; border-radius: var(--radius-pill); background: var(--forest-tint); color: var(--forest-ink); font-weight: 600; }
+  .trip-line .tl-t { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .trip-line button { flex: 0 0 auto; min-height: 32px; padding: 0 12px; border: 0; border-radius: var(--radius-pill); background: var(--surface); color: var(--forest); font-weight: 700; }
+  #homeBox { display: flex; flex-direction: column; gap: 16px; max-width: 720px; margin: 0 auto; }
+  .hm-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; padding: 4px 2px 0; }
+  .hm-head .hm-sm { font-size: var(--fs-meta); color: var(--ink-3); }
+  .hm-head .hm-dd { margin-top: 2px; font-size: 20px; font-weight: 700; color: var(--ink); line-height: 1.3; }
+  .hm-head .hm-new { flex: 0 0 auto; min-height: 40px; padding: 0 14px; white-space: nowrap; }
+  .hm-trip-top { display: flex; align-items: center; gap: 12px; }
+  .hm-tile { flex: 0 0 auto; width: 56px; height: 56px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-md); background: var(--forest-tint); font-size: 30px; }
+  .hm-tt { flex: 1 1 auto; min-width: 0; }
+  .hm-tt b { display: block; font-size: 16px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .hm-tt span { display: block; margin-top: 2px; font-size: 12px; color: var(--ink-2); }
+  .hm-edit { flex: 0 0 auto; min-height: 36px; padding: 0 12px; font-weight: 600; }
+  .hm-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+  .hm-chip { display: inline-flex; align-items: center; min-height: 32px; max-width: 100%; padding: 0 12px; border: 1px solid var(--line); border-radius: var(--radius-pill); background: var(--surface-sunken); color: var(--ink); font-size: 12px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  button.hm-chip { cursor: pointer; background: var(--forest-tint); color: var(--forest-ink); border-color: transparent; }
+  .hm-hint { margin: 12px 0 8px; color: var(--ink-2); }
+  .hm-sun { display: flex; gap: 8px; margin-bottom: 8px; }
+  .hm-sun > div { flex: 1 1 0; padding: 8px; border-radius: var(--radius-md); background: var(--surface-sunken); text-align: center; }
+  .hm-sun b { display: block; margin-top: 2px; font-size: 18px; font-weight: 700; }
+  .hm-rec { padding: 8px 12px; border-radius: var(--radius-md); background: var(--ember-tint); color: var(--ember-ink); font-weight: 600; }
+  .hm-soon { margin-top: 8px; color: var(--ink-3); font-size: var(--fs-meta); }
+  .hm-links { display: flex; gap: 6px; margin-top: 8px; }
+  .hm-links a { flex: 1 1 0; display: flex; align-items: center; justify-content: center; min-height: 40px; border: 1px solid var(--line-strong); border-radius: var(--radius-md); background: var(--surface); color: var(--ink); font-weight: 600; text-decoration: none; }
+  .wx-load { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 0; color: var(--ink-2); }
+  .wx-load.fail { flex-direction: column; gap: 8px; }
+  .wx-load button { min-height: 36px; padding: 0 14px; border: 1px solid var(--line-strong); border-radius: var(--radius-md); background: var(--surface); color: var(--ink); font-weight: 600; }
+  .wx-now { margin-bottom: 8px; font-weight: 700; font-size: 15px; }
+  .wx-now span { font-weight: 400; font-size: 11px; color: var(--ink-3); }
+  .wx-rain { margin-bottom: 8px; padding: 8px 12px; border-radius: var(--radius-md); background: #E6EEF7; color: #2B4E75; font-weight: 600; }
+  .wx-slots { display: grid; gap: 6px; margin-bottom: 8px; }
+  .wx-slots.n4 { grid-template-columns: repeat(4, 1fr); }
+  .wx-slots.n3 { grid-template-columns: repeat(3, 1fr); }
+  .wx-slots.scroll { display: flex; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 4px; }
+  .wx-slots.scroll .wx-cell { flex: 0 0 82px; }
+  .wx-tl { display: block; font-size: 10px; font-weight: 400; color: var(--ink-3); }
+  .wx-cell { min-width: 0; padding: 8px 2px; border-radius: var(--radius-md); background: var(--surface-sunken); text-align: center; }
+  .wx-lb { font-size: 11px; color: var(--ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 2px; }
+  .wx-em { margin-top: 2px; font-size: 22px; line-height: 1.3; }
+  .wx-t { font-size: 16px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .wx-s { margin-top: 2px; font-size: 11px; color: var(--ink-2); line-height: 1.5; font-variant-numeric: tabular-nums; }
+  .wx-src { margin-top: 2px; font-size: 10px; color: var(--ink-3); }
+  .wx-cmp { margin-bottom: 6px; padding: 8px 12px; border: 1px solid var(--line); border-radius: var(--radius-md); }
+  .wx-cv { margin-top: 2px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+  .wx-cj { margin-top: 4px; font-size: 12px; font-weight: 600; }
+  .wx-ok { color: var(--forest-ink); }
+  .wx-diff { color: var(--ember-ink); background: var(--ember-tint); padding: 2px 8px; border-radius: var(--radius-pill); display: inline-block; }
+  .wx-note { margin: 6px 0; color: var(--ink-3); font-size: var(--fs-meta); }
+  .wx-note.warn { color: var(--ember-ink); }
+  .wx-foot { margin-top: 8px; font-size: 10px; color: var(--ink-3); text-align: right; }
+  .hm-pack { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+  .hm-pack .hm-big { font-size: 28px; font-weight: 700; }
+  .hm-pack .hm-chk { color: var(--ink-3); }
+  .hm-bar { margin-top: 12px; }
+  .hm-bar .hb-lb { display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 12px; color: var(--ink-2); }
+  .hm-bar .hb-tr { height: 10px; border-radius: 5px; background: var(--surface-sunken); overflow: hidden; }
+  .hm-bar .hb-fill { height: 100%; border-radius: 5px; background: var(--forest); }
+  .hm-bar .hb-fill.warn { background: #D9822B; }
+  .hm-bar .hb-fill.over { background: #B23A2E; }
+  .hm-go { width: 100%; margin-top: 16px; }
+  .hm-safe { display: flex; gap: 8px; margin: 8px 0; }
+  .hm-safe a { flex: 1 1 0; display: flex; align-items: center; justify-content: center; min-height: 44px; border-radius: var(--radius-md); border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); font-weight: 700; text-decoration: none; }
+  .hm-safe a.sos { background: var(--danger-tint); border-color: var(--danger); color: var(--danger); }
+  .rp-t { min-height: 20px; padding: 8px 0 0; color: var(--ink-2); }
+  .sheet.full .tp-body { padding-bottom: 8px; }
+  .tp-sec { margin-bottom: 20px; }
+  .tp-q { margin-bottom: 8px; font-size: 15px; font-weight: 700; }
+  .tp-acts { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tp-act { display: inline-flex; align-items: center; gap: 6px; height: 56px; min-height: 56px; padding: 0 16px; border-radius: var(--radius-md); font-weight: 600; font-size: 14px; }
+  .tp-act.on { background: var(--forest); border-color: var(--forest); color: var(--on-forest); }
+  .tp-pl-btns { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .tp-pl-btns button { flex: 1 1 auto; min-height: 44px; font-weight: 600; }
+  .tp-when { display: grid; grid-template-columns: 1.5fr 1fr 0.8fr; gap: 8px; }
+  .tp-when .f { min-width: 0; }
+  .tp-when select { width: 100%; min-width: 0; }
+  .tp-radio { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; padding: 12px; border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--surface); cursor: pointer; }
+  .tp-radio.on { border-color: var(--forest); background: var(--forest-tint); }
+  .tp-radio input { flex: 0 0 auto; width: 20px; height: 20px; min-height: 0; margin: 1px 0 0; accent-color: var(--forest); }
+  .tp-radio small { display: block; margin-top: 2px; color: var(--ink-3); font-size: var(--fs-meta); }
+  .tp-ft { position: sticky; bottom: 0; padding-top: 8px; background: var(--surface); }
+  .tp-go { width: 100%; min-height: 52px; font-size: 16px; }
+  .sheet.full { top: 0; max-height: 100%; height: 100%; border-radius: 0; padding-top: 16px; }
+  .sheet.full::before { display: none; }
+  .sheet.full .tp-body { overflow-y: auto; max-height: calc(100% - 140px); }
   /* 장소 · 지도 · 길찾기 */
   .place-box { margin-bottom: 12px; }
   .place-line { display: flex; gap: 6px; }
@@ -620,6 +706,9 @@
                  transition: opacity .15s, transform .15s; }
     .sheet.dlg.open { transform: translate(-50%, -50%); opacity: 1; pointer-events: auto; }
     .sheet.dlg::before { display: none; }
+    .sheet.full { top: 50%; height: auto; max-height: 90vh; border-radius: var(--radius-lg); width: min(640px, calc(100vw - 32px)); }
+    .sheet.full .tp-body { max-height: calc(90vh - 160px); }
+    #homeBox { gap: 20px; }
     .hdr { padding: env(safe-area-inset-top) 24px 0; }
     .toast { bottom: 24px; }
     .topnav { display: flex; align-self: stretch; gap: 4px; margin: 0 auto 0 24px; }
@@ -719,13 +808,14 @@
   }
 </style>
 </head>
-<body data-tab="stock">
+<body data-tab="home">
 
 <div class="inapp-bar" id="inappBar" hidden></div>
 
 <header class="hdr">
   <h1><span class="h-logo" id="hLogo"></span>짐로그<button type="button" class="g-state" id="gState" hidden></button></h1>
   <nav class="topnav" id="topnav" aria-label="화면 전환">
+    <button data-go="home">나들이</button>
     <button data-go="stock">장비</button>
     <button data-go="pack">패킹</button>
     <button data-go="log">기록</button>
@@ -756,6 +846,11 @@
 <div class="mini" id="mini"></div>
 
 <main>
+  <!-- ⓪ 나들이 탭 -->
+  <section class="tab" data-tab="home">
+    <div id="homeBox"></div>
+  </section>
+
   <!-- ② 패킹 탭 -->
   <section class="tab" data-tab="pack">
     <div class="np-row">
@@ -800,10 +895,9 @@
 
   <!-- ① 장비 탭 -->
   <section class="tab" data-tab="stock">
+    <div class="trip-line" id="tripLine"></div>
     <div class="card" id="stockCard">
       <div class="stock-banner" id="stockBanner"></div>
-      <div class="act-row" id="actRow"></div>
-      <div class="place-box" id="placeBox"></div>
       <div class="inst-card" id="instCard" hidden></div>
       <div class="stock-sum" id="stockSum"></div>
       <div class="selbar" id="selBar">
@@ -925,6 +1019,7 @@
     <div class="sheet-grid" style="margin-top:8px">
       <label class="f" style="grid-column:1/-1"><span>출발일</span><input type="date" id="rDate"></label>
       <label class="f" style="grid-column:1/-1"><span>제목 (선택)</span><input id="rName" maxlength="30" placeholder="예: 지리산 1박, 한강 피크닉" autocomplete="off"></label>
+      <div class="f" style="grid-column:1/-1"><span>장소</span><div class="rp-t" id="rPlace"></div></div>
       <div class="f" style="grid-column:1/-1"><span>종류</span><div class="act-grid" id="rAct" style="margin-top:4px"></div></div>
       <div class="f" style="grid-column:1/-1"><span>일정</span><div class="rec-chips" id="rDays" style="margin-top:4px"></div></div>
       <label class="f" style="grid-column:1/-1"><span>메모 (선택)</span><input id="rMemo" maxlength="100" placeholder="예: 침낭 추웠음, 물 1L 남음" autocomplete="off"></label>
@@ -982,6 +1077,11 @@
   <label class="f"><span>장소 이름</span><input id="plName" maxlength="30" placeholder="예: 난지캠핑장" autocomplete="off"></label>
   <div class="sheet-ft"><button type="button" id="plClear">장소 지우기</button><button type="button" class="primary" id="plSave">저장</button></div>
 </div>
+<div class="sheet dlg full" id="tripSheet" role="dialog" aria-modal="true" aria-label="나들이 정하기">
+  <div class="sheet-hd"><b id="tpTitle">새 나들이</b><button id="tpClose" aria-label="닫기">✕</button></div>
+  <div class="tp-body" id="tpBody"></div>
+  <div class="tp-ft"><button type="button" class="primary tp-go" id="tpGo">짐 챙기러 가기 →</button></div>
+</div>
 <div class="sheet dlg" id="logSheet" role="dialog" aria-modal="true" aria-label="다녀온 기록 상세">
   <div class="sheet-hd"><b id="lTitle">다녀온 기록</b><button id="lClose" aria-label="닫기">✕</button></div>
   <div id="lBody"></div>
@@ -997,6 +1097,10 @@
 <div class="toast" id="toast"></div>
 
 <nav class="tabbar" id="tabbar">
+  <button data-go="home">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg>
+    나들이
+  </button>
   <button data-go="stock">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg>
     장비
@@ -1022,11 +1126,33 @@ const SUP_COLOR = '#A6763A';
 // 나들이 종류 (trips.activity). "나들이"는 종류 이름이 아니라 전체를 부르는 말
 const ACTIVITIES = [{ k: 'picnic', n: '피크닉', e: '🧺' }, { k: 'hike', n: '등산', e: '🥾' }, { k: 'backpack', n: '백패킹', e: '🎒' },
                     { k: 'camp', n: '캠핑', e: '🏕️' }, { k: 'carcamp', n: '차박', e: '🚗' }, { k: 'travel', n: '여행', e: '✈️' }];
-const ACT_KEY = 'backpacking-activity-v1', ACTF_KEY = 'backpacking-actfilter-v1';   // 이번 패킹 종류 / 기록 탭 종류 필터
+const ACT_KEY = 'backpacking-activity-v1', ACTF_KEY = 'backpacking-actfilter-v1';   // (옛) 이번 패킹 종류 — 이제 curTrip.act 가 대신한다 / 기록 탭 종류 필터
+const TRIPNOW_KEY = 'backpacking-tripnow-v1', PLACE_KEY = 'backpacking-place-v1';   // 이번 나들이 / (옛) 이번 나들이 장소
 const actOf = k => ACTIVITIES.find(a => a.k === k) || ACTIVITIES[2];
 const isAct = k => ACTIVITIES.some(a => a.k === k);
-let curAct = 'backpack';
-try { const v = localStorage.getItem(ACT_KEY); if (isAct(v)) curAct = v; } catch (e) {}
+// 이번 나들이: 종류·장소·날짜·일정·인원·가방·목표 무게·제목을 한 곳에 모은다
+const DEFAULT_TRIP = () => ({ act: 'backpack', place: null, date: '', days: null, people: 1, bags: [], targetW: null, name: '' });
+function normCurTrip(o) {
+  const d = DEFAULT_TRIP();
+  if (!o || typeof o !== 'object') return d;
+  const dy = Number(o.days);
+  return { act: isAct(o.act) ? o.act : d.act, place: normPlace(o.place), date: DATE_RE.test(o.date) ? o.date : '',
+           days: o.days !== null && o.days !== '' && o.days !== undefined && [0, 1, 2, 3].includes(dy) ? dy : null,
+           people: Math.max(1, Math.min(99, Math.round(Number(o.people)) || 1)),
+           bags: Array.isArray(o.bags) ? o.bags.map(Number).filter(n => n > 0) : [],
+           targetW: Number(o.targetW) > 0 ? Math.round(Number(o.targetW)) : null, name: String(o.name || '').slice(0, 30) };
+}
+var curTrip = DEFAULT_TRIP();
+(function () {
+  let raw = null;
+  try { raw = JSON.parse(localStorage.getItem(TRIPNOW_KEY)); } catch (e) {}
+  if (raw && typeof raw === 'object') { curTrip = normCurTrip(raw); return; }
+  // 처음 실행: 옛 curAct(ACT_KEY)·curPlace(PLACE_KEY)를 curTrip으로 옮긴다 (옛 키는 지우지 않고 더 이상 쓰지 않는다)
+  try { const v = localStorage.getItem(ACT_KEY); if (isAct(v)) curTrip.act = v; } catch (e) {}
+  try { curTrip.place = normPlace(JSON.parse(localStorage.getItem(PLACE_KEY))); } catch (e) {}
+  try { localStorage.setItem(TRIPNOW_KEY, JSON.stringify(curTrip)); } catch (e) {}
+})();
+function saveCurTrip() { try { localStorage.setItem(TRIPNOW_KEY, JSON.stringify(curTrip)); } catch (e) {} gMarkDirty(); }
 const CAT_EMOJI = ['⛺', '🛌', '🎒', '🧥', '🍳', '🔦', '🪑', '⛑️', '🧴', '🎲'], SUP_EMOJI = '🍙';   // CATS 순서와 같음
 const josaEulReul = w => {   // 마지막 글자 받침에 따라 을/를 (한글, 숫자, 영문 읽는 소리 기준)
   const ch = String(w).trim().slice(-1), c = ch.charCodeAt(0);
@@ -1066,7 +1192,7 @@ const KEY = 'backpacking-gear-v1';
 const TAB_KEY = 'backpacking-tab-v1';
 const SHAPES = ['박스', '원통', '직접'];
 const SIZE_FIELDS = ['dx', 'dy', 'dz', 'dia', 'len', 'vol'];   // 가로·세로·높이 / 지름·길이 / 직접 부피(L)
-const TABS = ['stock', 'pack', 'log'];
+const TABS = ['home', 'stock', 'pack', 'log'];
 
 /* ═══ migrate: 옛 데이터 변환 ═══════════════════════════════════════════════
    예전 버전에서 저장한 데이터(localStorage, 나중에 백업 불러오기)를 읽을 때만 쓴다. 현재 동작과 무관하니 지우지 말 것.
@@ -1407,12 +1533,15 @@ function lastTripOf(act) {   // 같은 종류의 가장 최근 기록
   return trips.filter(t => t.activity === act).sort((a, b) => b.date.localeCompare(a.date) || (b.recordedAt || '').localeCompare(a.recordedAt || ''))[0] || null;
 }
 const actChips = (sel, attr) => ACTIVITIES.map(x => `<button type="button" class="chip${x.k === sel ? ' on' : ''}" ${attr}="${x.k}"><span class="ac-e">${x.e}</span><span class="ac-n">${x.n}</span></button>`).join('');
-function renderActRow() {
-  const a = actOf(curAct), last = lastTripOf(curAct);
-  $('actNow').textContent = `${a.e} ${a.n} 짐 싸는 중`;
-  renderPlaceBox();
-  $('actRow').innerHTML = `<div class="ar-lb">이번엔 어디로?</div><div class="act-grid">${actChips(curAct, 'data-act')}</div>`
-    + (last ? `<button type="button" class="act-reuse" data-actreuse="${last.id}">지난 ${a.e} ${a.n} 구성 불러오기 (${shortD(last.date)} · 장비 ${last.itemIds.length}품목)</button>` : '');
+// 이번 나들이 한 줄 요약 ("🎒 백패킹 · 굴업도 · 10/24") — 장비 탭 맨 위와 패킹 탭에서 쓴다
+function tripLineText() {
+  const a = actOf(curTrip.act), p = curTrip.place;
+  return [`${a.e} ${a.n}`, p && (p.name || p.addr), curTrip.date && shortD(curTrip.date)].filter(Boolean).join(' · ');
+}
+function renderTripLines() {
+  const t = tripLineText();
+  $('tripLine').innerHTML = `<span class="tl-t">${esc(t)}</span><button type="button" data-gohome>바꾸기</button>`;
+  $('actNow').textContent = t;
 }
 function baseCompareFoot(baseW, n) {   // n = 선택한 장비 수 (비교할 기록이 없을 때 "장비 n품목")
   const none = `<span style="color:#666B64">장비 ${n}품목</span>`;
@@ -1420,9 +1549,9 @@ function baseCompareFoot(baseW, n) {   // n = 선택한 장비 수 (비교할 �
   try { const v = localStorage.getItem(DAYS_KEY); d = v === null || v === '' ? null : Number(v); } catch (e) {}
   if (d === null || isNaN(d)) return none;
   const mt = matchedTrip();   // 지금 상태가 이미 기록된 경우 그 기록은 비교 대상에서 제외
-  const prev = trips.filter(t => t.activity === curAct && t.days === d && t !== mt && t.baseW > 0).sort((a, b) => b.date.localeCompare(a.date) || (b.recordedAt || '').localeCompare(a.recordedAt || ''))[0];
+  const prev = trips.filter(t => t.activity === curTrip.act && t.days === d && t !== mt && t.baseW > 0).sort((a, b) => b.date.localeCompare(a.date) || (b.recordedAt || '').localeCompare(a.recordedAt || ''))[0];
   if (!prev) return none;
-  const lb = `지난 ${actOf(curAct).n} ${DAY_LABELS[d]}`, diff = Math.round(baseW - prev.baseW);
+  const lb = `지난 ${actOf(curTrip.act).n} ${DAY_LABELS[d]}`, diff = Math.round(baseW - prev.baseW);
   if (!diff) return `<span class="stat-cmp">${lb}과 같음</span>`;
   return diff < 0 ? `<span class="stat-cmp down">${lb} 대비 −${comma(-diff)}g 👍</span>` : `<span class="stat-cmp">${lb} 대비 +${comma(diff)}g</span>`;
 }
@@ -1468,6 +1597,7 @@ function renderStockHero(packedCount) {
 }
 
 /* ── 요약 · 분석 · 미니 합계 (체크된 장비 기준) ── */
+var lastStats = { packedCount: 0, packTotal: 0, loadedCount: 0, packW: 0, baseW: 0, vol: 0 };
 function renderSummary() {
   const byCat = sumBy('cat', CATS);
   const base = { w: items.reduce((sum, it) => sum + (it.packed ? it.w : 0), 0) };   // 베이스 = 선택된 장비 합계 (파우치 포함, 다 담은 총무게)
@@ -1523,7 +1653,9 @@ function renderSummary() {
     warnEl.hidden = false;
   } else warnEl.hidden = true;
   renderStockHero(packedCount);
-  renderActRow();
+  lastStats = { packedCount, packTotal, loadedCount, packW: base.w + cons.w, baseW: base.w, vol: totalVol };
+  renderTripLines();
+  renderHome();
 
   // 무게·부피 도넛: 분류(CATS 순) + 식량·소모품(무게만)
   anData = { segs: [...CATS.map((c, i) => ({ k: 'c' + i, name: c, color: CAT_COLORS[i], w: byCat[i].w, v: volByCat[i] })),
@@ -1843,7 +1975,7 @@ function revealItem(id) {
   setTimeout(() => el.classList.remove('flash'), 1900);
 }
 
-function renderAll() { renderSummary(); renderPack(); renderList(); renderLog(); }
+function renderAll() { renderSummary(); renderPack(); renderList(); renderLog(); renderHome(); }
 
 /* ── 편집 / 추가 / 삭제 ── */
 function onEdit(el) {
@@ -1975,7 +2107,7 @@ function renderBackupNote() {
 }
 function exportBackup() {
   const ld = lsGet(DAYS_KEY);
-  const data = { app: 'backpacking', version: 1, savedAt: new Date().toISOString(), items, supplies, trips,
+  const data = { app: 'backpacking', version: 1, savedAt: new Date().toISOString(), items, supplies, trips, curTrip,
     settings: { lastDays: ld === null || ld === '' || isNaN(Number(ld)) ? null : Number(ld),
                 period: { p: period, from: periodFrom, to: periodTo }, logFilter, chart: chartMode, sort: { s: sortMode, d: sortDesc } } };
   const blob = new Blob([JSON.stringify(data, null, 1)], { type: 'application/json' });
@@ -2012,6 +2144,9 @@ function applyBackupData(d, withSettings) {
   nextTid = trips.reduce((m, t) => Math.max(m, t.id), 0) + 1;
   nextCid = items.reduce((m, it) => (it.contents || []).reduce((mm, c) => Math.max(mm, c.id), m), 0) + 1;
   pkOpen.clear(); openId = null; editingSid = null; sampleTripsPending = false;
+  // 이번 나들이: 파일에 있으면 그대로, 옛 백업에 없으면(파일 불러오기일 때) 기본값. 드라이브 동기화에서 옛 파일을 받으면 지금 값을 유지
+  if (d.curTrip) curTrip = normCurTrip(d.curTrip); else if (withSettings) curTrip = DEFAULT_TRIP();
+  try { localStorage.setItem(TRIPNOW_KEY, JSON.stringify(curTrip)); } catch (e) {}
   save(); saveSupplies(); saveTrips();
   if (withSettings) applyBackupSettings(d.settings);
   renderAll();
@@ -2127,7 +2262,7 @@ async function gFindFile() {
 }
 async function gFileMeta(id) { return (await gFetch(`${GD}/${id}?fields=id,modifiedTime`)).json(); }
 async function gDownload(id) { return (await gFetch(`${GD}/${id}?alt=media`)).json(); }
-function gPayload() { return { app: 'backpacking', version: 1, savedAt: new Date().toISOString(), deviceId: gDeviceId(), items, supplies, trips }; }
+function gPayload() { return { app: 'backpacking', version: 1, savedAt: new Date().toISOString(), deviceId: gDeviceId(), items, supplies, trips, curTrip }; }
 async function gWriteFile() {   // 파일이 있으면 덮어쓰고 없으면 만든다 → { id, modifiedTime }
   const body = JSON.stringify(gPayload());
   if (!gmeta.fileId) { const f = await gFindFile(); if (f) gmeta.fileId = f.id; }
@@ -2400,17 +2535,14 @@ $('verList').addEventListener('click', e => {
 /* ═══ 장소 · 네이버 지도 · 길찾기 ═════════════════════════════════════════
    장소(trips.place)를 저장하고, 다녀온 곳 지도와 길찾기 버튼을 보여준다. 지도 스크립트는 처음 지도를 열 때만 불러온다.
    오프라인이거나 불러오지 못해도 앱은 그대로 동작한다. */
-var PLACE_KEY = 'backpacking-place-v1', LV_KEY = 'backpacking-logview-v1';
+var LV_KEY = 'backpacking-logview-v1';
 var NAVER_PARAM = 'ncpKeyId', NAVER_ID = 'lr2ynr45hu', APP_URL = 'https://sinung880222-cloud.github.io';
-var curPlace = null;
-try { curPlace = normPlace(JSON.parse(localStorage.getItem(PLACE_KEY))); } catch (e) {}
 try { localStorage.removeItem('backpacking-navapp-v1'); } catch (e) {}   // (옛) 기본 길찾기 앱 설정 키 정리
 var logView = 'list';
 try { if (localStorage.getItem(LV_KEY) === 'map') logView = 'map'; } catch (e) {}
 try { localStorage.removeItem('backpacking-naverparam-v1'); } catch (e) {}   // (옛) 자동 재시도로 기억하던 파라미터 정리
 const MAP_AUTH_FAIL = '<div class="map-msg"><div style="font-size:28px">🗺️</div>지도 인증에 실패했어요 · 잠시 후 다시 시도해 주세요</div>';
 const MAP_OFFLINE = '<div class="map-msg"><div style="font-size:28px">🗺️</div>인터넷이 연결되면 지도를 볼 수 있어요</div>';
-const savePlace = () => { try { if (curPlace) localStorage.setItem(PLACE_KEY, JSON.stringify(curPlace)); else localStorage.removeItem(PLACE_KEY); } catch (e) {} };
 
 var naverPromise = null, naverFail = '';   // naverFail: '' | 'auth'(인증 실패) | 'net'(불러오기 실패)
 const mapFailHTML = () => naverFail === 'auth' ? MAP_AUTH_FAIL : MAP_OFFLINE;
@@ -2493,19 +2625,15 @@ async function showMiniMap(el, p, state) {   // state = { map, marker } 를 넘�
   setTimeout(() => naver.maps.Event.trigger(map, 'resize'), 350);
   return { map, marker, el };
 }
-function renderPlaceBox() {
-  const p = curPlace, box = $('placeBox');
-  if (!p) {   // 장소가 없으면 눈에 띄는 안내 카드 (지도 그림 + "지도에서 장소를 골라요")
-    box.innerHTML = `<button type="button" class="place-empty" data-placeedit="cur"><svg width="72" height="60" viewBox="0 0 72 60" aria-hidden="true"><rect width="72" height="60" rx="10" fill="#fff"/><path d="M0 40 L18 26 L30 36 L46 18 L72 38 V60 H0Z" fill="#A9DDC1"/><path d="M0 50 L22 38 L40 48 L58 34 L72 44 V60 H0Z" fill="#2F6B4F" fill-opacity=".85"/><circle cx="46" cy="16" r="9" fill="#D9822B"/><circle cx="46" cy="16" r="3.5" fill="#fff"/></svg><span class="pe-t">📍 지도에서 장소를 골라요<small>캠핑장·산 이름을 찾거나 지도를 눌러 핀을 꽂아요 (선택)</small></span></button>`;
-    return;
-  }
-  box.innerHTML = `<div class="map-slot" id="pbSlot"></div>` + placeRowHTML(p, 'cur') + placeActionsHTML(p);
-  const slot = $('pbSlot');
+const PLACE_EMPTY_HTML = `<button type="button" class="place-empty" data-placeedit="cur"><svg width="72" height="60" viewBox="0 0 72 60" aria-hidden="true"><rect width="72" height="60" rx="10" fill="#fff"/><path d="M0 40 L18 26 L30 36 L46 18 L72 38 V60 H0Z" fill="#A9DDC1"/><path d="M0 50 L22 38 L40 48 L58 34 L72 44 V60 H0Z" fill="#2F6B4F" fill-opacity=".85"/><circle cx="46" cy="16" r="9" fill="#D9822B"/><circle cx="46" cy="16" r="3.5" fill="#fff"/></svg><span class="pe-t">📍 지도에서 장소를 골라요<small>캠핑장·산 이름을 찾거나 지도를 눌러 핀을 꽂아요 (선택)</small></span></button>`;   // 장소가 없을 때 안내 카드
+function mountHomeMap(p) {   // 나들이 탭 카드의 작은 지도 (같은 장소면 지도 요소를 재사용)
+  const slot = $('hmSlot');
+  if (!slot || !p) return;
   if (!pbEl) { pbEl = document.createElement('div'); pbEl.className = 'mini-map'; }
   slot.appendChild(pbEl);
-  slot.insertAdjacentHTML('beforeend', '<button type="button" class="mm-tap" data-placeedit="cur" aria-label="지도를 눌러 장소 바꾸기"></button><span class="mm-hint">눌러서 바꾸기</span>');
+  slot.insertAdjacentHTML('beforeend', '<button type="button" class="mm-tap" data-tripedit aria-label="나들이 수정"></button><span class="mm-hint">눌러서 바꾸기</span>');
   const key = p.lat + ',' + p.lng;
-  if (pbKey === key && pbMap) { setTimeout(() => naver.maps.Event.trigger(pbMap.map, 'resize'), 100); return; }
+  if (pbKey === key && pbMap) { setTimeout(() => { if (window.naver && naver.maps) naver.maps.Event.trigger(pbMap.map, 'resize'); }, 100); return; }
   pbKey = key;
   showMiniMap(pbEl, p, pbMap).then(st => { if (st) pbMap = st; else pbKey = ''; });
 }
@@ -2517,15 +2645,18 @@ function mountDetailMap(t) {   // 기록 상세: 장소가 있으면 작은 지�
 
 // 장소 정하기 시트
 var plMap = null, plMarker = null, plPos = null, plAddr = '', plTarget = null, plToken = 0;
-const placeOf = target => target === 'cur' ? curPlace : ((trips.find(t => t.id === Number(target)) || {}).place || null);
-async function openPlaceSheet(target) {
-  plTarget = target;
+const placeOf = target => target === 'cur' ? curTrip.place : ((trips.find(t => t.id === Number(target)) || {}).place || null);
+var plFrom = null;   // 'trip' = 나들이 정하기 화면에서 열었음 (닫으면 그 화면으로 돌아감)
+async function openPlaceSheet(target, opts) {
+  plTarget = target; plFrom = opts && opts.from || null;
   const init = placeOf(target), tok = ++plToken;
   plPos = init ? { lat: init.lat, lng: init.lng } : null; plAddr = init ? init.addr : '';
   $('plName').value = init ? init.name : ''; $('plQuery').value = '';
   $('plAddr').textContent = plAddr || '지도를 눌러 핀을 옮겨요';
   $('plClear').hidden = !init; $('plResults').hidden = true;
+  if (opts && opts.mode === 'search') setTimeout(() => $('plQuery').focus(), 400);
   if (target !== 'cur') $('logSheet').classList.remove('open');   // 기록 상세 위에 겹치지 않게
+  if (plFrom === 'trip') $('tripSheet').classList.remove('open');   // 나들이 정하기 화면 위에 겹치지 않게
   openDlg('placeSheet');
   const box = $('plMap');
   box.innerHTML = '<div class="map-msg">지도를 불러오는 중…</div>';
@@ -2539,6 +2670,7 @@ async function openPlaceSheet(target) {
   if (plPos) plSetPin(plPos.lat, plPos.lng, false, false);
   naver.maps.Event.addListener(plMap, 'click', e => plSetPin(e.coord.lat(), e.coord.lng(), true, false));
   setTimeout(() => { if (plMap) naver.maps.Event.trigger(plMap, 'resize'); }, 350);
+  if (opts && opts.mode === 'gps') plGps();   // 🎯 지금 위치: 누른 직후 바로 위치를 가져온다
 }
 function plSetPin(lat, lng, reverse, center) {
   if (!plMap) return;
@@ -2609,21 +2741,23 @@ function plGps() {
     () => toast('위치를 가져오지 못했어요 · 권한을 확인해 주세요'),
     { enableHighAccuracy: true, timeout: 10000, maximumAge: 30000 });
 }
-function plFinish(target) {   // 시트를 닫고, 기록 상세에서 열었으면 상세로 돌아간다
+function plFinish(target) {   // 시트를 닫고, 기록 상세·나들이 정하기 화면에서 열었으면 그 화면으로 돌아간다
+  const from = plFrom; plFrom = null;
   closeSheet(); plToken++;
   if (target !== 'cur') { renderLogDetail(); $('logSheet').classList.add('open'); $('overlay').classList.add('open'); document.body.style.overflow = 'hidden'; }
+  else { refreshTrip(); if (from === 'trip') { renderTripEditor(); openDlg('tripSheet'); } }
 }
 function plSave() {
   if (!plPos) { toast('지도를 눌러 핀을 먼저 찍어 주세요'); return; }
   const target = plTarget;
   const pl = normPlace({ name: $('plName').value.trim(), lat: plPos.lat, lng: plPos.lng, addr: plAddr });
-  if (target === 'cur') { curPlace = pl; savePlace(); renderPlaceBox(); }
+  if (target === 'cur') { curTrip.place = pl; saveCurTrip(); }
   else { const t = trips.find(x => x.id === Number(target)); if (t) { t.place = pl; saveTrips(); refreshStats(); } }
   plFinish(target);
   toast('장소를 저장했어요 📍');
 }
 function placeClear(target) {
-  if (target === 'cur') { curPlace = null; savePlace(); renderPlaceBox(); }
+  if (target === 'cur') { curTrip.place = null; saveCurTrip(); refreshTrip(); }
   else { const t = trips.find(x => x.id === Number(target)); if (t) { t.place = null; saveTrips(); renderLogDetail(); refreshStats(); } }
 }
 
@@ -2686,6 +2820,313 @@ $('plGps').onclick = plGps;
 $('plSave').onclick = plSave;
 $('plClear').onclick = () => { const t = plTarget; placeClear(t); plFinish(t); };
 /* ═══ /장소 · 지도 ═══════════════════════════════════════════════════════ */
+
+/* ═══ 나들이 탭 · 나들이 정하기 ═══════════════════════════════════════════
+   curTrip(이번 나들이)을 한 화면에서 보고 고친다. 날씨는 Worker 중계 서버(WEATHER_API)에서 받고, 일출·일몰은 좌표와 날짜로 직접 계산한다. */
+const DAY_MS = 86400000;
+const fmtMDW = str => { const d = parseD(str); return `${d.getMonth() + 1}/${d.getDate()} (${WEEK[d.getDay()]})`; };
+const dayDiff = str => Math.round((parseD(str) - parseD(todayStr())) / DAY_MS);
+function tripWhenText(t) {   // "10/24 (토) ~ 25 (일) · 1박 · 2명"
+  if (!t.date) return `${t.people}명`;
+  let when = fmtMDW(t.date);
+  if (t.days > 0) {
+    const s0 = parseD(t.date), e = parseD(fmtDate(new Date(s0.getTime() + t.days * DAY_MS)));
+    when += ` ~ ${e.getMonth() !== s0.getMonth() ? (e.getMonth() + 1) + '/' : ''}${e.getDate()} (${WEEK[e.getDay()]})`;
+  }
+  return [when, t.days === null ? '' : DAY_LABELS[t.days], `${t.people}명`].filter(Boolean).join(' · ');
+}
+// 일출·일몰: NOAA 태양 위치 공식 (외부 API 없이). tz = 한국 표준시 +9
+function julianDay(y, m, d) { if (m <= 2) { y -= 1; m += 12; } const A = Math.floor(y / 100), B = 2 - A + Math.floor(A / 4); return Math.floor(365.25 * (y + 4716)) + Math.floor(30.6001 * (m + 1)) + d + B - 1524.5; }
+function sunTimesNOAA(lat, lng, y, m, d, tz) {
+  const rad = Math.PI / 180;
+  const T = (julianDay(y, m, d) + 0.5 - tz / 24 - 2451545.0) / 36525;
+  const L0 = (280.46646 + T * (36000.76983 + T * 0.0003032)) % 360;
+  const M = 357.52911 + T * (35999.05029 - 0.0001537 * T);
+  const e = 0.016708634 - T * (0.000042037 + 0.0000001267 * T);
+  const C = Math.sin(M * rad) * (1.914602 - T * (0.004817 + 0.000014 * T)) + Math.sin(2 * M * rad) * (0.019993 - 0.000101 * T) + Math.sin(3 * M * rad) * 0.000289;
+  const omega = 125.04 - 1934.136 * T;
+  const lambda = L0 + C - 0.00569 - 0.00478 * Math.sin(omega * rad);
+  const eps = 23 + (26 + (21.448 - T * (46.815 + T * (0.00059 - T * 0.001813))) / 60) / 60 + 0.00256 * Math.cos(omega * rad);
+  const decl = Math.asin(Math.sin(eps * rad) * Math.sin(lambda * rad));
+  const yy = Math.tan(eps * rad / 2) ** 2;
+  const eqTime = 4 * (yy * Math.sin(2 * L0 * rad) - 2 * e * Math.sin(M * rad) + 4 * e * yy * Math.sin(M * rad) * Math.cos(2 * L0 * rad) - 0.5 * yy * yy * Math.sin(4 * L0 * rad) - 1.25 * e * e * Math.sin(2 * M * rad)) / rad;
+  const cosHA = Math.cos(90.833 * rad) / (Math.cos(lat * rad) * Math.cos(decl)) - Math.tan(lat * rad) * Math.tan(decl);
+  if (cosHA < -1 || cosHA > 1) return null;   // 백야·극야
+  const HA = Math.acos(cosHA) / rad, noon = 720 - 4 * lng - eqTime + tz * 60;
+  return { rise: noon - 4 * HA, set: noon + 4 * HA };
+}
+const fmtHM = min => { const m = Math.round(min); return `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`; };
+function sunInfo(p, dateStr) {
+  const d = parseD(dateStr), r = sunTimesNOAA(p.lat, p.lng, d.getFullYear(), d.getMonth() + 1, d.getDate(), 9);
+  return r ? { rise: fmtHM(r.rise), set: fmtHM(r.set), tent: fmtHM(r.set - 40) } : null;
+}
+const bagCapacity = () => curTrip.bags.reduce((sum, id) => { const b = items.find(x => x.id === id); return sum + (b && b.cap > 0 ? b.cap : 0); }, 0);   // 가방 용량(L): 2단계에서 채운다
+const barHTML = (label, value, ratio) => `<div class="hm-bar"><div class="hb-lb"><span>${label}</span><span>${value}</span></div><div class="hb-tr"><div class="hb-fill${ratio > 1 ? ' over' : ratio > 0.8 ? ' warn' : ''}" style="width:${Math.min(100, Math.round(ratio * 100))}%"></div></div></div>`;
+
+/* ── 날씨: 짐로그 날씨 서버(Cloudflare Worker)가 기상청 + MET Norway를 합쳐 준다. 인증키는 서버에만 있다. ── */
+const WEATHER_API = 'https://jimlog-weather.jimlog-weather.workers.dev';   // 배포한 Worker 주소(https://jimlog-weather.○○○.workers.dev)를 여기 한 곳에만 쓴다
+const WX_KEY = 'backpacking-wxcache-v1', WX_TTL = 30 * 60 * 1000;   // 같은 장소·날짜는 30분 동안 저장해 두고 다시 부르지 않는다
+var wx = { key: '', state: 'idle', data: null };
+const wxQuery = () => { const t = curTrip, p = t.place; return p && t.date ? { lat: p.lat, lng: p.lng, date: t.date, days: t.days || 0 } : null; };
+const wxKeyOf = q => [q.lat.toFixed(3), q.lng.toFixed(3), q.date, q.days].join('|');
+function wxStore(fn) { try { const all = JSON.parse(localStorage.getItem(WX_KEY) || '{}'); fn(all); const keep = Object.keys(all).sort((a, b) => all[b].t - all[a].t).slice(0, 5), o = {}; keep.forEach(k => { o[k] = all[k]; }); localStorage.setItem(WX_KEY, JSON.stringify(o)); return all; } catch (e) { return {}; } }
+function wxCacheGet(key) { try { const o = JSON.parse(localStorage.getItem(WX_KEY) || '{}')[key]; return o && Date.now() - o.t < WX_TTL ? o.data : null; } catch (e) { return null; } }
+const wxUsable = d => d && d.hours && d.hours.some(h => h.kma || h.met);
+function wxEnsure(force) {
+  const q = wxQuery(); if (!q || !WEATHER_API) return;
+  const n = dayDiff(q.date); if (n > 10 || n < 0) return;
+  const key = wxKeyOf(q);
+  if (!force && wx.key === key && wx.state !== 'idle') return;   // 불러오는 중·성공·실패 모두 자동으로 다시 부르지 않는다(실패는 [다시 시도]로만)
+  wx.key = key;
+  if (force) wxStore(all => { delete all[key]; });
+  else { const c = wxCacheGet(key); if (c) { wx.state = 'ok'; wx.data = c; return; } }
+  wx.state = 'loading'; wx.data = null;
+  fetch(`${WEATHER_API}/weather?lat=${q.lat}&lng=${q.lng}&date=${q.date}&days=${q.days}`)
+    .then(r => r.json().then(j => { if (!r.ok) throw new Error(j.error || '오류'); return j; }))
+    .then(j => {
+      if (wx.key !== key) return;
+      if (!wxUsable(j)) { wx.state = 'fail'; wx.data = null; return; }
+      wx.state = 'ok'; wx.data = j;
+      if (!j.errors || !j.errors.length) wxStore(all => { all[key] = { t: Date.now(), data: j }; });   // 일부 실패한 응답은 저장하지 않는다(다시 부르면 나아질 수 있어서)
+    })
+    .catch(() => { if (wx.key === key) { wx.state = 'fail'; wx.data = null; } })
+    .then(() => { if (wx.key === key) renderHome(); });
+}
+const PTY_EMOJI = { 1: '🌧️', 2: '🌨️', 3: '❄️', 4: '🌦️' };
+const wxRainy = h => h.kma ? h.kma.pty > 0 : h.met ? (h.met.precip || 0) >= (h.met.ph === 6 ? 0.6 : 0.1) : false;
+function wxEmoji(h, night) {
+  if (h.kma) {
+    if (h.kma.pty) return PTY_EMOJI[h.kma.pty] || '🌧️';
+    const s = h.kma.sky; return s === 1 ? (night ? '🌙' : '☀️') : s === 3 ? '⛅' : s === 4 ? '☁️' : '🌤️';
+  }
+  if (h.met) {
+    if (wxRainy(h)) return '🌧️';
+    const c = h.met.cloud; return c === null || c === undefined ? '🌤️' : c < 25 ? (night ? '🌙' : '☀️') : c < 75 ? '⛅' : '☁️';
+  }
+  return '—';
+}
+const wxHour = h => parseInt(h.time.slice(11, 13), 10);
+const wxAt = h => { const d = parseD(h.time.slice(0, 10)); return `${WEEK[d.getDay()]} ${wxHour(h)}시`; };
+const addDaysStr = (str, n) => fmtDate(new Date(parseD(str).getTime() + n * DAY_MS));
+const avg = a => a.reduce((s, x) => s + x, 0) / a.length;
+const NTH = ['첫', '둘째', '셋째', '넷째'];
+// 나들이 기간(출발일 0시 ~ 돌아오는 날 24시, 당일치기는 그날)의 시간·날짜만 남긴다 — 서버 응답에 더 있어도 여기서 한 번 더 거른다
+function wxWin(data) {
+  const d0 = curTrip.date, d1 = addDaysStr(d0, curTrip.days || 0);
+  return Object.assign({}, data, { hours: data.hours.filter(h => h.time.slice(0, 10) >= d0 && h.time.slice(0, 10) <= d1), days: data.days.filter(x => x.date >= d0 && x.date <= d1) });
+}
+// 칸 정의: [이름, 날짜, 시작시, 끝시, 'min'|'max']  밤·새벽(저녁)은 그 시간의 최저기온, 오전·오후는 최고기온
+function wxSlotDefs(t) {
+  const N = t.days || 0, day = i => addDaysStr(t.date, i);
+  if (N === 0) return [['오전', day(0), 6, 12, 'max'], ['오후', day(0), 12, 18, 'max'], ['저녁', day(0), 18, 24, 'min']];
+  const defs = [], pre = N > 1;   // 1박은 "첫날 오후 / 밤 / 둘째날 새벽 / 둘째날 오전", 2박 이상은 마지막 밤·아침까지 이어 붙인다
+  for (let i = 0; i <= N; i++) {
+    const nm = NTH[i] || `${i + 1}째`;
+    if (i === 0) defs.push([`${nm}날 오후`, day(i), 12, 18, 'max']);
+    else { defs.push([`${nm}날 새벽`, day(i), 0, 6, 'min']); defs.push([`${nm}날 오전`, day(i), 6, 12, 'max']); if (i < N) defs.push([`${nm}날 오후`, day(i), 12, 18, 'max']); }
+    if (i < N) defs.push([pre ? `${nm}날 밤` : '밤', day(i), 18, 24, 'min']);
+  }
+  return defs;
+}
+function wxSlots(t, data, si) {
+  const defs = wxSlotDefs(t), rise = si ? parseInt(si.rise, 10) : 6, set = si ? parseInt(si.set, 10) : 19;
+  return `<div class="wx-slots ${defs.length > 4 ? 'scroll' : 'n' + defs.length}">` + defs.map(([lb, d, a, b, mode]) => {
+    const hs = data.hours.filter(h => h.time.slice(0, 10) === d && wxHour(h) >= a && wxHour(h) < b && (h.kma || h.met));
+    if (!hs.length) return `<div class="wx-cell"><div class="wx-lb">${lb}</div><div class="wx-em">—</div><div class="wx-s">예보 없음</div></div>`;
+    const kmaHs = hs.filter(h => h.kma), useKma = kmaHs.length > 0, src = useKma ? kmaHs : hs;
+    const mid = src[Math.floor(src.length / 2)], hr = wxHour(mid), night = hr < rise || hr >= set;
+    const temps = src.map(h => (useKma ? h.kma.t : h.met.t)).filter(x => x !== null && x !== undefined);
+    const winds = src.map(h => (useKma ? h.kma.wsd : h.met.wsd)).filter(x => x !== null && x !== undefined);
+    let rain;
+    if (useKma) { const p = src.map(h => h.kma.pop).filter(x => x !== null); rain = p.length ? `💧${Math.max(...p)}%` : ''; }
+    else { const mm = hs.reduce((s, h) => s + ((h.met && h.met.precip) || 0) / (h.met && h.met.ph === 6 ? 6 : 1), 0); rain = `💧${mm >= 0.1 ? mm.toFixed(1) + 'mm' : '0'}`; }
+    const tv = temps.length ? Math.round(mode === 'min' ? Math.min(...temps) : Math.max(...temps)) + '°' : '—';
+    return `<div class="wx-cell"><div class="wx-lb">${lb}</div><div class="wx-em">${wxEmoji(mid, night)}</div><div class="wx-t"><span class="wx-tl">${mode === 'min' ? '최저' : '최고'}</span>${tv}</div>`
+      + `<div class="wx-s">${rain}${winds.length ? `<br>💨${Math.round(Math.max(...winds))}m/s` : ''}</div>${useKma ? '' : '<div class="wx-src">노르웨이</div>'}</div>`;
+  }).join('') + `</div>`;
+}
+function wxRainLine(data) {
+  const hs = data.hours.filter(h => h.kma || h.met), i = hs.findIndex(wxRainy);
+  if (i < 0) return '';
+  let j = i; while (j < hs.length && wxRainy(hs[j])) j++;
+  const run = hs.slice(i, j), word = run.some(h => h.kma && h.kma.pty === 3) ? '눈' : run.some(h => h.kma && h.kma.pty === 2) ? '비/눈' : '비';
+  const emo = word === '눈' ? '❄️' : word === '비/눈' ? '🌨️' : '🌧️';
+  return `<div class="wx-rain">${emo} ${wxAt(hs[i])}부터 ${word}${j < hs.length ? `, ${wxAt(hs[j])} 그침` : ''}</div>`;
+}
+function wxCompare(data) {
+  const tDeg = v => `${Math.round(v)}°C`, ms = v => `${Math.round(v)}m/s`;
+  const kd = data.days.filter(d => d.kma && d.kma.tmin !== null && d.kma.tmax !== null), md = data.days.filter(d => d.met);
+  const same = kd.length ? md.filter(d => kd.some(k => k.date === d.date)) : md;   // 기상청이 있는 날짜끼리 견주기
+  const line = (icon, label, a, b, fmt, tol, hint, tail) => {
+    if (a === null && b === null) return '';
+    const parts = [a !== null ? `기상청 ${fmt(a)}` : '', b !== null ? `노르웨이 ${fmt(b)}${tail || ''}` : ''].filter(Boolean).join(' · ');
+    let ver = '', rng = '';
+    if (a !== null && b !== null) {
+      const diff = Math.abs(Math.round(a) - Math.round(b));
+      if (hint.range) rng = ` → ${Math.round(Math.min(a, b))}~${tDeg(Math.max(a, b))}`;
+      ver = diff <= tol ? `<span class="wx-ok">예보 일치 👍</span>` : `<span class="wx-diff">예보가 갈려요 · ${hint.text}</span>`;
+    }
+    return `<div class="wx-cmp"><div class="wx-cl"><b>${icon} ${label}</b></div><div class="wx-cv">${parts}${rng}</div>${ver ? `<div class="wx-cj">${ver}</div>` : ''}</div>`;
+  };
+  const mn = arr => arr.length ? Math.min(...arr) : null, mx = arr => arr.length ? Math.max(...arr) : null;
+  let h = line('🌙', '최저기온', mn(kd.map(d => d.kma.tmin)), mn(same.map(d => d.met.tmin)), tDeg, 2, { range: true, text: '추운 쪽에 맞춰 챙기세요' });
+  h += line('🌞', '최고기온', mx(kd.map(d => d.kma.tmax)), mx(same.map(d => d.met.tmax)), tDeg, 2, { range: true, text: '더운 쪽도 생각해 두세요' });
+  const kh = data.hours.filter(x => x.kma), base = kh.length ? kh : data.hours;
+  const kw = mx(kh.map(x => x.kma.wsd).filter(v => v !== null)), mw = mx(base.filter(x => x.met).map(x => x.met.wsd).filter(v => v !== null)), mg = mx(base.filter(x => x.met).map(x => x.met.gust).filter(v => v !== null));
+  h += line('💨', '최대 풍속', kw, mw, ms, 2, { text: '센 쪽에 맞춰 챙기세요' }, mg !== null ? ` (돌풍 ${ms(mg)})` : '');
+  return h;
+}
+function wxBody(si) {
+  const t = curTrip, n = dayDiff(t.date);
+  if (n > 10) return `<div class="wx-note">출발 10일 전부터 예보를 볼 수 있어요</div>`;
+  if (n < 0) return '';
+  if (!WEATHER_API) return `<div class="hm-soon">날씨 서버를 연결하면 예보가 여기 나와요</div>`;
+  if (wx.state === 'loading' || wx.state === 'idle') return `<div class="wx-load">${jimSVG('wait', 44, true)}<span>날씨 보는 중…</span></div>`;
+  if (wx.state === 'fail' || !wx.data) return `<div class="wx-load fail"><span>날씨를 못 불러왔어요</span><button type="button" data-wxretry>다시 시도</button></div>`;
+  const d = wxWin(wx.data), errs = d.errors || [], hasKma = d.hours.some(h => h.kma), hasMet = true;
+  let h = '';
+  if (n === 0 && d.now && d.now.t !== null) h += `<div class="wx-now">지금 ${Math.round(d.now.t)}°C${d.now.wsd !== null ? ` · 바람 ${Math.round(d.now.wsd * 10) / 10}m/s` : ''} <span>(${d.now.src} ${d.now.at})</span></div>`;
+  h += wxRainLine(d) + wxSlots(t, d, si) + wxCompare(d);
+  if (!hasKma && !errs.some(e => e.src === 'kma')) h += `<div class="wx-note">기상청 예보는 출발 3일 전부터 나와요 · 지금은 노르웨이 예보만</div>`;
+  if (errs.some(e => e.src === 'kma')) h += `<div class="wx-note warn">기상청 예보를 못 불러왔어요</div>`;
+  if (errs.some(e => e.src === 'met')) h += `<div class="wx-note warn">노르웨이 예보를 못 불러왔어요</div>`;
+  return h;
+}
+function wxFoot() {
+  if (wx.state !== 'ok' || !wx.data) return '';
+  const u = new Date(wx.data.updatedAt), hm = `${pad2(u.getHours())}:${pad2(u.getMinutes())}`;
+  return `<div class="wx-foot">출처: 기상청, MET Norway · ${isNaN(u) ? '' : hm + ' 업데이트'}</div>`;
+}
+
+function renderHome() {
+  if (document.body.dataset.tab !== 'home') return;
+  const t = curTrip, a = actOf(t.act), p = t.place, st = lastStats;
+  // a. 머리말
+  let dd = '어디로 떠나 볼까요?', sm = '';
+  if (t.date) {
+    const n = dayDiff(t.date);
+    sm = '다음 나들이까지';
+    dd = n > 0 ? `D-${n} · ${WEEK[parseD(t.date).getDay()]}요일에 출발해요` : n === 0 ? '오늘 출발해요 🎉' : '출발일이 지났어요 · 기록을 남겼나요?';
+  }
+  let h = `<div class="hm-head"><div>${sm ? `<div class="hm-sm">${sm}</div>` : ''}<div class="hm-dd">${dd}</div></div><button type="button" class="primary hm-new" data-newtrip>＋ 새 나들이</button></div>`;
+  // b. 이번 나들이 카드
+  const bagNames = t.bags.map(id => (items.find(x => x.id === id) || {}).name).filter(Boolean);
+  h += `<div class="card"><div class="hm-trip-top"><div class="hm-tile">${a.e}</div><div class="hm-tt"><b>${esc(a.n)}${p ? ' · ' + esc(p.name || p.addr || '선택한 위치') : ''}</b><span>${esc(tripWhenText(t))}</span></div><button type="button" class="hm-edit" data-tripedit>수정</button></div>`;
+  if (!p && !t.date) h += `<p class="hm-hint">장소를 정하면 날씨를 볼 수 있어요</p>${PLACE_EMPTY_HTML}`;
+  else {
+    const route = p ? `<button type="button" class="hm-chip" data-route="naver" data-lat="${p.lat}" data-lng="${p.lng}" data-name="${esc(p.name || p.addr || '목적지')}">🧭 길찾기</button>` : '';
+    h += `<div class="hm-chips">${p && p.addr ? `<span class="hm-chip">📍 ${esc(p.addr)}</span>` : ''}${bagNames.length ? `<span class="hm-chip">🎒 ${esc(bagNames.join(' · '))}</span>` : ''}${route}</div>`;
+    if (!p) h += `<p class="hm-hint">장소를 정하면 날씨를 볼 수 있어요</p>${PLACE_EMPTY_HTML}`;
+    else h += `<div class="map-slot" id="hmSlot" style="margin:12px 0 0"></div>`;
+  }
+  h += `</div>`;
+  // c. 날씨 브리핑: 서버 예보(기상청 + MET Norway) + 일출·일몰(직접 계산) + 링크
+  if (p && t.date) {
+    wxEnsure();
+    const si = sunInfo(p, t.date), camp = ['backpack', 'camp', 'carcamp'].includes(t.act);
+    h += `<div class="card"><div class="card-title">🌤️ 날씨 브리핑</div>` + wxBody(si)
+      + (si ? `<div class="hm-sun"><div><span class="sub">🌅 일출</span><b>${si.rise}</b></div><div><span class="sub">🌇 일몰</span><b>${si.set}</b></div></div>
+        <div class="hm-rec">${camp ? `⛺ 일몰 40분 전인 ${si.tent}까지 텐트 치는 걸 추천해요` : `🌇 일몰 40분 전인 ${si.tent}까지 이동을 마치는 걸 추천해요`}</div>` : '<div class="hm-hint">이 날짜는 해가 뜨고 지는 시간을 계산할 수 없어요</div>')
+      + `<div class="hm-links"><a href="https://www.windy.com/?${p.lat},${p.lng},11" target="_blank" rel="noopener">Windy</a><a href="https://www.weather.go.kr/w/index.do" target="_blank" rel="noopener">기상청</a><a href="https://www.meteoblue.com/ko/weather/week/${p.lat.toFixed(3)}N${p.lng.toFixed(3)}E" target="_blank" rel="noopener">meteoblue</a></div>` + wxFoot() + `</div>`;
+  }
+  // d. 날씨 보고 챙길 것 (3단계에서 채움, 지금은 숨김)
+  h += `<div class="card" id="hmGear" hidden><div class="card-title">🎒 날씨 보고 챙길 것</div></div>`;
+  // e. 짐 현황
+  const kg = (st.packW / 1000).toFixed(1) + 'kg', vl = Math.round(st.vol) + 'L';
+  const cap = bagCapacity();
+  h += `<div class="card"><div class="card-title">📦 짐 현황</div><div class="hm-pack"><span class="hm-big">${kg} · ${vl}</span><span class="hm-chk">체크 ${st.loadedCount} / ${st.packTotal}</span></div>`
+    + (t.targetW ? barHTML('무게', `${kg} / ${(t.targetW / 1000).toFixed(1)}kg`, st.packW / t.targetW) : `<div class="hm-bar"><div class="hb-lb"><span>무게</span><span>${kg}</span></div></div>`)
+    + (cap > 0 ? barHTML('부피', `${vl} / ${Math.round(cap)}L`, st.vol / cap) : `<div class="hm-bar"><div class="hb-lb"><span>부피</span><span>${vl}</span></div><div class="hm-soon" style="margin-top:2px">가방을 고르면 얼마나 찼는지 보여요</div></div>`)
+    + `<button type="button" class="primary hm-go" data-hmgo="${st.packedCount > 0 ? 'pack' : 'stock'}">${st.packedCount > 0 ? '패킹 이어서 하기 →' : '장비 고르러 가기 →'}</button></div>`;
+  // f. 안전
+  const q = encodeURIComponent(((p && (p.name || p.addr)) || '') + ' 응급실');
+  h += `<div class="card"><div class="card-title">🛟 안전</div><div class="hm-safe"><a class="sos" href="tel:119">📞 119</a><a href="https://map.naver.com/p/search/${q}" target="_blank" rel="noopener">🏥 가까운 응급실</a></div><div class="hm-soon">사고가 나면 지금 위치를 119에 알려주세요</div><div id="hmGrid" hidden>국가지점번호</div></div>`;
+  $('homeBox').innerHTML = h;
+  if (p) mountHomeMap(p);
+}
+function refreshTrip() { renderTripLines(); renderHome(); if ($('tripSheet').classList.contains('open')) renderTripEditor(); }
+
+// 나들이 정하기 (전체 화면 시트): 새 나들이 / 수정
+var tpMode = 'edit', tpGear = 'keep', tpSecond = 'keep';
+function openTripEditor(mode, gear) {
+  tpMode = mode;
+  tpSecond = mode === 'edit' || gear === 'keep' ? 'keep' : 'empty';
+  tpGear = mode === 'edit' || gear === 'keep' ? 'keep' : (lastTripOf(curTrip.act) ? 'last' : 'empty');
+  $('tpTitle').textContent = mode === 'new' ? '새 나들이' : '나들이 수정';
+  renderTripEditor();
+  openDlg('tripSheet');
+}
+function renderTripEditor() {
+  const t = curTrip, p = t.place, a = actOf(t.act), last = lastTripOf(t.act);
+  if (tpGear === 'last' && !last) tpGear = tpSecond;
+  const packed = items.filter(i => i.packed).length;
+  let h = `<div class="tp-sec"><div class="tp-q">어떤 나들이예요?</div><div class="tp-acts">${ACTIVITIES.map(x => `<button type="button" class="tp-act chip${x.k === t.act ? ' on' : ''}" data-tpact="${x.k}"><span>${x.e}</span><span>${x.n}</span></button>`).join('')}</div></div>`;
+  h += `<div class="tp-sec"><div class="tp-q">📍 어디로 가세요?</div><div class="place-line"><button type="button" class="place-row" data-tpplace="map"><span>📍</span><span class="pl-t">${p ? esc(p.name || p.addr || '선택한 위치') : '장소 정하기'}${p && p.name && p.addr ? `<small>${esc(p.addr)}</small>` : ''}</span><span class="pl-go">${p ? '바꾸기' : '정하기'}</span></button>${p ? '<button type="button" class="pl-x" data-tpplaceclear aria-label="장소 지우기">✕</button>' : ''}</div>
+    <div class="tp-pl-btns"><button type="button" data-tpplace="search">🔍 이름·주소로 찾기</button><button type="button" data-tpplace="gps">🎯 지금 위치</button><button type="button" data-tpplace="map">🗺️ 지도에서 찍기</button></div></div>`;
+  h += `<div class="tp-sec"><div class="tp-q">📅 언제 가세요?</div><div class="tp-when">
+    <label class="f"><span>출발일</span><input type="date" id="tpDate" value="${t.date}"></label>
+    <label class="f"><span>일정</span><select id="tpDays">${DAY_LABELS.map((l, i) => `<option value="${i}"${(t.days === null ? 0 : t.days) === i ? ' selected' : ''}>${l}</option>`).join('')}</select></label>
+    <label class="f"><span>인원</span><input id="tpPeople" inputmode="numeric" maxlength="2" value="${t.people}"></label></div></div>`;
+  h += `<div class="tp-sec" id="tpBags" hidden><div class="tp-q">🧳 어디에 싣나요?</div></div>`;   // 2단계에서 채운다
+  const lastTxt = last ? `${shortD(last.date)}${last.place && last.place.name ? ' · ' + esc(last.place.name) : ''} · 장비 ${last.itemIds.length}개 · ${fmtW(last.baseW)}${last.vol > 0 ? ' · ' + fmtV(last.vol) : ''}` : '';
+  const second = tpSecond === 'keep' ? ['keep', '지금 고른 그대로', `장비 ${packed}개`] : ['empty', '빈 상태로 시작', '장비 선택을 모두 비우고 처음부터'];
+  const opts = [...(last ? [['last', `지난 ${a.n} 짐 불러오기`, lastTxt]] : []), second];
+  h += `<div class="tp-sec"><div class="tp-q">🎒 짐은 어떻게 시작할까요?</div>${opts.map(([k, l, sub]) => `<label class="tp-radio${tpGear === k ? ' on' : ''}"><input type="radio" name="tpgear" value="${k}"${tpGear === k ? ' checked' : ''}><span>${l}<small>${sub}</small></span></label>`).join('')}</div>`;
+  $('tpBody').innerHTML = h;
+}
+function applyTripGear() {   // 고른 시작 방법을 장비 선택에 반영
+  if (tpGear === 'last') {
+    const l = lastTripOf(curTrip.act);
+    if (l) { items.forEach(it => { it.packed = l.itemIds.includes(it.id); resetLoaded(it); }); pkOpen.clear(); save(); }
+  } else if (tpGear === 'empty') {
+    items.forEach(it => { it.packed = false; resetLoaded(it); });
+    supplies = []; editingSid = null; pkOpen.clear(); save(); saveSupplies();
+  }
+}
+function beginNewTrip(gear) {   // 날짜·장소·제목은 비우고 종류·가방·인원은 남긴다
+  curTrip = Object.assign(DEFAULT_TRIP(), { act: curTrip.act, bags: curTrip.bags.slice(), people: curTrip.people });
+  saveCurTrip(); refreshTrip();
+  openTripEditor('new', gear);
+}
+async function startNewTrip() {
+  const n = items.filter(i => i.packed).length;
+  if (!n) { beginNewTrip('empty'); return; }
+  const ch = await gAsk('지금 고른 장비는 어떻게 할까요?', `새 나들이를 만들어요. 지금 고른 장비는 ${n}개예요.`, '지금 고른 그대로 쓰기', '비우고 새로 시작');
+  if (ch === 'a') beginNewTrip('keep'); else if (ch === 'b') beginNewTrip('empty');
+}
+function startNextTrip() {   // 기록을 남긴 뒤 "다음 나들이를 만들까요?" → 날짜·장소·제목은 비우고 종류·가방은 남긴다
+  Object.assign(curTrip, { date: '', place: null, name: '', days: null });
+  saveCurTrip(); goTab('home'); refreshTrip();
+  openTripEditor('new', 'keep');
+}
+document.addEventListener('click', e => {
+  if (e.target.closest('[data-newtrip]')) { startNewTrip(); return; }
+  if (e.target.closest('[data-tripedit]')) { openTripEditor('edit'); return; }
+  if (e.target.closest('[data-gohome]')) { goTab('home'); return; }
+  if (e.target.closest('[data-wxretry]')) { wxEnsure(true); renderHome(); return; }
+  const go = e.target.closest('[data-hmgo]');
+  if (go) { goTab(go.dataset.hmgo); return; }
+  const pl = e.target.closest('[data-tpplace]');
+  if (pl) { openPlaceSheet('cur', { from: 'trip', mode: pl.dataset.tpplace }); return; }
+  if (e.target.closest('[data-tpplaceclear]')) { curTrip.place = null; saveCurTrip(); refreshTrip(); return; }
+  const ta = e.target.closest('[data-tpact]');
+  if (ta) { curTrip.act = ta.dataset.tpact; saveCurTrip(); refreshTrip(); }
+});
+$('tpBody').addEventListener('change', e => {
+  if (e.target.id === 'tpDate') curTrip.date = DATE_RE.test(e.target.value) ? e.target.value : '';
+  else if (e.target.id === 'tpDays') curTrip.days = Number(e.target.value);
+  else if (e.target.id === 'tpPeople') { curTrip.people = Math.max(1, Math.min(99, Math.round(Number(String(e.target.value).replace(/[^\d]/g, ''))) || 1)); e.target.value = curTrip.people; }
+  else if (e.target.name === 'tpgear') { tpGear = e.target.value; document.querySelectorAll('#tpBody .tp-radio').forEach(r => r.classList.toggle('on', r.querySelector('input').checked)); return; }
+  else return;
+  saveCurTrip(); renderTripLines(); renderHome();
+});
+$('tpClose').onclick = () => closeSheet();
+$('tpGo').onclick = () => {
+  saveCurTrip(); applyTripGear();
+  closeSheet(); renderAll(); goTab('stock');
+  toast('짐을 챙겨 볼까요? 🎒');
+};
+/* ═══ /나들이 탭 ═════════════════════════════════════════════════════════ */
 
 /* ═══ 홈 화면 설치 안내 ═══════════════════════════════════════════════════
    앱 안 브라우저(카톡 등)에서는 띠로 "브라우저로 열기", 안드로이드 크롬은 beforeinstallprompt 설치 카드,
@@ -2761,11 +3202,12 @@ function clearAll() {
 /* ── 탭 ── */
 function setTab(t, scroll) {
   t = TAB_LEGACY[t] || t;
-  if (!TABS.includes(t)) t = 'stock';
+  if (!TABS.includes(t)) t = 'home';
   document.body.dataset.tab = t;
   document.querySelectorAll('.tab').forEach(s => s.classList.toggle('on', s.dataset.tab === t));
   document.querySelectorAll('#tabbar button, #topnav button').forEach(b => b.classList.toggle('on', b.dataset.go === t));
   try { localStorage.setItem(TAB_KEY, t); } catch (e) {}
+  if (t === 'home') renderHome();
   updateSelbarH();
   if (scroll) window.scrollTo(0, 0);
 }
@@ -2853,12 +3295,15 @@ function openRec(auto) {
   $('rLater').textContent = auto ? '나중에' : '취소';
   $('rForm').hidden = false; $('rConflict').hidden = true;
   $('rSum').innerHTML = `<div class="rec-sum3"><div><span class="sub">장비</span><b>${rec.length}품목</b></div><div><span class="sub">베이스</span><b>${fmtW(baseW)}</b></div><div><span class="sub">배낭</span><b>${fmtW(baseW + sups.reduce((sum, x) => sum + x.w * x.q, 0))}</b></div></div>`;
-  $('rName').value = ''; $('rMemo').value = '';
+  // 출발일·일정·제목·장소·종류는 이번 나들이(curTrip) 값으로 미리 채운다 (제목이 비어 있으면 장소 이름)
+  const ct = curTrip;
+  $('rName').value = ct.name || (ct.place && ct.place.name) || ''; $('rMemo').value = '';
+  $('rPlace').textContent = ct.place ? '📍 ' + (ct.place.name || ct.place.addr) : '장소 없음 (나들이 탭에서 정할 수 있어요)';
   let last = null;
   try { const v = localStorage.getItem(DAYS_KEY); last = v === null || v === '' ? null : Number(v); } catch (e) {}
-  setRecAct(curAct);   // 기본값 = 이번 패킹 종류
-  setRecDays([0, 1, 2, 3].includes(last) ? last : null);   // 마지막 선택값 기억
-  setRecDate(tomorrowStr());   // 기본 출발일 = 내일
+  setRecAct(ct.act);
+  setRecDays(ct.date && ct.days !== null ? ct.days : ([0, 1, 2, 3].includes(last) ? last : null));   // 나들이의 일정, 없으면 마지막 선택값
+  setRecDate(DATE_RE.test(ct.date) ? ct.date : tomorrowStr());   // 나들이의 출발일, 없으면 내일
   openDlg('recSheet');
 }
 function buildRecord(date, name) {
@@ -2866,7 +3311,7 @@ function buildRecord(date, name) {
   const baseW = rec.reduce((sum, it) => sum + it.w, 0);
   return { date, name, itemIds: rec.map(it => it.id), items: rec.map(it => ({ id: it.id, name: it.name, cat: it.cat, w: it.w })), baseW, packW: baseW + sups.reduce((sum, x) => sum + x.w * x.q, 0),
            supplies: sups.map(x => ({ name: x.name, w: x.w, q: x.q, p: x.p })),
-           vol: rec.reduce((sum, it) => sum + volOf(it), 0), recordedAt: new Date().toISOString(), place: curPlace };   // 이번 나들이 장소가 기록의 place로
+           vol: rec.reduce((sum, it) => sum + volOf(it), 0), recordedAt: new Date().toISOString(), place: curTrip.place };   // 이번 나들이 장소가 기록의 place로
 }
 function saveRec() {
   const date = DATE_RE.test($('rDate').value) ? $('rDate').value : tomorrowStr();
@@ -2884,7 +3329,7 @@ function commitRec(mode) {
   const name = $('rName').value.trim();
   const rec = { ...buildRecord(date, name), activity: recAct, days: recDays, memo: $('rMemo').value.trim().slice(0, 100) };
   try { localStorage.setItem(DAYS_KEY, recDays === null ? '' : String(recDays)); } catch (e) {}
-  if (recAct !== curAct) { curAct = recAct; try { localStorage.setItem(ACT_KEY, curAct); } catch (e) {} }
+  if (recAct !== curTrip.act) { curTrip.act = recAct; saveCurTrip(); }
   let label = name || '이번 패킹';
   if (mode === 'update' && trips.some(t => t.id === recDup)) {
     const t = trips.find(x => x.id === recDup);
@@ -2896,7 +3341,7 @@ function commitRec(mode) {
   }
   saveTrips();   // 기록 후 챙김(loaded)·식량 상태는 그대로 유지
   closeSheet(); renderAll();
-  toast(label + ' (๑•̀ㅂ•́)و✧');
+  toastAction(label + ' (๑•̀ㅂ•́)و✧ · 다음 나들이를 만들까요?', '만들기', startNextTrip);
 }
 
 /* ── 새 패킹 시작 (기록된 상태에서) ── */
@@ -3581,15 +4026,7 @@ window.addEventListener('scroll', hideSizePop, { passive: true });
 
 // 패킹 완료 기록 / 새 패킹 시작 / 나들이 기록
 $('btnFinish').onclick = () => openRec(false);
-$('actNow').onclick = () => {   // 장비 탭으로 이동해 종류 칩 위치로 스크롤
-  goTab('stock');
-  setTimeout(() => $('actRow').scrollIntoView({ behavior: 'smooth', block: 'start' }), 60);
-};
-$('actRow').addEventListener('click', e => {
-  const c = e.target.closest('[data-act]'), r = e.target.closest('[data-actreuse]');
-  if (c) { curAct = c.dataset.act; try { localStorage.setItem(ACT_KEY, curAct); } catch (err) {} renderSummary(); return; }
-  if (r) { const t = trips.find(x => x.id === Number(r.dataset.actreuse)); if (t) reuseTrip(t); }
-});
+$('actNow').onclick = () => goTab('home');   // 한 줄 요약을 누르면 나들이 탭으로
 $('rAct').addEventListener('click', e => { const b = e.target.closest('[data-ra]'); if (b) setRecAct(b.dataset.ra); });
 $('rDays').addEventListener('click', e => { const b = e.target.closest('[data-rd]'); if (b) setRecDays(recDays === Number(b.dataset.rd) ? null : Number(b.dataset.rd)); });   // 다시 누르면 미지정
 $('rToday').onclick = () => setRecDate(todayStr());
@@ -3762,8 +4199,8 @@ if ('IntersectionObserver' in window) {
     { rootMargin: `-${document.querySelector('.hdr').offsetHeight}px 0px 0px 0px` }).observe($('statsWrap'));
 }
 
-let startTab = 'stock';
-try { startTab = localStorage.getItem(TAB_KEY) || 'stock'; } catch (e) {}
+let startTab = 'home';
+try { startTab = localStorage.getItem(TAB_KEY) || 'home'; } catch (e) {}
 setTab(startTab, false);
 function initSampleTrips() {   // 처음 열었을 때 보여주는 샘플 나들이 (이름으로 장비를 찾아 연결)
   const ids = names => names.map(n => (items.find(it => it.name === n) || {}).id).filter(Boolean);

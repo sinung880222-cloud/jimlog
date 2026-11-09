@@ -1,0 +1,6 @@
+# 짐로그 날씨 중계 서버 (Cloudflare Worker)
+# 비밀값(KMA_KEY)은 여기에 쓰지 않는다 → `npx wrangler secret put KMA_KEY` 로 직접 넣는다.
+name = "jimlog-weather"
+main = "src/index.js"
+compatibility_date = "2025-09-01"
+workers_dev = true
