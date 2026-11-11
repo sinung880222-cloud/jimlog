@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict';
 import { toGrid } from '../src/grid.js';
 import { fcstBase, ncstBase } from '../src/time.js';
-import { parseFcst, parseNcst, parseMet, combine, parseMetDaily, buildDaily } from '../src/index.js';
+import { parseFcst, parseNcst, parseMet, combine, parseMetDaily, buildDaily, parseSearch } from '../src/index.js';
 
 // 격자 변환
 const cases = [['서울시청', 37.5665, 126.978, 60, 127], ['굴업도(근처)', 37.19, 125.99, 0, 0]];
@@ -50,4 +50,8 @@ assert.deepEqual([dl[1].src, dl[1].icon], ['kma', 'rain']);
 assert.deepEqual([dl[2].src, dl[2].icon, dl[2].tmin, dl[2].tmax], ['met', 'sun', 4, 9]);
 assert.deepEqual([dl[3].src, dl[3].icon], ['met', 'rain']);
 assert.equal(dl[10].src, null);
+// /search: <b> 제거, mapx=경도 mapy=위도 (1e7 배 정수 또는 도 단위)
+const sr = parseSearch({ items: [{ title: '<b>서울</b>시청', address: '서울 중구 태평로1가 31', roadAddress: '서울 중구 세종대로 110', category: '공공기관>시청', mapx: '1269783881', mapy: '375666805' }, { title: 'A &amp; B', address: '', roadAddress: '', category: '', mapx: '126.98', mapy: '37.56' }, { title: 'bad', mapx: 'x', mapy: '1' }] });
+assert.equal(sr.length, 2); assert.equal(sr[0].name, '서울시청'); assert.ok(Math.abs(sr[0].lat - 37.5666805) < 1e-6 && Math.abs(sr[0].lng - 126.9783881) < 1e-6);
+assert.equal(sr[1].name, 'A & B'); assert.equal(sr[1].lat, 37.56);
 console.log('모두 통과');

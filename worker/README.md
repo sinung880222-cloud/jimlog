@@ -6,6 +6,8 @@
 cd worker
 npx wrangler login               # 브라우저에서 승인
 npx wrangler secret put KMA_KEY  # 공공데이터포털 일반 인증키(Decoding 값)를 프롬프트에 직접 붙여넣기
+npx wrangler secret put NAVER_SEARCH_ID      # 장소 검색(/search)용 NAVER API HUB 키 ID
+npx wrangler secret put NAVER_SEARCH_SECRET  # 같은 앱의 키 Secret
 npx wrangler deploy              # 끝에 나오는 …workers.dev 주소를 index.html의 WEATHER_API에
 node test/weather.test.mjs       # 격자 변환·발표시각·응답 정리 검사 (키 불필요)
 ```

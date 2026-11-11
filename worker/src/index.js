@@ -276,6 +276,38 @@ async function handleDaily(url, env, ctx, origin) {
   return json({ updatedAt: new Date().toISOString(), grid, days, errors }, 200, origin, { 'Cache-Control': 'public, max-age=600' });
 }
 
+/* ── 장소 검색: NAVER API HUB 지역 검색 (키는 Worker 비밀값 NAVER_SEARCH_ID / NAVER_SEARCH_SECRET) ── */
+const SEARCH_URL = 'https://naverapihub.apigw.ntruss.com/search/v1/local';
+const stripTags = v => String(v || '').replace(/<[^>]*>/g, '').replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').trim();
+function coordOf(v) {   // mapx/mapy: 문자열. 1e7 배 정수이거나 이미 도(度) 단위일 수 있다
+  const n = parseFloat(v); if (!Number.isFinite(n)) return null;
+  return Math.abs(n) > 1000 ? n / 1e7 : n;
+}
+export function parseSearch(j) {
+  const items = j && Array.isArray(j.items) ? j.items : [];
+  return items.map(x => {
+    const lng = coordOf(x.mapx), lat = coordOf(x.mapy);
+    if (lat === null || lng === null) return null;
+    return { name: stripTags(x.title), addr: stripTags(x.address), roadAddr: stripTags(x.roadAddress), category: stripTags(x.category),
+             lat: Math.round(lat * 1e6) / 1e6, lng: Math.round(lng * 1e6) / 1e6 };
+  }).filter(Boolean);
+}
+async function handleSearch(url, env, ctx, origin) {
+  const q = (url.searchParams.get('q') || '').trim().slice(0, 40);
+  if (q.length < 1) return json({ error: 'q(검색어)가 필요해요' }, 400, origin);
+  const id = String(env.NAVER_SEARCH_ID || '').trim().replace(/^["']|["']$/g, ''), sec = String(env.NAVER_SEARCH_SECRET || '').trim().replace(/^["']|["']$/g, '');
+  if (!id || !sec) return json({ error: '장소 검색 키가 설정되지 않았어요' }, 503, origin);
+  try {
+    const text = await cached('search/' + encodeURIComponent(q.toLowerCase()), async () => {
+      const r = await getText(`${SEARCH_URL}?query=${encodeURIComponent(q)}&display=5`, { headers: { 'X-NCP-APIGW-API-KEY-ID': id, 'X-NCP-APIGW-API-KEY': sec } });
+      return { text: r.text, ttl: 600 };   // 같은 검색어 10분
+    }, ctx);
+    return json({ results: parseSearch(JSON.parse(text)) }, 200, origin, { 'Cache-Control': 'public, max-age=600' });
+  } catch (e) {
+    return json({ error: scrub(scrub(e && e.message, id), sec) }, 502, origin);
+  }
+}
+
 export default {
   async fetch(request, env, ctx) {
     const origin = request.headers.get('Origin');
@@ -289,6 +321,10 @@ export default {
     if (url.pathname === '/daily') {
       try { return await handleDaily(url, env, ctx, origin); }
       catch (e) { return json({ error: scrub(e && e.message, env.KMA_KEY) }, 500, origin); }
+    }
+    if (url.pathname === '/search') {
+      try { return await handleSearch(url, env, ctx, origin); }
+      catch (e) { return json({ error: scrub(e && e.message, env.NAVER_SEARCH_SECRET) }, 500, origin); }
     }
     if (url.pathname === '/') return json({ app: 'jimlog-weather', ok: true }, 200, origin);
     return json({ error: 'not found' }, 404, origin);

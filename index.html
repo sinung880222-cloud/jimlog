@@ -177,14 +177,14 @@
   .cal-dow { padding: 4px 0; text-align: center; font-size: 11px; font-weight: 600; color: var(--ink-3); }
   .cal-dow.sun, .cal-day.sun .cal-n { color: var(--cal-sun); }
   .cal-dow.sat, .cal-day.sat .cal-n { color: var(--cal-sat); }
-  .cal-day { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; min-height: 54px; min-width: 0; padding: 3px 0 2px; border: 0; border-radius: var(--radius-md); background: none; color: var(--ink); font-size: 14px; font-weight: 600; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+  .cal-day { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; min-height: 44px; min-width: 0; padding: 2px 0 1px; border: 0; border-radius: var(--radius-md); background: none; color: var(--ink); font-size: 13px; font-weight: 600; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
   .cal-day.today { box-shadow: inset 0 0 0 2px var(--ember); }
   .cal-day.past { opacity: .3; pointer-events: none; }
   .cal-day.sel { background: var(--forest); }
   .cal-day.sel .cal-n, .cal-day.sel .cal-tn { color: var(--on-forest); }
   .cal-day.pre { background: var(--forest-tint); }
-  .cal-ic { font-size: 14px; line-height: 1.15; }
-  .cal-tn { font-size: 10px; font-weight: 400; color: var(--ink-2); font-variant-numeric: tabular-nums; line-height: 1.1; }
+  .cal-ic { font-size: 12px; line-height: 1.1; }
+  .cal-tn { font-size: 9px; font-weight: 400; color: var(--ink-2); font-variant-numeric: tabular-nums; line-height: 1.1; }
   .cal-day.far .cal-ic, .cal-day.far .cal-tn { opacity: .55; }
   .cal-tip { position: absolute; z-index: 20; padding: 6px 10px; border-radius: var(--radius-md); background: var(--ink); color: #fff; font-size: 12px; white-space: nowrap; pointer-events: none; }
   .cal-sum { margin: 10px 0 8px; padding: 8px 12px; border-radius: var(--radius-md); background: var(--forest-tint); color: var(--forest-ink); font-weight: 600; line-height: 1.5; }
@@ -197,6 +197,77 @@
   .gp-line .gp-t { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .gp-line button { flex: 0 0 auto; min-height: 32px; padding: 0 12px; font-weight: 700; }
   .trip-line button.tl-t { display: block; text-align: left; background: none; border: 0; color: inherit; font-weight: 600; padding: 0; min-height: 32px; }
+  .set-row { display: grid; grid-template-columns: 52px minmax(0, 1fr); align-items: center; column-gap: 6px; row-gap: 8px; margin-bottom: 14px; }
+  .set-row:last-child { margin-bottom: 0; }
+  .set-row > .span { grid-column: 1 / -1; min-width: 0; }
+  .set-lb { margin: 0; font-size: 11px; font-weight: 600; color: var(--ink-3); line-height: 1.3; }
+  .set-row.dt .cal-head { margin: 0; }
+  .set-row.dt .cal-sum { margin: 2px 0 0; }
+  .set-fold { display: flex; justify-content: flex-end; margin: -6px 0 6px; }
+  .set-fold button, .set-sum button { min-height: 32px; padding: 0 10px; border: 0; background: none; color: var(--ink-3); font-size: 12px; font-weight: 600; white-space: nowrap; }
+  .card.set-sum { display: flex; align-items: center; gap: 6px; padding: 8px 8px 8px 14px; border-radius: var(--radius-lg); }
+  .set-sum .ss-t { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
+  .hm-wait { display: flex; align-items: center; gap: 12px; padding: 12px 14px; color: var(--ink-2); }
+  .hm-wait > div { flex: 1 1 auto; font-weight: 600; }
+  .act-row .chip.editing { box-shadow: 0 0 0 2px var(--ember); }
+  .act-row .chip.act-add { min-width: 34px; padding: 0 10px; font-size: 16px; color: var(--ink-3); }
+  .ty-edit { padding: 10px; border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--surface-sunken); }
+  .ty-line { display: flex; align-items: center; gap: 6px; }
+  .ty-line.ty-sub { margin-top: 8px; }
+  .ty-line input { flex: 1 1 auto; min-width: 0; height: 40px; font-size: 16px; }
+  .ty-line button { flex: 0 0 auto; min-height: 40px; padding: 0 12px; font-weight: 600; }
+  .ty-line .ty-e { width: 44px; padding: 0; font-size: 20px; }
+  .ty-line.ty-sub button { flex: 1 1 0; padding: 0 4px; }
+  .ty-line .ty-del { color: var(--danger); border-color: var(--danger); }
+  .ty-emo { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+  .ty-emo button { width: 38px; height: 38px; min-height: 0; padding: 0; font-size: 18px; }
+  .ty-emo input { flex: 1 1 90px; min-width: 0; height: 38px; font-size: 16px; }
+  .ty-mv { margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--line); }
+  .ty-mvq { margin-bottom: 6px; font-weight: 600; }
+  .ty-mvc { display: flex; flex-wrap: wrap; gap: 6px; }
+  .ty-mvc .chip { min-height: 36px; padding: 0 12px; }
+  .pl-line { display: flex; gap: 6px; min-width: 0; }
+  .pl-main { flex: 1 1 auto; min-width: 0; height: 44px; display: flex; align-items: center; gap: 6px; padding: 0 12px; text-align: left; font-weight: 600; }
+  .pl-main.empty { color: var(--ink-3); font-weight: 400; }
+  .pl-main .pl-nm { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .pl-main .pl-go { flex: 0 0 auto; color: var(--ink-3); }
+  .pm { padding: 8px; border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--surface-sunken); }
+  .pm-bar { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
+  .pm-lb { flex: 1 1 auto; font-size: 11px; font-weight: 600; color: var(--ink-3); }
+  .pm-bar button { min-height: 32px; padding: 0 10px; font-size: 12px; font-weight: 600; }
+  .pm-mapw { position: relative; height: 300px; border-radius: var(--radius-md); overflow: hidden; }
+  .pm-slot, .pm-slot .mini-map { height: 300px; }
+  .pm-search { position: absolute; z-index: 5; top: 8px; left: 8px; right: 8px; display: flex; gap: 6px; }
+  .pm-search input { flex: 1 1 auto; min-width: 0; height: 44px; font-size: 16px; box-shadow: 0 1px 4px rgba(0,0,0,.18); }
+  .pm-search button { flex: 0 0 auto; min-height: 44px; padding: 0 14px; font-weight: 700; box-shadow: 0 1px 4px rgba(0,0,0,.18); }
+  .pm-list { margin-top: 8px; }
+  .pm-item { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 48px; margin-bottom: 6px; padding: 6px 10px; text-align: left; border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--surface); }
+  .pm-item .pm-n, .pm-pin { flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 50%; background: var(--forest); color: var(--on-forest); font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .pm-pin { border: 2px solid #fff; box-shadow: 0 1px 4px rgba(0,0,0,.35); box-sizing: border-box; }
+  .pm-item .pm-t { flex: 1 1 auto; min-width: 0; }
+  .pm-item b { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .pm-item small { display: block; margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--fs-meta); color: var(--ink-3); }
+  .pm-src { margin-top: 2px; text-align: right; font-size: 10px; color: var(--ink-3); }
+  .act-row { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; -webkit-overflow-scrolling: touch; }
+  .act-row::-webkit-scrollbar { display: none; }
+  .act-row .chip { flex: 0 0 auto; display: inline-flex; align-items: center; gap: 3px; height: 34px; min-height: 34px; padding: 0 10px; font-weight: 600; font-size: 12px; white-space: nowrap; }
+  .act-row .chip .ac-e { font-size: 13px; line-height: 1; }
+  .act-row .chip.on { background: var(--forest); border-color: var(--forest); color: var(--on-forest); }
+  .act-row .chip[hidden] { display: none; }
+  .pls { display: flex; gap: 6px; }
+  .pls input { flex: 1 1 auto; min-width: 0; height: 44px; font-size: 16px; }
+  .pls-ic { flex: 0 0 auto; width: 44px; height: 44px; min-height: 0; padding: 0; font-size: 18px; }
+  .pls-chips { display: flex; align-items: center; gap: 6px; margin-top: 8px; overflow-x: auto; scrollbar-width: none; }
+  .pls-chips::-webkit-scrollbar { display: none; }
+  .set-row > .pls-chips { margin-top: 0; }
+  .pls-cl { flex: 0 0 auto; font-size: 11px; font-weight: 600; color: var(--ink-2); }
+  .pls-chip { flex: 0 0 auto; min-height: 32px; padding: 0 10px; border-radius: var(--radius-pill); font-size: 12px; font-weight: 600; white-space: nowrap; background: var(--forest-tint); border-color: transparent; color: var(--forest-ink); }
+  .pls-chip small { margin-left: 4px; font-weight: 400; color: var(--ink-2); }
+  .set-hint { padding: 2px 4px; text-align: center; }
+  .card.set { padding: 14px; border-radius: var(--radius-lg); }
+  #hmSlot .mini-map { height: 120px; }
+  .wx-card .card-title { display: flex; align-items: center; }
+  .wx-route { margin-left: auto; min-height: 28px; padding: 0 10px; }
   .st-n { flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; margin-right: 8px; border-radius: 50%; font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums; vertical-align: middle; }
   .st-n.cur { border: 2px solid var(--ember); color: var(--ember); background: var(--surface); }
   .st-n.ok { background: var(--forest); color: var(--on-forest); }
@@ -1213,14 +1284,35 @@ const DAY = 86400000;
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const SUP_COLOR = '#A6763A';
 // 나들이 종류 (trips.activity). "나들이"는 종류 이름이 아니라 전체를 부르는 말
-const ACTIVITIES = [{ k: 'picnic', n: '피크닉', e: '🧺' }, { k: 'hike', n: '등산', e: '🥾' }, { k: 'backpack', n: '백패킹', e: '🎒' },
-                    { k: 'camp', n: '캠핑', e: '🏕️' }, { k: 'carcamp', n: '차박', e: '🚗' }, { k: 'travel', n: '여행', e: '✈️' }];
+const TYPES_KEY = 'backpacking-types-v1';
+const DEFAULT_TYPES = [{ k: 'picnic', n: '피크닉', e: '🧺', custom: false }, { k: 'hike', n: '등산', e: '🥾', custom: false }, { k: 'backpack', n: '백패킹', e: '🎒', custom: false },
+                       { k: 'camp', n: '캠핑', e: '🏕️', custom: false }, { k: 'carcamp', n: '차박', e: '🚗', custom: false }, { k: 'travel', n: '여행', e: '✈️', custom: false },
+                       { k: 'bike', n: '브롬핑', e: '🚲', custom: true }];   // 기존 k는 절대 바꾸지 않는다. 사용자 종류 k = 'u' + Date.now()
+function normTypes(arr) {   // 검증·정리 (없거나 비었으면 null)
+  if (!Array.isArray(arr)) return null;
+  const seen = new Set(), out = [];
+  arr.forEach(x => {
+    if (!x || typeof x !== 'object') return;
+    const k = String(x.k || '').slice(0, 40), n = String(x.n || '').trim().slice(0, 8);
+    if (!k || !n || seen.has(k)) return;
+    seen.add(k); out.push({ k, n, e: String(x.e || '🏷️').slice(0, 8), custom: !!x.custom });
+  });
+  return out.length ? out : null;
+}
+const ACTIVITIES = (function () {   // 나들이 종류 목록 (trips.activity). 같은 배열 객체를 제자리에서 바꿔 쓴다
+  let v = null;
+  try { v = normTypes(JSON.parse(localStorage.getItem(TYPES_KEY))); } catch (e) {}
+  if (!v) { v = DEFAULT_TYPES.map(x => ({ ...x })); try { localStorage.setItem(TYPES_KEY, JSON.stringify(v)); } catch (e) {} }
+  return v;
+})();
+function setTypes(list) { ACTIVITIES.splice(0, ACTIVITIES.length, ...list); }
+function saveTypes() { try { localStorage.setItem(TYPES_KEY, JSON.stringify(ACTIVITIES)); } catch (e) {} gMarkDirty(); }
 const ACT_KEY = 'backpacking-activity-v1', ACTF_KEY = 'backpacking-actfilter-v1';   // (옛) 이번 패킹 종류 — 이제 curTrip.act 가 대신한다 / 기록 탭 종류 필터
 const TRIPNOW_KEY = 'backpacking-tripnow-v1', PLACE_KEY = 'backpacking-place-v1';   // 이번 나들이 / (옛) 이번 나들이 장소
-const actOf = k => ACTIVITIES.find(a => a.k === k) || ACTIVITIES[2];
-const isAct = k => ACTIVITIES.some(a => a.k === k);
+const actOf = k => ACTIVITIES.find(a => a.k === k) || { k, n: '기타', e: '🏷️' };   // 없는 종류는 '기타'로 보이고 데이터는 그대로
+const isAct = k => typeof k === 'string' && k.length > 0 && k.length <= 40;
 // 이번 나들이: 종류·장소·날짜·일정·인원·가방·목표 무게·제목을 한 곳에 모은다
-const DEFAULT_TRIP = () => ({ act: 'backpack', place: null, date: '', days: null, people: 1, bags: [], targetW: null, name: '' });
+const DEFAULT_TRIP = () => ({ act: (ACTIVITIES.find(a => a.k === 'backpack') || ACTIVITIES[0]).k, place: null, date: '', days: null, people: 1, bags: [], targetW: null, name: '' });
 function normCurTrip(o) {
   const d = DEFAULT_TRIP();
   if (!o || typeof o !== 'object') return d;
@@ -2197,7 +2289,7 @@ function renderBackupNote() {
 }
 function exportBackup() {
   const ld = lsGet(DAYS_KEY);
-  const data = { app: 'backpacking', version: 1, savedAt: new Date().toISOString(), items, supplies, trips, curTrip,
+  const data = { app: 'backpacking', version: 1, savedAt: new Date().toISOString(), items, supplies, trips, curTrip, types: ACTIVITIES,
     settings: { lastDays: ld === null || ld === '' || isNaN(Number(ld)) ? null : Number(ld),
                 period: { p: period, from: periodFrom, to: periodTo }, logFilter, chart: chartMode, sort: { s: sortMode, d: sortDesc } } };
   const blob = new Blob([JSON.stringify(data, null, 1)], { type: 'application/json' });
@@ -2235,6 +2327,8 @@ function applyBackupData(d, withSettings) {
   nextCid = items.reduce((m, it) => (it.contents || []).reduce((mm, c) => Math.max(mm, c.id), m), 0) + 1;
   pkOpen.clear(); openId = null; editingSid = null; sampleTripsPending = false;
   // 이번 나들이: 파일에 있으면 그대로, 옛 백업에 없으면(파일 불러오기일 때) 기본값. 드라이브 동기화에서 옛 파일을 받으면 지금 값을 유지
+  const ty = normTypes(d.types);   // 종류 목록: 파일에 있으면 그대로, 옛 파일에 없으면 지금 목록 유지
+  if (ty) { setTypes(ty); try { localStorage.setItem(TYPES_KEY, JSON.stringify(ACTIVITIES)); } catch (e) {} }
   if (d.curTrip) curTrip = normCurTrip(d.curTrip); else if (withSettings) curTrip = DEFAULT_TRIP();
   try { localStorage.setItem(TRIPNOW_KEY, JSON.stringify(curTrip)); } catch (e) {}
   save(); saveSupplies(); saveTrips();
@@ -2352,7 +2446,7 @@ async function gFindFile() {
 }
 async function gFileMeta(id) { return (await gFetch(`${GD}/${id}?fields=id,modifiedTime`)).json(); }
 async function gDownload(id) { return (await gFetch(`${GD}/${id}?alt=media`)).json(); }
-function gPayload() { return { app: 'backpacking', version: 1, savedAt: new Date().toISOString(), deviceId: gDeviceId(), items, supplies, trips, curTrip }; }
+function gPayload() { return { app: 'backpacking', version: 1, savedAt: new Date().toISOString(), deviceId: gDeviceId(), items, supplies, trips, curTrip, types: ACTIVITIES }; }
 async function gWriteFile() {   // 파일이 있으면 덮어쓰고 없으면 만든다 → { id, modifiedTime }
   const body = JSON.stringify(gPayload());
   if (!gmeta.fileId) { const f = await gFindFile(); if (f) gmeta.fileId = f.id; }
@@ -2692,7 +2786,7 @@ function routeButtonsHTML(p) {
 }
 const martURL = p => `https://map.naver.com/p/search/${encodeURIComponent((p.name || p.addr || '') + ' 마트 편의점')}`;
 const placeActionsHTML = p => routeButtonsHTML(p) + `<a class="mart-link" href="${martURL(p)}" target="_blank" rel="noopener">네이버지도에서 이 주변 마트·편의점 보기</a>`;
-function placeRowHTML(p, target) {   // 장소 줄 (누르면 장소 정하기 시트) + 지우기
+function logPlaceRowHTML(p, target) {   // 기록 상세의 장소 줄 (누르면 장소 정하기 시트) + 지우기
   const label = p ? esc(p.name || p.addr || '선택한 위치') : '장소 정하기 (선택)';
   return `<div class="place-line"><button type="button" class="place-row" data-placeedit="${target}"><span>📍</span><span class="pl-t">${label}${p && p.name && p.addr ? `<small>${esc(p.addr)}</small>` : ''}</span><span class="pl-go">${p ? '바꾸기' : '정하기'}</span></button>${p ? `<button type="button" class="pl-x" data-placeclear="${target}" aria-label="장소 지우기">✕</button>` : ''}</div>`;
 }
@@ -2721,7 +2815,6 @@ function mountHomeMap(p) {   // 나들이 탭 카드의 작은 지도 (같은 �
   if (!slot || !p) return;
   if (!pbEl) { pbEl = document.createElement('div'); pbEl.className = 'mini-map'; }
   slot.appendChild(pbEl);
-  slot.insertAdjacentHTML('beforeend', '<button type="button" class="mm-tap" data-stedit="all" aria-label="날짜·장소 바꾸기"></button><span class="mm-hint">눌러서 바꾸기</span>');
   const key = p.lat + ',' + p.lng;
   if (pbKey === key && pbMap) { setTimeout(() => { if (window.naver && naver.maps) naver.maps.Event.trigger(pbMap.map, 'resize'); }, 100); return; }
   pbKey = key;
@@ -2856,13 +2949,13 @@ function plFinish(target) {   // 시트를 닫고, 기록 상세·나들이 정�
   const from = plFrom; plFrom = null;
   closeSheet(); plToken++;
   if (target !== 'cur') { renderLogDetail(); $('logSheet').classList.add('open'); $('overlay').classList.add('open'); document.body.style.overflow = 'hidden'; }
-  else { edit2 = false; refreshTrip(); if (from === 'flow') scrollToStep(); }
+  else { refreshTrip(); }
 }
 function plSave() {
   if (!plPos) { toast('지도를 눌러 핀을 먼저 찍어 주세요'); return; }
   const target = plTarget;
   const pl = normPlace({ name: $('plName').value.trim(), lat: plPos.lat, lng: plPos.lng, addr: plAddr });
-  if (target === 'cur') { curTrip.place = pl; placeSkip = false; autoActFromPlace(); saveCurTrip(); }
+  if (target === 'cur') { curTrip.place = pl; saveCurTrip(); }
   else { const t = trips.find(x => x.id === Number(target)); if (t) { t.place = pl; saveTrips(); refreshStats(); } }
   plFinish(target);
   toast('장소를 저장했어요 📍');
@@ -2916,7 +3009,7 @@ document.addEventListener('click', e => {
   const r = e.target.closest('[data-route]');
   if (r) { openRoute({ lat: Number(r.dataset.lat), lng: Number(r.dataset.lng), name: r.dataset.name }); return; }
   const pe = e.target.closest('[data-placeedit]');
-  if (pe) { openPlaceSheet(pe.dataset.placeedit); return; }
+  if (pe) { if (pe.dataset.placeedit === 'cur') gotoSet('place'); else openPlaceSheet(pe.dataset.placeedit); return; }
   const pc = e.target.closest('[data-placeclear]');
   if (pc) { placeClear(pc.dataset.placeclear); return; }
   const lv = e.target.closest('[data-lv]');
@@ -3111,46 +3204,47 @@ function wxFoot() {
 
 function renderHome() {
   if (document.body.dataset.tab !== 'home') return;
-  const t = curTrip, p = t.place, a = actOf(t.act), F = stepFlags();
-  const past = !!t.date && dayDiff(t.date) < 0;
+  const ae = document.activeElement, keep = ae && (ae.id === 'pmQ' || ae.id === 'tyName') ? { id: ae.id, s: ae.selectionStart, e: ae.selectionEnd } : null;   // 다시 그려도 검색칸 포커스를 지킨다
+  const t = curTrip, p = t.place, planned = !!t.date && dayDiff(t.date) >= 0, past = !!t.date && dayDiff(t.date) < 0;
   let h = '';
   if (past && !trips.some(x => x.date === t.date)) h += `<div class="fl-past"><span>지난 나들이 기록을 남길까요?</span><button type="button" data-flrec>기록 남기기</button></div>`;
-  const placeTxt = p ? '📍 ' + esc(placeLabel(p)) : '📍 장소는 나중에';
-  if (F.all) {
-    // ①②③이 모두 끝났다 → D-day 머리말 + 합친 요약 카드(종류·장소 / 날짜·일정·길찾기 [바꾸기]) + 작은 지도
+  // [1] 맨 위 머리말
+  const nb = '<button type="button" class="hm-new" data-newtrip>＋ 새 나들이</button>';
+  if (planned) {
     const n = dayDiff(t.date);
-    h += `<div class="hm-head"><div><div class="hm-sm">다음 나들이까지</div><div class="hm-dd">${n > 0 ? `D-${n} · ${WEEK[parseD(t.date).getDay()]}요일에 출발해요` : '오늘 출발해요 🎉'}</div></div><button type="button" class="hm-new" data-newtrip>＋ 새 나들이</button></div>`;
-    h += `<section class="card st merged"><div class="mg-top">${stN(3, 'ok')}<div class="mg-t"><div class="mg-p">${a.e} ${esc(a.n)} · ${placeTxt}</div><div class="mg-d">📅 ${esc(tripWhenShort(t))}${p ? ` · <button type="button" class="hm-chip" data-route="naver" data-lat="${p.lat}" data-lng="${p.lng}" data-name="${esc(p.name || p.addr || '목적지')}">🧭 길찾기</button>` : ''}</div></div><button type="button" class="st-chg" data-stedit="all">바꾸기</button></div>${p ? '<div class="map-slot" id="hmSlot" style="margin:12px 0 0"></div>' : ''}</section>`;
-  } else {
-    // ① 종류 → ② 어디로 → ③ 달력 (끝난 단계는 한 줄로 접고, ①②가 끝났으면 한 줄로 합친다)
-    if (!F.e1 && !F.e2 && F.P) h += stDone(2, `${a.e} ${esc(a.n)} · ${placeTxt}`, '12');
-    else {
-      h += F.e1 ? stepActHTML() : stDone(1, `🏷️ ${a.e} ${esc(a.n)}`, '1');
-      if (F.e2) h += stepPlaceHTML();
-      else if (F.P) h += stDone(2, placeTxt, '2');
-      else h += stTodo(2, '📍 어디로 가세요?', '종류를 먼저 골라 주세요');
-    }
-    if (F.e3) h += stepCalHTML();
-    else if (F.D) h += stDone(3, '📅 ' + esc(tripWhenShort(t)), '3');
-    else h += stTodo(3, '📅 언제 떠나요?', '장소를 정한 뒤 달력에서 골라요');
-  }
-  // ④ 🌤️ 날씨 브리핑 (서버 예보 + 일출·일몰 직접 계산 + 링크) → [🎒 짐 챙기러 가기 →]
-  if (F.all && p) {
+    h += `<div class="hm-head"><div class="hm-dd">${n > 0 ? `D-${n} · ${WEEK[parseD(t.date).getDay()]}요일에 출발해요` : '오늘 출발해요 🎉'}</div>${nb}</div>`;
+  } else h += `<div class="hm-head"><div class="hm-dd">어디로 떠나 볼까요?</div>${nb}</div>`;
+  // 정하기 영역: 🏷️ 종류 · 📍 장소 · 📅 날짜 (아무 순서로 고르고, 다 정해지면 한 줄로 접힌다)
+  const done = !!(p && planned && !calPending && !tyEdit && !pmOpen);
+  if (done && !setExp) {
+    const a0 = actOf(t.act);
+    h += `<section class="card set-sum"><span class="ss-t">${esc(a0.e)} ${esc(a0.n)} · 📍 ${esc(placeLabel(p))} · 📅 ${esc(fmtMDW(t.date))}${t.days === null ? '' : ' ' + DAY_LABELS[t.days]}</span><button type="button" data-setexp>펼치기 ▾</button></section>`;
+  } else h += `<section class="card set">${done ? '<div class="set-fold"><button type="button" data-setfold>접기 ▴</button></div>' : ''}${actRowHTML()}${placeRowHTML()}${dateRowHTML()}</section>`;
+  if (p) dailyEnsure();
+  // [5] 장소와 날짜가 둘 다 있으면 작은 지도 → 🌤️ 날씨 브리핑
+  if (planned && p) {
     wxEnsure();
-    const si = sunInfo(p, t.date), camp = ['backpack', 'camp', 'carcamp'].includes(t.act);
-    h += `<section class="card st cur wx-card"><div class="st-hd">${stN(4, 'cur')}<b>🌤️ 날씨 브리핑</b></div>` + wxBody(si)
+    const si = sunInfo(p, t.date), camp = actDays(t.act) >= 1;
+    h += `<div class="map-slot" id="hmSlot"></div>`
+      + `<section class="card wx-card"><div class="card-title">🌤️ 날씨 브리핑<button type="button" class="hm-chip wx-route" data-route="naver" data-lat="${p.lat}" data-lng="${p.lng}" data-name="${esc(p.name || p.addr || '목적지')}">🧭 길찾기</button></div>` + wxBody(si)
       + (si ? `<div class="hm-sun"><div><span class="sub">🌅 일출</span><b>${si.rise}</b></div><div><span class="sub">🌇 일몰</span><b>${si.set}</b></div></div>
         <div class="hm-rec">${camp ? `⛺ 일몰 40분 전인 ${si.tent}까지 텐트 치는 걸 추천해요` : `🌇 일몰 40분 전인 ${si.tent}까지 이동을 마치는 걸 추천해요`}</div>` : '<div class="hm-hint">이 날짜는 해가 뜨고 지는 시간을 계산할 수 없어요</div>')
       + `<div class="hm-links"><a href="https://www.windy.com/?${p.lat},${p.lng},11" target="_blank" rel="noopener">Windy</a><a href="https://www.weather.go.kr/w/index.do" target="_blank" rel="noopener">기상청</a><a href="https://www.meteoblue.com/ko/weather/week/${p.lat.toFixed(3)}N${p.lng.toFixed(3)}E" target="_blank" rel="noopener">meteoblue</a></div>` + wxFoot() + `</section>`;
-  } else h += stTodo(4, '🌤️ 날씨 브리핑', !F.P ? '장소와 날짜를 정하면 볼 수 있어요' : !t.place ? '장소를 정하면 볼 수 있어요' : '날짜를 정하면 볼 수 있어요');
-  if (F.all) h += `<button type="button" class="primary hm-go" data-hmgo="stock">🎒 짐 챙기러 가기 →</button>`;
+  } else h += `<div class="card hm-wait"><span>${jimSVG('wait', 64)}</span><div>장소와 날짜를 고르면 날씨가 보여요</div></div>`;
+  if (planned) h += `<button type="button" class="primary hm-go" data-hmgo="stock">🎒 짐 챙기러 가기 →</button>`;
   // 🛟 안전
   const q = encodeURIComponent(((p && (p.name || p.addr)) || '') + ' 응급실');
   h += `<div class="card"><div class="card-title">🛟 안전</div><div class="hm-safe"><a class="sos" href="tel:119">📞 119</a><a href="https://map.naver.com/p/search/${q}" target="_blank" rel="noopener">🏥 가까운 응급실</a></div><div class="hm-soon">사고가 나면 지금 위치를 119에 알려주세요</div><div id="hmGrid" hidden>국가지점번호</div></div>`;
   $('homeBox').innerHTML = h;
-  if (p) mountHomeMap(p);
+  if (planned && p) mountHomeMap(p);
+  if (pmOpen) mountPm();
+  if (keep) { const i = $(keep.id); if (i) { i.focus(); try { i.setSelectionRange(keep.s, keep.e); } catch (e) {} } }
 }
 function refreshTrip() { renderTripLines(); renderHome(); }
+function gotoSet(row, noTab) {   // 정하기 영역을 펼치고 해당 줄로 스크롤 (장소 시트가 있던 곳은 여기로 온다)
+  if (!noTab) { goTab('home'); setExp = true; if (row === 'place') pmOpen = true; renderHome(); }
+  setTimeout(() => { const el = row === 'place' ? $('setPlace') : document.querySelector('.card.set'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 80);
+}
 
 // 나들이 정하는 흐름: 날씨 먼저(언제 → 어디로) → 🎒 짐 챙기기 카드(종류·인원·가방·짐 시작) → 장비 탭
 var gearChoice = null;   // null = 자동(같은 종류 지난 기록이 있으면 불러오기, 없으면 지금 그대로) | 'last' | 'keep' | 'empty'
@@ -3161,29 +3255,18 @@ const latestFirst = (x, y) => y.date.localeCompare(x.date) || (y.recordedAt || '
 function autoActFromPlace() {   // 같은 장소로 다녀온 기록이 있으면 그 종류, 없으면 마지막에 쓴 종류(그대로)
   if (!actAuto || !curTrip.place) return;
   const k = placeKey(curTrip.place), m = trips.filter(x => x.place && placeKey(x.place) === k).sort(latestFirst)[0];
-  if (m && ACTIVITIES.some(x => x.k === m.activity)) curTrip.act = m.activity;
+  if (m && isAct(m.activity)) curTrip.act = m.activity;
 }
 const gearDefault = () => lastTripOf(curTrip.act) ? 'last' : 'keep';
 function gearNow() { const g = gearChoice || gearDefault(); return g === 'last' && !lastTripOf(curTrip.act) ? 'keep' : g; }
 function lastTripDesc(l) { return `${shortD(l.date)}${l.place && l.place.name ? ' · ' + esc(l.place.name) : ''} · 장비 ${l.itemIds.length}개 · ${fmtW(l.baseW)}${l.vol > 0 ? ' · ' + fmtV(l.vol) : ''}`; }
 const upcomingSat = off => { const d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() + (6 - d.getDay() + 7) % 7 + off * 7); return fmtDate(d); };   // 다가오는 토요일(오늘이 토요일이면 오늘)
 
-// ── 단계 카드: ① 🏷️ 종류 → ② 📍 어디로 → ③ 📅 달력 → ④ 🌤️ 날씨 브리핑 → [🎒 짐 챙기러 가기 →] → 장비 탭 (팝업 없이 그 자리에서)
+// ── 나들이 탭 = 한 화면에 다 열어 두기: 🏷️ 종류 · 📍 장소 · 📅 날짜를 아무 순서로 고른다 (팝업·단계 없음, 고르는 즉시 저장)
 const ACT_DAYS = { picnic: 0, hike: 0, travel: 0, backpack: 1, camp: 1, carcamp: 1 };   // 종류별 기본 일정(박)
-var actChosen = false;                // 이번 나들이의 종류를 골랐는지(이미 날짜가 있는 나들이는 고른 것으로 본다)
-var edit1 = false, edit2 = false, edit3 = false;   // [바꾸기]로 단계를 다시 펼침
-var placeSkip = false;                // "장소는 나중에 정할게요"
 var openRow = '';                     // 장비 탭 "이번 짐 준비"에서 펼친 줄(한 번에 한 줄): bags | gear
-var plsQ = '', plsList = null, plsBusy = false, plsMsg = '';   // ② 장소 검색 상태
-var calMonth = '', calStart = '', calEnd = '', calLong = false, calPressT = null;   // ③ 달력 상태
-function stepFlags() {
-  const t = curTrip, D = !!t.date && dayDiff(t.date) >= 0, P = !!t.place || placeSkip, A = actChosen || D;
-  const e1 = !A || edit1, e2 = (A && !P) || edit2, e3 = (A && P && !D) || edit3;
-  return { A, P, D, e1, e2, e3, all: A && P && D && !e1 && !e2 && !e3 };
-}
-const stN = (n, k) => `<span class="st-n ${k}">${k === 'ok' ? '✓' : n}</span>`;   // cur = 주황 숫자 · ok = 초록 ✓ · todo = 회색 숫자
-const stDone = (n, sum, key) => `<div class="st done">${stN(n, 'ok')}<span class="st-sum">${sum}</span><button type="button" class="st-chg" data-stedit="${key}">바꾸기</button></div>`;
-const stTodo = (n, title, hint) => `<div class="st todo">${stN(n, 'todo')}<span class="st-sum"><b>${title}</b>${hint ? `<small>${hint}</small>` : ''}</span></div>`;
+var setExp = false;   // 정하기 영역을 [펼치기]로 연 상태 (다 정해졌어도 열어 둠)
+var calMonth = '', calOpen = null, calPending = false, calEnd = '', calLong = false, calPressT = null;      // 📅 달력 상태
 const placeLabel = pl => pl.name || pl.addr || '선택한 위치';
 const nightsLabel = n => DAY_LABELS[Math.max(0, Math.min(3, n))];
 function rangeText(s0, e0) {   // "11/14 (토) ~ 15 (일)"
@@ -3194,90 +3277,186 @@ function rangeText(s0, e0) {   // "11/14 (토) ~ 15 (일)"
 function tripWhenShort(t) {   // "11/14 (토) ~ 15 (일) · 1박"
   return rangeText(t.date, t.days > 0 ? addDaysStr(t.date, t.days) : t.date) + (t.days === null ? '' : ' · ' + DAY_LABELS[t.days]);
 }
-function scrollToStep() {   // 단계가 바뀌면 지금 단계로 부드럽게 스크롤
-  setTimeout(() => { const el = document.querySelector('#homeBox .st.cur'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 60);
+// 🏷️ 종류: 한 줄 가로 스크롤 칩(높이 40px), 고른 칩은 초록, 맨 끝 [＋]. 칩을 길게 누르면 이름·이모지·순서·삭제
+const actDays = k => ACT_DAYS[k] !== undefined ? ACT_DAYS[k] : 1;   // 기본 일정: 피크닉·등산·여행 당일 / 나머지(사용자 종류 포함) 1박
+const TY_EMOJIS = ['🌊', '⛰️', '🏍️', '🛶', '🎣', '❄️', '🌸', '🍂', '🐕', '🔥', '⭐'];
+var tyEdit = null, tyLong = false, tyPressT = null;   // tyEdit = { mode:'add'|'edit', k, e, n, emo, del } | null
+function firstGrapheme(v) { v = String(v || '').trim(); if (!v) return ''; try { return [...new Intl.Segmenter(undefined, { granularity: 'grapheme' }).segment(v)][0].segment; } catch (e) { return Array.from(v)[0]; } }
+function actRowHTML() {
+  const known = ACTIVITIES.some(x => x.k === curTrip.act);
+  const chip = x => `<button type="button" class="chip${x.k === curTrip.act ? ' on' : ''}${tyEdit && tyEdit.mode === 'edit' && tyEdit.k === x.k ? ' editing' : ''}" data-sact="${esc(x.k)}"><span class="ac-e">${esc(x.e)}</span><span class="ac-n">${esc(x.n)}</span></button>`;
+  return `<div class="set-row"><div class="set-lb">🏷️ 종류</div><div class="act-row">${(known ? '' : chip(actOf(curTrip.act)))}${ACTIVITIES.map(chip).join('')}<button type="button" class="chip act-add${tyEdit && tyEdit.mode === 'add' ? ' editing' : ''}" data-tyadd aria-label="종류 추가">＋</button></div>${tyEditHTML()}</div>`;
 }
-// ① 종류
-function stepActHTML() {
-  const a = actOf(curTrip.act);
-  return `<section class="card st cur" id="st1"><div class="st-hd">${stN(1, 'cur')}<b>🏷️ 어떤 나들이예요?</b></div>
-    <div class="act-grid4">${ACTIVITIES.map(x => `<button type="button" class="chip${actChosen && x.k === curTrip.act ? ' on' : ''}" data-sact="${x.k}"><span class="ac-e">${x.e}</span><span class="ac-n">${x.n}</span></button>`).join('')}</div>
-    <div class="st-last">마지막: ${a.e} ${esc(a.n)} <button type="button" class="gc-link" data-actedit hidden>종류 편집</button></div></section>`;
+function tyEditHTML() {
+  const t = tyEdit; if (!t) return '';
+  const emos = [...new Set([...TY_EMOJIS, ...ACTIVITIES.map(x => x.e)])];
+  const n = t.mode === 'edit' ? trips.filter(x => x.activity === t.k).length : 0;
+  return `<div class="ty-edit span"><div class="ty-line"><button type="button" class="ty-e" id="tyEBtn" data-tyemotg aria-label="이모지 고르기">${esc(t.e)}</button><input id="tyName" type="text" maxlength="8" placeholder="이름 (최대 8자)" autocomplete="off" value="${esc(t.n)}"><button type="button" class="primary" data-tysave>${t.mode === 'add' ? '추가' : '저장'}</button><button type="button" data-tycancel>취소</button></div>`
+    + (t.emo ? `<div class="ty-emo">${emos.map(e => `<button type="button" data-tyemo="${esc(e)}">${esc(e)}</button>`).join('')}<input id="tyEmoIn" type="text" maxlength="8" placeholder="직접 입력" autocomplete="off"></div>` : '')
+    + (t.mode === 'edit' ? `<div class="ty-line ty-sub"><button type="button" data-tymove="-1">◀ 앞으로</button><button type="button" data-tymove="1">뒤로 ▶</button><button type="button" class="ty-del" data-tydel>삭제</button></div>` : '')
+    + (t.del && n ? `<div class="ty-mv"><div class="ty-mvq">기록 ${n}개를 어느 종류로 옮길까요?</div><div class="ty-mvc">${ACTIVITIES.filter(x => x.k !== t.k).map(x => `<button type="button" class="chip" data-tyto="${esc(x.k)}">${esc(x.e)} ${esc(x.n)}</button>`).join('')}</div></div>` : '')
+    + '</div>';
+}
+const afterTypes = () => { renderAll(); renderTripLines(); };
+function tyOpenEdit(k) { const a = ACTIVITIES.find(x => x.k === k); if (!a) return; tyEdit = { mode: 'edit', k, e: a.e, n: a.n, emo: false, del: false }; renderHome(); }
+function tySave() {
+  const t = tyEdit; if (!t) return;
+  const n = String(t.n || '').trim().slice(0, 8), e = t.e || '🏷️';
+  if (!n) { toast('이름을 적어 주세요'); return; }
+  if (t.mode === 'add') {
+    let ts = Date.now(); while (ACTIVITIES.some(x => x.k === 'u' + ts)) ts++;
+    const k = 'u' + ts;
+    ACTIVITIES.push({ k, n, e, custom: true }); saveTypes(); tyEdit = null; pickAct(k); afterTypes(); toast(`'${n}' 종류를 만들었어요`);
+  } else {
+    const a = ACTIVITIES.find(x => x.k === t.k); if (a) { a.n = n; a.e = e; saveTypes(); }
+    tyEdit = null; afterTypes();
+  }
+}
+function tyMove(dir) {
+  const t = tyEdit; if (!t) return;
+  const i = ACTIVITIES.findIndex(x => x.k === t.k), j = i + dir;
+  if (i < 0 || j < 0 || j >= ACTIVITIES.length) return;
+  [ACTIVITIES[i], ACTIVITIES[j]] = [ACTIVITIES[j], ACTIVITIES[i]]; saveTypes(); afterTypes();
+}
+function tyDelete(to) {
+  const t = tyEdit; if (!t) return;
+  if (ACTIVITIES.length <= 1) { toast('종류는 최소 1개 남겨야 해요'); return; }
+  const n = trips.filter(x => x.activity === t.k).length;
+  if (n && !to) { t.del = true; renderHome(); return; }   // 기록이 있으면 어느 종류로 옮길지 먼저 묻는다
+  const name = (ACTIVITIES.find(x => x.k === t.k) || {}).n || '';
+  if (n) { trips.forEach(x => { if (x.activity === t.k) x.activity = to; }); saveTrips(); }
+  setTypes(ACTIVITIES.filter(x => x.k !== t.k)); saveTypes();
+  if (curTrip.act === t.k) { curTrip.act = to || ACTIVITIES[0].k; saveCurTrip(); }
+  if (actFilter === t.k) { actFilter = 'all'; lsSet(ACTF_KEY, 'all'); }
+  tyEdit = null; afterTypes(); toast(`'${name}' 종류를 지웠어요`);
 }
 function pickAct(k) {
-  curTrip.act = k; actChosen = true; edit1 = false;
-  if (!curTrip.date || dayDiff(curTrip.date) < 0) curTrip.days = ACT_DAYS[k];   // 종류별 기본 일정 (달력에서 바꾸면 그 값)
-  saveCurTrip(); refreshTrip(); scrollToStep();
+  curTrip.act = k; tyEdit = null;
+  if (!curTrip.date || dayDiff(curTrip.date) < 0) curTrip.days = actDays(k);   // 날짜를 아직 안 골랐으면 종류별 기본 일정
+  saveCurTrip(); refreshTrip();
 }
-// ② 어디로 — 카드 안에서 검색·종류별 갔던 곳·지금 위치, 지도에서 찍기만 전체 화면
-function mineInfo(pl) {
-  const k = placeKey(pl), ms = trips.filter(x => x.place && placeKey(x.place) === k).sort(latestFirst);
-  return ms.length ? { n: ms.length, act: (ACTIVITIES.find(x => x.k === ms[0].activity) || {}).n || '' } : null;
-}
-function sameActPlaces() {   // 같은 종류 기록의 장소(좌표 3자리로 중복 제거), 최근순 5곳 · "N번 · 날짜 · 메모"
+document.addEventListener('pointerdown', e => {   // 종류 칩 길게 누르기 = 편집
+  clearTimeout(tyPressT); tyLong = false;
+  const c = e.target.closest('.act-row [data-sact]');
+  if (c) tyPressT = setTimeout(() => { tyLong = true; tyOpenEdit(c.dataset.sact); }, 500);
+});
+['pointerup', 'pointercancel', 'pointermove'].forEach(ev => document.addEventListener(ev, e => { if (ev !== 'pointermove' || Math.abs(e.movementX) + Math.abs(e.movementY) > 6) clearTimeout(tyPressT); }));
+document.addEventListener('contextmenu', e => { if (e.target.closest('.act-row [data-sact]')) e.preventDefault(); });
+
+// 📍 장소: 평소엔 한 줄 + 🎯, 줄을 누르면 그 자리에 지도 패널(300px). 검색은 짐로그 서버(/search → NAVER)
+function sameActPlaces() {   // 같은 종류 기록의 장소(좌표 3자리로 중복 제거), 최근순 5곳
   const seen = new Map();
   trips.filter(x => x.place && x.activity === curTrip.act).sort(latestFirst).forEach(x => { const k = placeKey(x.place); if (!seen.has(k)) seen.set(k, { p: x.place, n: 0, last: x }); seen.get(k).n++; });
-  return [...seen.values()].slice(0, 5).map(v => ({ p: v.p, line: `${v.n}번 · ${shortD(v.last.date)}${v.last.memo ? ' · ' + String(v.last.memo).slice(0, 24) : ''}`, mine: true }));
+  return [...seen.values()].slice(0, 5).map(v => ({ p: v.p, n: v.n, line: `${v.n}번 · ${shortD(v.last.date)}${v.last.memo ? ' · ' + String(v.last.memo).slice(0, 24) : ''}` }));
 }
-const plsBase = () => plsList || sameActPlaces();
-function plsItemsHTML() {
-  if (plsBusy) return '<div class="pls-msg">찾는 중…</div>';
-  const list = plsBase(), a = actOf(curTrip.act);
-  if (!list.length) return `<div class="pls-msg">${esc(plsMsg || (plsList ? '찾지 못했어요 · 주소를 넣거나 지도에서 찍어 주세요' : `아직 ${a.n}으로 다녀온 곳이 없어요`))}</div>`;
-  return (plsList ? '' : `<div class="pls-lb">⭐ ${a.e} ${esc(a.n)}으로 갔던 곳</div>`) + list.map((x, i) => `<button type="button" class="pls-item" data-plsi="${i}"><span class="pls-t">${x.mine ? '⭐ ' : ''}${esc(placeLabel(x.p))}</span><small>${esc(x.line || (x.mine && x.mine.n ? `${x.mine.n}번 다녀옴${x.mine.act ? ' · 지난번 ' + x.mine.act : ''}` : x.p.addr))}</small></button>`).join('') + (plsMsg ? `<div class="pls-msg">${esc(plsMsg)}</div>` : '');
+var pmOpen = false, pmQv = '', pmList = null, pmBusy = false, pmMsg = '', pmTok = 0, pmEl = null, pmMap = null, pmMarkers = [], pmCur = null;
+function pmListHTML() {
+  if (pmBusy) return '<div class="pls-msg">찾는 중…</div>';
+  if (pmMsg) return `<div class="pls-msg">${esc(pmMsg)}</div><div class="pm-src">검색: NAVER</div>`;
+  if (!pmList) return '<div class="pls-msg">이름이나 주소로 검색하거나, 지도를 길게 눌러 그 자리를 골라요</div>';
+  return pmList.map((x, i) => `<button type="button" class="pm-item" data-pmi="${i}"><span class="pm-n">${i + 1}</span><span class="pm-t"><b>${esc(x.name || x.addr || '이름 없음')}</b><small>${esc([x.name ? x.addr : '', x.category].filter(Boolean).join(' · '))}</small></span></button>`).join('') + '<div class="pm-src">검색: NAVER</div>';
 }
-function renderPls() { const b = $('plsRes'); if (b) b.innerHTML = plsItemsHTML(); }
-function stepPlaceHTML() {
+function pmRenderList() { const b = $('pmList'); if (b) b.innerHTML = pmListHTML(); }
+function pmPanelHTML() {
+  return `<div class="pm span" id="pmBox"><div class="pm-bar"><span class="pm-lb">지도에서 장소 찾기</span>${curTrip.place ? '<button type="button" class="pm-clr" data-pmclear>장소 지우기</button>' : ''}<button type="button" class="pm-x" data-pmclose>닫기</button></div>
+    <div class="pm-mapw"><div class="pm-slot" id="pmMapSlot"></div><div class="pm-search"><input id="pmQ" type="text" placeholder="캠핑장·산 이름이나 주소" enterkeyhint="search" autocomplete="off" value="${esc(pmQv)}"><button type="button" class="primary" data-pmgo>검색</button></div></div>
+    <div class="pm-list" id="pmList">${pmListHTML()}</div></div>`;
+}
+function placeRowHTML() {
+  const p = curTrip.place, a = actOf(curTrip.act), mine = sameActPlaces();
+  return `<div class="set-row" id="setPlace"><div class="set-lb">📍 장소</div>
+    <div class="pl-line"><button type="button" class="pl-main${p ? '' : ' empty'}" data-plopen aria-expanded="${pmOpen}"><span class="pl-nm">${p ? esc(placeLabel(p)) : '장소를 찾아보세요'}</span><span class="pl-go">${pmOpen ? '⌃' : '⌄'}</span></button><button type="button" class="pls-ic" data-plsgps aria-label="지금 위치">🎯</button></div>
+    ${mine.length ? `<div class="pls-chips span"><span class="pls-cl">⭐ ${esc(a.e)} ${esc(a.n)}로 갔던 곳</span>${mine.map((x, i) => `<button type="button" class="pls-chip" data-plsm="${i}" title="${esc(x.line)}">${esc(placeLabel(x.p))}${x.n > 1 ? `<small>${x.n}번</small>` : ''}</button>`).join('')}</div>` : ''}
+    ${pmOpen ? pmPanelHTML() : ''}</div>`;
+}
+function pmClearPins() { pmMarkers.forEach(m => { try { m.setMap(null); } catch (e) {} }); pmMarkers = []; }
+function pmDrawPins() {
+  pmClearPins();
+  if (!pmMap || !(window.naver && naver.maps) || !pmList || !pmList.length) return;
+  const b = new naver.maps.LatLngBounds();
+  pmList.forEach((x, i) => {
+    const ll = new naver.maps.LatLng(x.lat, x.lng); b.extend(ll);
+    const m = new naver.maps.Marker({ position: ll, map: pmMap, icon: { content: `<div class="pm-pin">${i + 1}</div>`, anchor: new naver.maps.Point(13, 13) } });
+    naver.maps.Event.addListener(m, 'click', () => pmPick(i));
+    pmMarkers.push(m);
+  });
+  if (pmList.length > 1) pmMap.fitBounds(b, { top: 64, right: 30, bottom: 30, left: 30 });   // 결과가 다 보이게
+  else { pmMap.setCenter(new naver.maps.LatLng(pmList[0].lat, pmList[0].lng)); pmMap.setZoom(15); }
+}
+async function mountPm() {   // 지도 요소는 다시 그려도 재사용
+  const slot = $('pmMapSlot'); if (!slot) return;
+  if (!pmEl) { pmEl = document.createElement('div'); pmEl.className = 'mini-map pm-map'; }
+  slot.appendChild(pmEl);
+  if (pmMap) { setTimeout(() => { try { naver.maps.Event.trigger(pmMap, 'resize'); } catch (e) {} }, 100); return; }
+  if (!navigator.onLine) { pmEl.innerHTML = MAP_OFFLINE; return; }
+  if (!(window.naver && naver.maps)) pmEl.innerHTML = '<div class="map-msg">지도를 불러오는 중…</div>';
+  const ok = await loadNaverMaps();
+  if (pmMap) return;
+  if (!ok) { pmEl.innerHTML = mapFailHTML(); return; }
+  pmEl.innerHTML = '';
   const p = curTrip.place;
-  return `<section class="card st cur" id="st2"><div class="st-hd">${stN(2, 'cur')}<b>📍 어디로 가세요?</b></div>
-    ${p ? `<div class="pls-now">지금: ${esc(placeLabel(p))}</div>` : ''}
-    <div class="pls"><input id="plsQ" type="text" placeholder="캠핑장·산 이름이나 주소" enterkeyhint="search" autocomplete="off" value="${esc(plsQ)}"><button type="button" class="primary" data-plsgo>찾기</button></div>
-    <div class="pls-res" id="plsRes">${plsItemsHTML()}</div>
-    <div class="pls-btns"><button type="button" data-plsgps>🎯 지금 위치</button><button type="button" data-plsmap>🗺️ 지도에서 찍기</button></div>
-    <button type="button" class="pls-skip" data-plsskip>장소는 나중에 정할게요 → 달력으로</button></section>`;
+  pmMap = new naver.maps.Map(pmEl, { center: new naver.maps.LatLng(p ? p.lat : 37.5665, p ? p.lng : 126.978), zoom: p ? 14 : 11, zoomControl: true, zoomControlOptions: { position: naver.maps.Position.BOTTOM_RIGHT } });
+  if (p) pmCur = new naver.maps.Marker({ position: new naver.maps.LatLng(p.lat, p.lng), map: pmMap });
+  const lp = e => { if (e && e.coord) pmLongPick(e.coord.lat(), e.coord.lng()); };
+  naver.maps.Event.addListener(pmMap, 'longtap', lp);      // 지도를 길게 누르면 그 지점을 선택
+  naver.maps.Event.addListener(pmMap, 'rightclick', lp);   // PC: 오른쪽 클릭
+  setTimeout(() => { try { naver.maps.Event.trigger(pmMap, 'resize'); } catch (e) {} }, 350);
+  if (pmList && pmList.length) pmDrawPins();
 }
-function setPlace(pl) {   // 장소를 골랐다 → ②를 접고 ③ 달력으로
-  curTrip.place = pl; placeSkip = false; edit2 = false;
-  plsList = null; plsQ = ''; plsMsg = '';
-  saveCurTrip(); refreshTrip(); scrollToStep(); toast('장소를 저장했어요 📍');
-}
-async function plsSearch() {
-  const q = (($('plsQ') || {}).value || '').trim(); plsQ = q; plsMsg = '';
-  if (!q) { plsList = null; renderPls(); return; }
-  plsBusy = true; renderPls();
-  const out = [], seen = new Set();
-  const add = x => { const pl = normPlace(x); if (!pl) return; const k = placeKey(pl); if (seen.has(k)) return; seen.add(k); out.push({ p: pl, mine: mineInfo(pl) }); };
-  const ql = q.toLowerCase();
-  myPlaces(50).filter(pl => ((pl.name || '') + ' ' + (pl.addr || '')).toLowerCase().includes(ql)).forEach(add);
-  try {   // 주소로 찾기(네이버)
+async function reverseAddr(lat, lng) {   // 좌표 → 주소 (실패하면 빈 글자)
+  try {
     if (navigator.onLine && await loadNaverMaps() && naver.maps.Service) {
-      const list = await new Promise(res => naver.maps.Service.geocode({ query: q }, (status, resp) => res(status === naver.maps.Service.Status.OK && resp && resp.v2 && resp.v2.addresses || [])));
-      list.slice(0, 3).forEach(f => add({ name: '', lat: Number(f.y), lng: Number(f.x), addr: f.roadAddress || f.jibunAddress || q }));
+      return await new Promise(res => naver.maps.Service.reverseGeocode({ coords: new naver.maps.LatLng(lat, lng), orders: [naver.maps.Service.OrderType.ROAD_ADDR, naver.maps.Service.OrderType.ADDR].join(',') }, (status, r) => res(status === naver.maps.Service.Status.OK && r && r.v2 && r.v2.address ? (r.v2.address.roadAddress || r.v2.address.jibunAddress || '') : '')));
     }
   } catch (e) {}
-  if (out.length < 5) {   // 이름으로 찾기(OpenStreetMap)
-    try { (await plNameSearch(q)).forEach(x => { const parts = String(x.display_name || '').split(','); add({ name: String(x.name || parts[0]).trim(), lat: Number(x.lat), lng: Number(x.lon), addr: parts.slice(1, 4).join(',').trim() }); }); }
-    catch (e) { plsMsg = '이름 검색에 연결하지 못했어요 · 주소로 찾거나 지도에서 찍어 주세요'; }
+  return '';
+}
+function setPlace(pl) {   // 장소를 골랐다 → 패널은 닫힌다
+  curTrip.place = pl; pmOpen = false; pmQv = ''; pmList = null; pmMsg = ''; pmBusy = false; pmTok++; pmClearPins();
+  if (pmCur) { try { pmCur.setMap(null); } catch (e) {} pmCur = null; }
+  saveCurTrip(); refreshTrip(); toast('장소를 저장했어요 📍');
+}
+function pmPick(i) { const x = (pmList || [])[i]; if (!x) return; const pl = normPlace({ name: x.name, lat: x.lat, lng: x.lng, addr: x.addr }); if (pl) setPlace(pl); }
+async function pmLongPick(lat, lng) {
+  const tok = ++pmTok; toast('주소를 찾는 중…');
+  const addr = await reverseAddr(lat, lng);
+  if (tok !== pmTok) return;
+  const pl = normPlace({ name: '', lat, lng, addr }); if (pl) setPlace(pl);
+}
+const pmHit = x => { const lat = Number(x && x.lat), lng = Number(x && x.lng); if (!isFinite(lat) || !isFinite(lng) || (!lat && !lng)) return null; return { name: String(x.name || ''), addr: String(x.roadAddr || x.addr || ''), category: String(x.category || ''), lat, lng }; };
+async function pmSearch() {
+  const inp = $('pmQ'), q = ((inp && inp.value) || pmQv).trim(); pmQv = q;
+  if (!q) { toast('검색어를 적어 주세요'); return; }
+  const tok = ++pmTok; pmBusy = true; pmMsg = ''; pmRenderList();
+  let list = null;
+  if (WEATHER_API && navigator.onLine) {   // 1) 짐로그 서버 → NAVER 지역 검색
+    const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 8000);
+    try { const r = await fetch(`${WEATHER_API}/search?q=${encodeURIComponent(q)}`, { signal: ctl.signal }); const j = await r.json(); if (r.ok && Array.isArray(j.results)) list = j.results.map(pmHit).filter(Boolean); } catch (e) {}
+    clearTimeout(to);
   }
-  out.sort((x, y) => (y.mine ? 1 : 0) - (x.mine ? 1 : 0));   // ⭐ 내 장소를 맨 위로
-  plsList = out.slice(0, 5); plsBusy = false; renderPls();
+  if (tok !== pmTok) return;
+  if (!list || !list.length) {   // 2) 결과가 없거나 실패하면 주소 검색(geocoder)으로 한 번 더
+    try {
+      if (navigator.onLine && await loadNaverMaps() && naver.maps.Service) {
+        const found = await new Promise(res => naver.maps.Service.geocode({ query: q }, (status, resp) => res(status === naver.maps.Service.Status.OK && resp && resp.v2 && resp.v2.addresses || [])));
+        list = found.slice(0, 5).map(f => pmHit({ name: '', roadAddr: f.roadAddress, addr: f.jibunAddress || q, category: '주소', lat: f.y, lng: f.x })).filter(Boolean);
+      }
+    } catch (e) {}
+  }
+  if (tok !== pmTok) return;
+  pmList = list || []; pmBusy = false; pmMsg = pmList.length ? '' : '찾지 못했어요 · 다른 이름이나 주소로 찾거나 지도를 길게 눌러 주세요';
+  pmRenderList(); pmDrawPins();
 }
 function plsGps() {
   if (!navigator.geolocation) { toast('이 기기에서는 위치를 쓸 수 없어요'); return; }
   navigator.geolocation.getCurrentPosition(async pos => {   // 버튼을 눌렀을 때만 위치 권한을 요청
     const lat = pos.coords.latitude, lng = pos.coords.longitude;
-    let addr = '';
-    try {
-      if (navigator.onLine && await loadNaverMaps() && naver.maps.Service) {
-        addr = await new Promise(res => naver.maps.Service.reverseGeocode({ coords: new naver.maps.LatLng(lat, lng), orders: [naver.maps.Service.OrderType.ROAD_ADDR, naver.maps.Service.OrderType.ADDR].join(',') }, (status, r) => res(status === naver.maps.Service.Status.OK && r && r.v2 && r.v2.address ? (r.v2.address.roadAddress || r.v2.address.jibunAddress || '') : '')));
-      }
-    } catch (e) {}
-    const pl = normPlace({ name: '현재 위치', lat, lng, addr });
+    const pl = normPlace({ name: '현재 위치', lat, lng, addr: await reverseAddr(lat, lng) });
     if (pl) setPlace(pl); else toast('위치를 가져오지 못했어요');
   }, () => toast('위치를 가져오지 못했어요 · 권한을 확인해 주세요'), { enableHighAccuracy: true, timeout: 10000, maximumAge: 30000 });
 }
 
-// ③ 📅 달력 — 출발일 → 돌아오는 날, 장소가 있으면 오늘부터 10일까지 날씨 아이콘 + 최저기온
+// 📅 날짜: 작은 월 달력 — 장소가 있으면 오늘부터 10일까지 날씨 아이콘 + 최저기온 (/daily), 고르는 즉시 저장
 const DAILY_EMOJI = { sun: '☀️', partly: '⛅', cloud: '☁️', rain: '🌧️', snow: '❄️', shower: '🌦️' };
 var daily = { key: '', state: 'idle', byDate: {}, t: 0 };
 function dailyEnsure() {
@@ -3289,61 +3468,56 @@ function dailyEnsure() {
     .then(r => r.json().then(j => { if (!r.ok) throw new Error(j.error || '오류'); return j; }))
     .then(j => { if (daily.key !== key) return; const m = {}; (j.days || []).forEach(x => { m[x.date] = x; }); daily = { key, state: 'ok', byDate: m, t: Date.now() }; })
     .catch(() => { if (daily.key === key) daily.state = 'fail'; })
-    .then(() => { if (daily.key === key && curTrip.place && placeKey(curTrip.place) === key && $('calBox')) renderHome(); });
+    .then(() => { if (daily.key === key && curTrip.place && placeKey(curTrip.place) === key) renderHome(); });
 }
 const dailyOf = ds => { const d = curTrip.place && daily.key === placeKey(curTrip.place) && daily.state === 'ok' ? daily.byDate[ds] : null; const n = dayDiff(ds); return d && d.icon && n >= 0 && n <= 10 ? d : null; };
-const calEffEnd = () => (calStart ? (calEnd || addDaysStr(calStart, ACT_DAYS[curTrip.act] || 0)) : '');
-function calInit() {
-  const D = curTrip.date && dayDiff(curTrip.date) >= 0;
-  calStart = D ? curTrip.date : ''; calEnd = D ? addDaysStr(curTrip.date, curTrip.days || 0) : '';
-  calMonth = (D ? curTrip.date : todayStr()).slice(0, 7);
-}
+const isPlanned = () => !!curTrip.date && dayDiff(curTrip.date) >= 0;
+const isCalOpen = () => true;   // 영역 전체가 한 줄로 접히므로 달력은 늘 월 달력
 function calTap(ds) {
   if (ds < todayStr()) return;
-  if (!calStart || calEnd) { calStart = ds; calEnd = ''; }   // 출발일부터 새로 고른다
-  else if (ds === calStart) calEnd = ds;                      // 같은 날을 두 번 = 당일
-  else if (ds < calStart) calStart = ds;                      // 더 이른 날 = 출발일을 바꾼다
-  else calEnd = ds;                                           // 돌아오는 날
-  renderHome();
+  const t = curTrip;
+  if (!calPending) { t.date = ds; t.days = actDays(t.act); calEnd = ''; calPending = true; }   // 출발일 (돌아오는 날을 기다림)
+  else if (ds === t.date) { t.days = 0; calEnd = ds; calPending = false; calOpen = false; calMonth = ''; }   // 같은 날 두 번 = 당일
+  else if (ds < t.date) { t.date = ds; t.days = actDays(t.act); calEnd = ''; }                         // 더 이른 날 = 출발일 변경
+  else { calEnd = ds; t.days = Math.min(3, Math.round((parseD(ds) - parseD(t.date)) / DAY_MS)); calPending = false; calOpen = false; calMonth = ''; }   // 돌아오는 날
+  saveCurTrip(); refreshTrip();
 }
 function calSummary() {
-  if (!calStart) return `출발일을 누르고, 돌아오는 날을 눌러 주세요<br><small>${esc(actOf(curTrip.act).n)} 기본 일정은 ${DAY_LABELS[ACT_DAYS[curTrip.act] || 0]}이에요</small>`;
-  const e = calEffEnd(), nights = Math.round((parseD(e) - parseD(calStart)) / DAY_MS), dates = [];
-  for (let i = 0; i <= Math.min(nights, 10); i++) dates.push(addDaysStr(calStart, i));
+  const t = curTrip;
+  if (!isPlanned()) return `출발일을 누르고, 돌아오는 날을 눌러 주세요 <small>· ${esc(actOf(t.act).n)} 기본 일정은 ${DAY_LABELS[actDays(t.act)]}</small>`;
+  const e = calEnd || addDaysStr(t.date, t.days || 0), nights = Math.round((parseD(e) - parseD(t.date)) / DAY_MS), dates = [];
+  for (let i = 0; i <= Math.min(nights, 10); i++) dates.push(addDaysStr(t.date, i));
+  const head = `${esc(rangeText(t.date, e))} · ${nightsLabel(nights)}`, over = nights > 3 ? '<br><small>최대 3박+로 저장돼요</small>' : '';
   const infos = dates.map(dailyOf);
-  let wx = '';
   if (infos.every(Boolean)) {
     const bad = infos.findIndex(x => ['rain', 'shower', 'snow'].includes(x.icon));
-    if (bad >= 0) return `${calEnd ? '✅' : '☑️'} ${esc(rangeText(calStart, e))} · ${nightsLabel(nights)} · ${infos[bad].icon === 'snow' ? '❄️' : '🌧️'} ${WEEK[parseD(dates[bad]).getDay()]}요일에 ${infos[bad].icon === 'snow' ? '눈' : '비'} 소식${nights > 3 ? '<br><small>최대 3박+로 저장돼요</small>' : ''}`;
-    wx = infos.every(x => ['sun', 'partly'].includes(x.icon)) ? (dates.length === 1 ? ' · 맑음' : dates.length === 2 ? ' · 둘 다 맑음' : ' · 모두 맑음') : ' · 대체로 흐려요';
+    if (bad >= 0) return `${head} · ${infos[bad].icon === 'snow' ? '❄️' : '🌧️'} ${WEEK[parseD(dates[bad]).getDay()]}요일에 ${infos[bad].icon === 'snow' ? '눈' : '비'} 소식${over}`;
+    return `${head} · ${infos.every(x => ['sun', 'partly'].includes(x.icon)) ? (dates.length === 1 ? '맑음' : dates.length === 2 ? '둘 다 맑음' : '모두 맑음') : '대체로 흐려요'}${over}`;
   }
-  return `${calEnd ? '✅' : '☑️'} ${esc(rangeText(calStart, e))} · ${nightsLabel(nights)}${wx}${nights > 3 ? '<br><small>최대 3박+로 저장돼요</small>' : ''}`;
+  return head + over;
 }
-function stepCalHTML() {
-  if (!calMonth) calInit();
-  dailyEnsure();
-  const m0 = parseD(calMonth + '-01'), y = m0.getFullYear(), mo = m0.getMonth(), today = todayStr();
-  const nDays = new Date(y, mo + 1, 0).getDate(), e = calEffEnd(), pre = !!calStart && !calEnd;
-  let cells = '';
-  for (let i = 0; i < m0.getDay(); i++) cells += '<span></span>';
-  for (let d = 1; d <= nDays; d++) {
-    const ds = `${y}-${pad2(mo + 1)}-${pad2(d)}`, dow = (m0.getDay() + d - 1) % 7, n = dayDiff(ds), inf = dailyOf(ds);
-    const sel = calStart && ds >= calStart && ds <= e;
-    cells += `<button type="button" class="cal-day${dow === 0 ? ' sun' : dow === 6 ? ' sat' : ''}${ds === today ? ' today' : ''}${ds < today ? ' past' : ''}${sel ? (pre && ds !== calStart ? ' pre' : ' sel') : ''}${inf && n >= 8 ? ' far' : ''}" data-cal="${ds}"${inf ? ` data-info="${ds}"` : ''}><span class="cal-n">${d}</span>${inf ? `<span class="cal-ic">${DAILY_EMOJI[inf.icon] || ''}</span><span class="cal-tn">${inf.tmin !== null && inf.tmin !== undefined ? Math.round(inf.tmin) + '°' : ''}</span>` : ''}</button>`;
+function dateRowHTML() {
+  const t = curTrip, today = todayStr(), planned = isPlanned(), open = isCalOpen(), pre = calPending;
+  const e = planned ? (calEnd || addDaysStr(t.date, t.days || 0)) : '';
+  const cell = (ds, dow) => {
+    const n = dayDiff(ds), inf = dailyOf(ds), sel = planned && ds >= t.date && ds <= e;
+    return `<button type="button" class="cal-day${dow === 0 ? ' sun' : dow === 6 ? ' sat' : ''}${ds === today ? ' today' : ''}${ds < today ? ' past' : ''}${sel ? (pre && ds !== t.date ? ' pre' : ' sel') : ''}${inf && n >= 8 ? ' far' : ''}" data-cal="${ds}"${inf ? ` data-info="${ds}"` : ''}><span class="cal-n">${Number(ds.slice(8))}</span>${inf ? `<span class="cal-ic">${DAILY_EMOJI[inf.icon] || ''}</span><span class="cal-tn">${inf.tmin !== null && inf.tmin !== undefined ? Math.round(inf.tmin) + '°' : ''}</span>` : ''}</button>`;
+  };
+  let head = '', cells = '';
+  if (open) {
+    if (!calMonth) calMonth = (planned ? t.date : today).slice(0, 7);
+    const m0 = parseD(calMonth + '-01'), y = m0.getFullYear(), mo = m0.getMonth(), nDays = new Date(y, mo + 1, 0).getDate();
+    for (let i = 0; i < m0.getDay(); i++) cells += '<span></span>';
+    for (let d = 1; d <= nDays; d++) cells += cell(`${y}-${pad2(mo + 1)}-${pad2(d)}`, (m0.getDay() + d - 1) % 7);
+    head = `<div class="cal-head"><button type="button" data-calnav="-1" aria-label="이전 달"${calMonth <= today.slice(0, 7) ? ' disabled' : ''}>‹</button><b>${y}년 ${mo + 1}월</b><button type="button" data-calnav="1" aria-label="다음 달">›</button></div>`;
+  } else {   // 정해진 나들이: 고른 주 한 줄만
+    const d0 = parseD(t.date), sun = addDaysStr(t.date, -d0.getDay());
+    for (let i = 0; i < 7; i++) cells += cell(addDaysStr(sun, i), i);
   }
-  const curM = today.slice(0, 7);
-  return `<section class="card st cur" id="st3"><div class="st-hd">${stN(3, 'cur')}<b>📅 언제 떠나요?</b></div>
-    <div class="cal-wrap" id="calBox"><div class="cal-head"><button type="button" data-calnav="-1" aria-label="이전 달"${calMonth <= curM ? ' disabled' : ''}>‹</button><b>${y}년 ${mo + 1}월</b><button type="button" data-calnav="1" aria-label="다음 달">›</button></div>
+  return `<div class="set-row dt"><div class="set-lb">📅 날짜</div>${head}<div class="cal-wrap span" id="calBox">
     <div class="cal-grid">${['일', '월', '화', '수', '목', '금', '토'].map((w, i) => `<span class="cal-dow${i === 0 ? ' sun' : i === 6 ? ' sat' : ''}">${w}</span>`).join('')}${cells}</div></div>
-    <div class="cal-sum">${calSummary()}</div>
-    <button type="button" class="primary cal-go" data-calgo${calStart ? '' : ' disabled'}>이 날짜로 날씨 보기</button></section>`;
-}
-function calGo() {
-  if (!calStart) return;
-  const nights = Math.round((parseD(calEffEnd()) - parseD(calStart)) / DAY_MS);
-  curTrip.date = calStart; curTrip.days = Math.max(0, Math.min(3, nights));
-  edit3 = false; calMonth = ''; calStart = ''; calEnd = '';
-  saveCurTrip(); refreshTrip(); scrollToStep();
+    <div class="cal-sum span">${calSummary()}</div>
+  </div>`;
 }
 function showCalTip(cell) {   // 날짜 칸 길게 누르기: 그날 최저·최고·강수확률 말풍선
   const ds = cell.dataset.info, d = daily.byDate[ds], box = $('calBox'); if (!d || !box) return;
@@ -3423,9 +3597,10 @@ function gearStart() {   // [이대로 시작]
   markGearStarted(true); renderAll(); renderTripLines();
   toast('짐을 챙겨 볼까요? 🎒');
 }
-function resetSteps() { edit1 = edit2 = edit3 = false; placeSkip = false; openRow = ''; plsList = null; plsQ = ''; plsMsg = ''; calMonth = ''; calStart = calEnd = ''; actChosen = false; markGearStarted(false); }
-function beginNewTrip(choice) {   // [＋ 새 나들이]는 ①부터: 날짜·장소·제목은 비우고 종류·가방·인원은 남긴다
+function resetSteps() { openRow = ''; pmOpen = false; pmList = null; pmQv = ''; pmMsg = ''; pmBusy = false; pmTok++; pmClearPins(); tyEdit = null; setExp = false; calMonth = ''; calOpen = null; calPending = false; calEnd = ''; markGearStarted(false); }
+function beginNewTrip(choice) {   // [＋ 새 나들이]: 날짜·장소·제목은 비우고 종류·가방·인원은 남긴다
   curTrip = Object.assign(DEFAULT_TRIP(), { act: curTrip.act, bags: curTrip.bags.slice(), people: curTrip.people });
+  curTrip.days = actDays(curTrip.act);
   gearChoice = choice; resetSteps();
   saveCurTrip(); goTab('home'); refreshTrip(); window.scrollTo(0, 0);
 }
@@ -3435,40 +3610,47 @@ async function startNewTrip() {
   const ch = await gAsk('지금 고른 장비는 어떻게 할까요?', `새 나들이를 만들어요. 지금 고른 장비는 ${n}개예요.`, '지금 고른 그대로 쓰기', '비우고 새로 시작');
   if (ch === 'a') beginNewTrip('keep'); else if (ch === 'b') beginNewTrip('empty');
 }
-function startNextTrip() {   // 기록을 남긴 뒤 "다음 나들이를 만들까요?" → 날짜·장소·제목·일정은 비우고 종류·가방은 남기고 ①부터
-  Object.assign(curTrip, { date: '', place: null, name: '', days: null });
+function startNextTrip() {   // 기록을 남긴 뒤 "다음 나들이를 만들까요?" → 날짜·장소·제목·일정은 비우고 종류·가방은 남긴다
+  Object.assign(curTrip, { date: '', place: null, name: '', days: actDays(curTrip.act) });
   gearChoice = 'keep'; resetSteps();
   saveCurTrip(); goTab('home'); refreshTrip(); window.scrollTo(0, 0);
 }
-function editSteps(which) {   // 한 줄 요약의 [바꾸기] → 그 단계를 다시 펼친다
-  if (which === '1' || which === '12' || which === 'all') edit1 = true;
-  if (which === '2' || which === '12' || which === 'all') edit2 = true;
-  if (which === '3' || which === 'all') { edit3 = true; calMonth = ''; }
-  goTab('home'); renderHome(); scrollToStep();
-}
 document.addEventListener('click', e => {
   if (e.target.closest('[data-newtrip]')) { startNewTrip(); return; }
-  const se = e.target.closest('[data-stedit]');
-  if (se) { editSteps(se.dataset.stedit); return; }
   if (e.target.closest('[data-gohome]')) { goTab('home'); return; }
   if (e.target.closest('[data-wxretry]')) { wxEnsure(true); renderHome(); return; }
   if (e.target.closest('[data-flrec]')) { openRec(false); return; }
-  // ① 종류
+  // 🏷️ 종류
   const sa = e.target.closest('[data-sact]');
-  if (sa) { pickAct(sa.dataset.sact); return; }
-  // ② 장소
-  if (e.target.closest('[data-plsgo]')) { plsSearch(); return; }
-  const pi = e.target.closest('[data-plsi]');
-  if (pi) { const x = plsBase()[Number(pi.dataset.plsi)]; if (x) setPlace(x.p); return; }
+  if (sa) { if (tyLong) { tyLong = false; return; } pickAct(sa.dataset.sact); return; }
+  if (e.target.closest('[data-tyadd]')) { tyEdit = tyEdit && tyEdit.mode === 'add' ? null : { mode: 'add', k: '', e: '🌊', n: '', emo: false, del: false }; renderHome(); if (tyEdit) { const i = $('tyName'); if (i) i.focus(); } return; }
+  if (e.target.closest('[data-tycancel]')) { tyEdit = null; renderHome(); return; }
+  if (e.target.closest('[data-tysave]')) { tySave(); return; }
+  if (e.target.closest('[data-tyemotg]')) { if (tyEdit) { tyEdit.emo = !tyEdit.emo; renderHome(); } return; }
+  const te = e.target.closest('[data-tyemo]');
+  if (te) { if (tyEdit) { tyEdit.e = te.dataset.tyemo; tyEdit.emo = false; renderHome(); } return; }
+  const tm = e.target.closest('[data-tymove]');
+  if (tm) { tyMove(Number(tm.dataset.tymove)); return; }
+  if (e.target.closest('[data-tydel]')) { tyDelete(null); return; }
+  const tt = e.target.closest('[data-tyto]');
+  if (tt) { tyDelete(tt.dataset.tyto); return; }
+  // 📍 장소
+  if (e.target.closest('[data-plopen]')) { pmOpen = !pmOpen; renderHome(); if (pmOpen) gotoSet('place', true); return; }
+  if (e.target.closest('[data-pmclose]')) { pmOpen = false; renderHome(); return; }
+  if (e.target.closest('[data-pmgo]')) { pmSearch(); return; }
+  const pi = e.target.closest('[data-pmi]');
+  if (pi) { pmPick(Number(pi.dataset.pmi)); return; }
+  if (e.target.closest('[data-pmclear]')) { curTrip.place = null; pmClearPins(); if (pmCur) { try { pmCur.setMap(null); } catch (er) {} pmCur = null; } saveCurTrip(); refreshTrip(); return; }
+  const pm = e.target.closest('[data-plsm]');
+  if (pm) { const x = sameActPlaces()[Number(pm.dataset.plsm)]; if (x) setPlace(x.p); return; }
   if (e.target.closest('[data-plsgps]')) { plsGps(); return; }
-  if (e.target.closest('[data-plsmap]')) { openPlaceSheet('cur', { from: 'flow', mode: 'map' }); return; }
-  if (e.target.closest('[data-plsskip]')) { placeSkip = true; edit2 = false; refreshTrip(); scrollToStep(); return; }
-  // ③ 달력
+  if (e.target.closest('[data-setexp]')) { setExp = true; renderHome(); return; }
+  if (e.target.closest('[data-setfold]')) { setExp = false; renderHome(); return; }
+  // 📅 날짜
   const cd = e.target.closest('[data-cal]');
   if (cd) { if (calLong) { calLong = false; return; } calTap(cd.dataset.cal); return; }
   const cn = e.target.closest('[data-calnav]');
   if (cn) { const m = parseD(calMonth + '-01'); m.setMonth(m.getMonth() + Number(cn.dataset.calnav)); calMonth = fmtDate(m).slice(0, 7); renderHome(); return; }
-  if (e.target.closest('[data-calgo]')) { calGo(); return; }
   // 장비 탭 이번 짐 준비
   const gr = e.target.closest('[data-gcrow]');
   if (gr) { openRow = openRow === gr.dataset.gcrow ? '' : gr.dataset.gcrow; renderGearPrep(); return; }
@@ -3481,9 +3663,16 @@ document.addEventListener('click', e => {
   const go = e.target.closest('[data-hmgo]');
   if (go) { goTab(go.dataset.hmgo); return; }
 });
-document.addEventListener('keydown', e => { if (e.target.id === 'plsQ' && e.key === 'Enter') { e.preventDefault(); plsSearch(); } });
-document.addEventListener('focusin', e => {   // 검색칸에 포커스가 가면 카드가 위쪽에 오게 (키보드에 결과가 가리지 않게)
-  if (e.target.id === 'plsQ') setTimeout(() => { const c = $('st2'); if (c) c.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 350);
+document.addEventListener('input', e => {
+  const id = e.target.id;
+  if (id === 'pmQ') pmQv = e.target.value;
+  else if (id === 'tyName' && tyEdit) tyEdit.n = e.target.value;
+  else if (id === 'tyEmoIn' && tyEdit) { const g = firstGrapheme(e.target.value); if (g) { tyEdit.e = g; const b = $('tyEBtn'); if (b) b.textContent = g; } }
+});
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Enter') return;
+  if (e.target.id === 'pmQ') { e.preventDefault(); pmSearch(); }
+  else if (e.target.id === 'tyName') { e.preventDefault(); tySave(); }
 });
 /* ═══ /나들이 탭 ═════════════════════════════════════════════════════════ */
 
@@ -4006,7 +4195,7 @@ function renderLogDetail() {
     <div class="td-edit" data-tid="${t.id}">
       <label class="f" style="grid-column:1/-1"><span>출발일</span><input type="date" data-te="date" value="${t.date}"></label>
       <label class="f" style="grid-column:1/-1"><span>제목</span><input data-te="name" maxlength="30" value="${esc(t.name)}" placeholder="제목 (선택)"></label>
-      <div class="f" style="grid-column:1/-1"><span>장소</span><div style="margin-top:4px">${t.place ? `<div class="map-slot"><div class="mini-map dt-map"></div><button type="button" class="mm-tap" data-placeedit="${t.id}" aria-label="지도를 눌러 장소 바꾸기"></button><span class="mm-hint">눌러서 바꾸기</span></div>` : ''}${placeRowHTML(t.place, t.id)}${t.place ? placeActionsHTML(t.place) : ''}</div></div>
+      <div class="f" style="grid-column:1/-1"><span>장소</span><div style="margin-top:4px">${t.place ? `<div class="map-slot"><div class="mini-map dt-map"></div><button type="button" class="mm-tap" data-placeedit="${t.id}" aria-label="지도를 눌러 장소 바꾸기"></button><span class="mm-hint">눌러서 바꾸기</span></div>` : ''}${logPlaceRowHTML(t.place, t.id)}${t.place ? placeActionsHTML(t.place) : ''}</div></div>
       <div class="f" style="grid-column:1/-1"><span>종류</span><div class="act-grid" style="margin-top:4px">${actChips(t.activity, 'data-tact')}</div></div>
       <div class="f" style="grid-column:1/-1"><span>일정</span><div class="rec-chips" style="margin-top:4px">${DAY_LABELS.map((l, i) => `<button type="button" class="chip${t.days === i ? ' on' : ''}" data-td="${i}">${l}</button>`).join('')}</div></div>
       <label class="f" style="grid-column:1/-1"><span>메모 (최대 100자)</span><textarea data-te="memo" rows="2" maxlength="100" placeholder="예: 침낭 추웠음, 물 1L 남음">${esc(t.memo)}</textarea></label>
