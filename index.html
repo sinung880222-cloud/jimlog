@@ -211,6 +211,7 @@
   .hm-wait > div { flex: 1 1 auto; font-weight: 600; }
   .act-row .chip.editing { box-shadow: 0 0 0 2px var(--ember); }
   .act-row .chip.act-add { min-width: 34px; padding: 0 10px; font-size: 16px; color: var(--ink-3); }
+  .ty-hint { margin-top: -4px; font-size: 10px; color: var(--ink-3); }
   .ty-edit { padding: 10px; border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--surface-sunken); }
   .ty-line { display: flex; align-items: center; gap: 6px; }
   .ty-line.ty-sub { margin-top: 8px; }
@@ -219,7 +220,7 @@
   .ty-line .ty-e { width: 44px; padding: 0; font-size: 20px; }
   .ty-line.ty-sub button { flex: 1 1 0; padding: 0 4px; }
   .ty-line .ty-del { color: var(--danger); border-color: var(--danger); }
-  .ty-emo { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+  .ty-emo { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; max-height: 176px; overflow-y: auto; }
   .ty-emo button { width: 38px; height: 38px; min-height: 0; padding: 0; font-size: 18px; }
   .ty-emo input { flex: 1 1 90px; min-width: 0; height: 38px; font-size: 16px; }
   .ty-mv { margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--line); }
@@ -3279,20 +3280,20 @@ function tripWhenShort(t) {   // "11/14 (토) ~ 15 (일) · 1박"
 }
 // 🏷️ 종류: 한 줄 가로 스크롤 칩(높이 40px), 고른 칩은 초록, 맨 끝 [＋]. 칩을 길게 누르면 이름·이모지·순서·삭제
 const actDays = k => ACT_DAYS[k] !== undefined ? ACT_DAYS[k] : 1;   // 기본 일정: 피크닉·등산·여행 당일 / 나머지(사용자 종류 포함) 1박
-const TY_EMOJIS = ['🌊', '⛰️', '🏍️', '🛶', '🎣', '❄️', '🌸', '🍂', '🐕', '🔥', '⭐'];
+const TY_EMOJIS = ['🌊', '⛰️', '🏍️', '🛶', '🎣', '❄️', '🌸', '🍂', '🐕', '🔥', '⭐', '🏖️', '🏔️', '🌲', '🌳', '🌅', '🌄', '🌙', '🌌', '☀️', '🌈', '🏞️', '🏝️', '🗻', '🚲', '🛵', '🛻', '🚐', '🚙', '🚌', '🚂', '⛵', '🚤', '🏄', '🤿', '🚣', '🧗', '🏃', '🚶', '⛷️', '🏂', '🏌️', '🧘', '🏊', '🚴', '🎿', '🛷', '⛺', '🔦', '🧭', '📷', '🎒', '🧳', '🗺️', '🍖', '🍜', '🍙', '🥾', '☕', '🍺', '🎵', '🎸', '🎲', '🐶', '🐱', '🦌', '🐟', '🦆', '🌻', '🍁', '🌾', '🧊', '💧', '🔭', '👨‍👩‍👧', '❤️', '✨']; // 고르는 이모지 후보
 var tyEdit = null, tyLong = false, tyPressT = null;   // tyEdit = { mode:'add'|'edit', k, e, n, emo, del } | null
 function firstGrapheme(v) { v = String(v || '').trim(); if (!v) return ''; try { return [...new Intl.Segmenter(undefined, { granularity: 'grapheme' }).segment(v)][0].segment; } catch (e) { return Array.from(v)[0]; } }
 function actRowHTML() {
   const known = ACTIVITIES.some(x => x.k === curTrip.act);
   const chip = x => `<button type="button" class="chip${x.k === curTrip.act ? ' on' : ''}${tyEdit && tyEdit.mode === 'edit' && tyEdit.k === x.k ? ' editing' : ''}" data-sact="${esc(x.k)}"><span class="ac-e">${esc(x.e)}</span><span class="ac-n">${esc(x.n)}</span></button>`;
-  return `<div class="set-row"><div class="set-lb">🏷️ 종류</div><div class="act-row">${(known ? '' : chip(actOf(curTrip.act)))}${ACTIVITIES.map(chip).join('')}<button type="button" class="chip act-add${tyEdit && tyEdit.mode === 'add' ? ' editing' : ''}" data-tyadd aria-label="종류 추가">＋</button></div>${tyEditHTML()}</div>`;
+  return `<div class="set-row"><div class="set-lb">🏷️ 종류</div><div class="act-row">${(known ? '' : chip(actOf(curTrip.act)))}${ACTIVITIES.map(chip).join('')}<button type="button" class="chip act-add${tyEdit && tyEdit.mode === 'add' ? ' editing' : ''}" data-tyadd aria-label="종류 추가">＋</button></div>${tyEdit ? '' : '<div class="ty-hint span">칩을 길게 누르면 수정·순서·삭제</div>'}${tyEditHTML()}</div>`;
 }
 function tyEditHTML() {
   const t = tyEdit; if (!t) return '';
-  const emos = [...new Set([...TY_EMOJIS, ...ACTIVITIES.map(x => x.e)])];
+  const emos = [...new Set([...TY_EMOJIS, ...ACTIVITIES.map(x => x.e)])];   // 직접 입력 없이 후보에서만 고른다
   const n = t.mode === 'edit' ? trips.filter(x => x.activity === t.k).length : 0;
   return `<div class="ty-edit span"><div class="ty-line"><button type="button" class="ty-e" id="tyEBtn" data-tyemotg aria-label="이모지 고르기">${esc(t.e)}</button><input id="tyName" type="text" maxlength="8" placeholder="이름 (최대 8자)" autocomplete="off" value="${esc(t.n)}"><button type="button" class="primary" data-tysave>${t.mode === 'add' ? '추가' : '저장'}</button><button type="button" data-tycancel>취소</button></div>`
-    + (t.emo ? `<div class="ty-emo">${emos.map(e => `<button type="button" data-tyemo="${esc(e)}">${esc(e)}</button>`).join('')}<input id="tyEmoIn" type="text" maxlength="8" placeholder="직접 입력" autocomplete="off"></div>` : '')
+    + (t.emo ? `<div class="ty-emo">${emos.map(e => `<button type="button" data-tyemo="${esc(e)}">${esc(e)}</button>`).join('')}</div>` : '')
     + (t.mode === 'edit' ? `<div class="ty-line ty-sub"><button type="button" data-tymove="-1">◀ 앞으로</button><button type="button" data-tymove="1">뒤로 ▶</button><button type="button" class="ty-del" data-tydel>삭제</button></div>` : '')
     + (t.del && n ? `<div class="ty-mv"><div class="ty-mvq">기록 ${n}개를 어느 종류로 옮길까요?</div><div class="ty-mvc">${ACTIVITIES.filter(x => x.k !== t.k).map(x => `<button type="button" class="chip" data-tyto="${esc(x.k)}">${esc(x.e)} ${esc(x.n)}</button>`).join('')}</div></div>` : '')
     + '</div>';
@@ -3667,7 +3668,6 @@ document.addEventListener('input', e => {
   const id = e.target.id;
   if (id === 'pmQ') pmQv = e.target.value;
   else if (id === 'tyName' && tyEdit) tyEdit.n = e.target.value;
-  else if (id === 'tyEmoIn' && tyEdit) { const g = firstGrapheme(e.target.value); if (g) { tyEdit.e = g; const b = $('tyEBtn'); if (b) b.textContent = g; } }
 });
 document.addEventListener('keydown', e => {
   if (e.key !== 'Enter') return;
