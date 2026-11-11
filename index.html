@@ -3216,11 +3216,7 @@ function renderHome() {
     h += `<div class="hm-head"><div class="hm-dd">${n > 0 ? `D-${n} · ${WEEK[parseD(t.date).getDay()]}요일에 출발해요` : '오늘 출발해요 🎉'}</div>${nb}</div>`;
   } else h += `<div class="hm-head"><div class="hm-dd">어디로 떠나 볼까요?</div>${nb}</div>`;
   // 정하기 영역: 🏷️ 종류 · 📍 장소 · 📅 날짜 (아무 순서로 고르고, 다 정해지면 한 줄로 접힌다)
-  const done = !!(p && planned && !calPending && !tyEdit && !pmOpen);
-  if (done && !setExp) {
-    const a0 = actOf(t.act);
-    h += `<section class="card set-sum"><span class="ss-t">${esc(a0.e)} ${esc(a0.n)} · 📍 ${esc(placeLabel(p))} · 📅 ${esc(fmtMDW(t.date))}${t.days === null ? '' : ' ' + DAY_LABELS[t.days]}</span><button type="button" data-setexp>펼치기 ▾</button></section>`;
-  } else h += `<section class="card set">${done ? '<div class="set-fold"><button type="button" data-setfold>접기 ▴</button></div>' : ''}${actRowHTML()}${placeRowHTML()}${dateRowHTML()}</section>`;
+  h += `<section class="card set">${actRowHTML()}${placeRowHTML()}${dateRowHTML()}</section>`;   // 접고 펼치기 없이 늘 열어 둔다
   if (p) dailyEnsure();
   // [5] 장소와 날짜가 둘 다 있으면 작은 지도 → 🌤️ 날씨 브리핑
   if (planned && p) {
@@ -3243,7 +3239,7 @@ function renderHome() {
 }
 function refreshTrip() { renderTripLines(); renderHome(); }
 function gotoSet(row, noTab) {   // 정하기 영역을 펼치고 해당 줄로 스크롤 (장소 시트가 있던 곳은 여기로 온다)
-  if (!noTab) { goTab('home'); setExp = true; if (row === 'place') pmOpen = true; renderHome(); }
+  if (!noTab) { goTab('home'); if (row === 'place') pmOpen = true; renderHome(); }
   setTimeout(() => { const el = row === 'place' ? $('setPlace') : document.querySelector('.card.set'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 80);
 }
 
@@ -3266,7 +3262,6 @@ const upcomingSat = off => { const d = new Date(); d.setHours(0, 0, 0, 0); d.set
 // ── 나들이 탭 = 한 화면에 다 열어 두기: 🏷️ 종류 · 📍 장소 · 📅 날짜를 아무 순서로 고른다 (팝업·단계 없음, 고르는 즉시 저장)
 const ACT_DAYS = { picnic: 0, hike: 0, travel: 0, backpack: 1, camp: 1, carcamp: 1 };   // 종류별 기본 일정(박)
 var openRow = '';                     // 장비 탭 "이번 짐 준비"에서 펼친 줄(한 번에 한 줄): bags | gear
-var setExp = false;   // 정하기 영역을 [펼치기]로 연 상태 (다 정해졌어도 열어 둠)
 var calMonth = '', calOpen = null, calPending = false, calEnd = '', calLong = false, calPressT = null;      // 📅 달력 상태
 const placeLabel = pl => pl.name || pl.addr || '선택한 위치';
 const nightsLabel = n => DAY_LABELS[Math.max(0, Math.min(3, n))];
@@ -3390,7 +3385,7 @@ async function mountPm() {   // 지도 요소는 다시 그려도 재사용
   if (!ok) { pmEl.innerHTML = mapFailHTML(); return; }
   pmEl.innerHTML = '';
   const p = curTrip.place;
-  pmMap = new naver.maps.Map(pmEl, { center: new naver.maps.LatLng(p ? p.lat : 37.5665, p ? p.lng : 126.978), zoom: p ? 14 : 11, zoomControl: true, zoomControlOptions: { position: naver.maps.Position.BOTTOM_RIGHT } });
+  pmMap = new naver.maps.Map(pmEl, { center: new naver.maps.LatLng(p ? p.lat : 37.5665, p ? p.lng : 126.978), zoom: p ? 14 : 11, zoomControl: true, zoomControlOptions: { style: naver.maps.ZoomControlStyle.SMALL, position: naver.maps.Position.RIGHT_BOTTOM } });   // 작은 +/- 버튼(큰 슬라이더는 300px 칸에서 잘림)
   if (p) pmCur = new naver.maps.Marker({ position: new naver.maps.LatLng(p.lat, p.lng), map: pmMap });
   const lp = e => { if (e && e.coord) pmLongPick(e.coord.lat(), e.coord.lng()); };
   naver.maps.Event.addListener(pmMap, 'longtap', lp);      // 지도를 길게 누르면 그 지점을 선택
@@ -3583,7 +3578,7 @@ function gearStart() {   // [이대로 시작]
   markGearStarted(true); renderAll(); renderTripLines();
   toast('짐을 챙겨 볼까요? 🎒');
 }
-function resetSteps() { openRow = ''; pmOpen = false; pmList = null; pmQv = ''; pmMsg = ''; pmBusy = false; pmTok++; pmClearPins(); tyEdit = null; setExp = false; calMonth = ''; calOpen = null; calPending = false; calEnd = ''; markGearStarted(false); }
+function resetSteps() { openRow = ''; pmOpen = false; pmList = null; pmQv = ''; pmMsg = ''; pmBusy = false; pmTok++; pmClearPins(); tyEdit = null; calMonth = ''; calOpen = null; calPending = false; calEnd = ''; markGearStarted(false); }
 function beginNewTrip(choice) {   // [＋ 새 나들이]: 날짜·장소·제목은 비우고 종류·가방·인원은 남긴다
   curTrip = Object.assign(DEFAULT_TRIP(), { act: curTrip.act, bags: curTrip.bags.slice(), people: curTrip.people });
   curTrip.days = actDays(curTrip.act);
@@ -3633,8 +3628,6 @@ document.addEventListener('click', e => {
   if (e.target.closest('[data-pmclear]')) { curTrip.place = null; pmClearPins(); if (pmCur) { try { pmCur.setMap(null); } catch (er) {} pmCur = null; } saveCurTrip(); refreshTrip(); return; }
   const pm = e.target.closest('[data-plsm]');
   if (pm) { const x = sameActPlaces()[Number(pm.dataset.plsm)]; if (x) setPlace(x.p); return; }
-  if (e.target.closest('[data-setexp]')) { setExp = true; renderHome(); return; }
-  if (e.target.closest('[data-setfold]')) { setExp = false; renderHome(); return; }
   // 📅 날짜
   const cd = e.target.closest('[data-cal]');
   if (cd) { if (calLong) { calLong = false; return; } calTap(cd.dataset.cal); return; }
