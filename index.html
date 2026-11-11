@@ -3281,12 +3281,12 @@ function tripWhenShort(t) {   // "11/14 (토) ~ 15 (일) · 1박"
 // 🏷️ 종류: 한 줄 가로 스크롤 칩(높이 40px), 고른 칩은 초록, 맨 끝 [＋]. 칩을 길게 누르면 이름·이모지·순서·삭제
 const actDays = k => ACT_DAYS[k] !== undefined ? ACT_DAYS[k] : 1;   // 기본 일정: 피크닉·등산·여행 당일 / 나머지(사용자 종류 포함) 1박
 const TY_EMOJIS = ['🌊', '⛰️', '🏍️', '🛶', '🎣', '❄️', '🌸', '🍂', '🐕', '🔥', '⭐', '🏖️', '🏔️', '🌲', '🌳', '🌅', '🌄', '🌙', '🌌', '☀️', '🌈', '🏞️', '🏝️', '🗻', '🚲', '🛵', '🛻', '🚐', '🚙', '🚌', '🚂', '⛵', '🚤', '🏄', '🤿', '🚣', '🧗', '🏃', '🚶', '⛷️', '🏂', '🏌️', '🧘', '🏊', '🚴', '🎿', '🛷', '⛺', '🔦', '🧭', '📷', '🎒', '🧳', '🗺️', '🍖', '🍜', '🍙', '🥾', '☕', '🍺', '🎵', '🎸', '🎲', '🐶', '🐱', '🦌', '🐟', '🦆', '🌻', '🍁', '🌾', '🧊', '💧', '🔭', '👨‍👩‍👧', '❤️', '✨']; // 고르는 이모지 후보
-var tyEdit = null, tyLong = false, tyPressT = null;   // tyEdit = { mode:'add'|'edit', k, e, n, emo, del } | null
+var tyEdit = null;   // tyEdit = { mode:'add'|'edit', k, e, n, emo, del } | null
 function firstGrapheme(v) { v = String(v || '').trim(); if (!v) return ''; try { return [...new Intl.Segmenter(undefined, { granularity: 'grapheme' }).segment(v)][0].segment; } catch (e) { return Array.from(v)[0]; } }
 function actRowHTML() {
   const known = ACTIVITIES.some(x => x.k === curTrip.act);
   const chip = x => `<button type="button" class="chip${x.k === curTrip.act ? ' on' : ''}${tyEdit && tyEdit.mode === 'edit' && tyEdit.k === x.k ? ' editing' : ''}" data-sact="${esc(x.k)}"><span class="ac-e">${esc(x.e)}</span><span class="ac-n">${esc(x.n)}</span></button>`;
-  return `<div class="set-row"><div class="set-lb">🏷️ 종류</div><div class="act-row">${(known ? '' : chip(actOf(curTrip.act)))}${ACTIVITIES.map(chip).join('')}<button type="button" class="chip act-add${tyEdit && tyEdit.mode === 'add' ? ' editing' : ''}" data-tyadd aria-label="종류 추가">＋</button></div>${tyEdit ? '' : '<div class="ty-hint span">칩을 길게 누르면 수정·순서·삭제</div>'}${tyEditHTML()}</div>`;
+  return `<div class="set-row"><div class="set-lb">🏷️ 종류</div><div class="act-row">${(known ? '' : chip(actOf(curTrip.act)))}${ACTIVITIES.map(chip).join('')}<button type="button" class="chip act-add${tyEdit && tyEdit.mode === 'add' ? ' editing' : ''}" data-tyadd aria-label="종류 추가">＋</button></div>${tyEdit ? '' : '<div class="ty-hint span">칩을 두 번 누르면 수정·순서·삭제</div>'}${tyEditHTML()}</div>`;
 }
 function tyEditHTML() {
   const t = tyEdit; if (!t) return '';
@@ -3336,13 +3336,7 @@ function pickAct(k) {
   if (!curTrip.date || dayDiff(curTrip.date) < 0) curTrip.days = actDays(k);   // 날짜를 아직 안 골랐으면 종류별 기본 일정
   saveCurTrip(); refreshTrip();
 }
-document.addEventListener('pointerdown', e => {   // 종류 칩 길게 누르기 = 편집
-  clearTimeout(tyPressT); tyLong = false;
-  const c = e.target.closest('.act-row [data-sact]');
-  if (c) tyPressT = setTimeout(() => { tyLong = true; tyOpenEdit(c.dataset.sact); }, 500);
-});
-['pointerup', 'pointercancel', 'pointermove'].forEach(ev => document.addEventListener(ev, e => { if (ev !== 'pointermove' || Math.abs(e.movementX) + Math.abs(e.movementY) > 6) clearTimeout(tyPressT); }));
-document.addEventListener('contextmenu', e => { if (e.target.closest('.act-row [data-sact]')) e.preventDefault(); });
+var tyLastK = '', tyLastT = 0;   // 종류 칩을 두 번 누르면(350ms 안) 편집 — 칩은 첫 번째 탭에 바로 선택되고 화면이 다시 그려지므로 시각으로 센다
 
 // 📍 장소: 평소엔 한 줄 + 🎯, 줄을 누르면 그 자리에 지도 패널(300px). 검색은 짐로그 서버(/search → NAVER)
 function sameActPlaces() {   // 같은 종류 기록의 장소(좌표 3자리로 중복 제거), 최근순 5곳
@@ -3623,7 +3617,11 @@ document.addEventListener('click', e => {
   if (e.target.closest('[data-flrec]')) { openRec(false); return; }
   // 🏷️ 종류
   const sa = e.target.closest('[data-sact]');
-  if (sa) { if (tyLong) { tyLong = false; return; } pickAct(sa.dataset.sact); return; }
+  if (sa) {
+    const k = sa.dataset.sact, now = Date.now();
+    if (k === tyLastK && now - tyLastT < 350) { tyLastK = ''; tyOpenEdit(k); return; }   // 더블 클릭·더블 탭 = 편집
+    tyLastK = k; tyLastT = now; pickAct(k); return;
+  }
   if (e.target.closest('[data-tyadd]')) { tyEdit = tyEdit && tyEdit.mode === 'add' ? null : { mode: 'add', k: '', e: '🌊', n: '', emo: false, del: false }; renderHome(); if (tyEdit) { const i = $('tyName'); if (i) i.focus(); } return; }
   if (e.target.closest('[data-tycancel]')) { tyEdit = null; renderHome(); return; }
   if (e.target.closest('[data-tysave]')) { tySave(); return; }
