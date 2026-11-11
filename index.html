@@ -3360,7 +3360,7 @@ function pmPanelHTML() {
 function placeRowHTML() {
   const p = curTrip.place, a = actOf(curTrip.act), mine = sameActPlaces();
   return `<div class="set-row" id="setPlace"><div class="set-lb">📍 장소</div>
-    <div class="pl-line"><button type="button" class="pl-main${p ? '' : ' empty'}" data-plopen aria-expanded="${pmOpen}"><span class="pl-nm">${p ? esc(placeLabel(p)) : '장소를 찾아보세요'}</span><span class="pl-go">${pmOpen ? '⌃' : '⌄'}</span></button><button type="button" class="pls-ic" data-plsgps aria-label="지금 위치">🎯</button></div>
+    <div class="pl-line"><button type="button" class="pl-main${p ? '' : ' empty'}" data-plopen aria-expanded="${pmOpen}"><span class="pl-nm">${p ? esc(placeLabel(p)) : '장소를 찾아보세요'}</span><span class="pl-go">${pmOpen ? '⌃' : '⌄'}</span></button></div>
     ${mine.length ? `<div class="pls-chips span"><span class="pls-cl">⭐ ${esc(a.e)} ${esc(a.n)}로 갔던 곳</span>${mine.map((x, i) => `<button type="button" class="pls-chip" data-plsm="${i}" title="${esc(x.line)}">${esc(placeLabel(x.p))}${x.n > 1 ? `<small>${x.n}번</small>` : ''}</button>`).join('')}</div>` : ''}
     ${pmOpen ? pmPanelHTML() : ''}</div>`;
 }
@@ -3442,15 +3442,6 @@ async function pmSearch() {
   pmList = list || []; pmBusy = false; pmMsg = pmList.length ? '' : '찾지 못했어요 · 다른 이름이나 주소로 찾거나 지도를 길게 눌러 주세요';
   pmRenderList(); pmDrawPins();
 }
-function plsGps() {
-  if (!navigator.geolocation) { toast('이 기기에서는 위치를 쓸 수 없어요'); return; }
-  navigator.geolocation.getCurrentPosition(async pos => {   // 버튼을 눌렀을 때만 위치 권한을 요청
-    const lat = pos.coords.latitude, lng = pos.coords.longitude;
-    const pl = normPlace({ name: '현재 위치', lat, lng, addr: await reverseAddr(lat, lng) });
-    if (pl) setPlace(pl); else toast('위치를 가져오지 못했어요');
-  }, () => toast('위치를 가져오지 못했어요 · 권한을 확인해 주세요'), { enableHighAccuracy: true, timeout: 10000, maximumAge: 30000 });
-}
-
 // 📅 날짜: 작은 월 달력 — 장소가 있으면 오늘부터 10일까지 날씨 아이콘 + 최저기온 (/daily), 고르는 즉시 저장
 const DAILY_EMOJI = { sun: '☀️', partly: '⛅', cloud: '☁️', rain: '🌧️', snow: '❄️', shower: '🌦️' };
 var daily = { key: '', state: 'idle', byDate: {}, t: 0 };
@@ -3642,7 +3633,6 @@ document.addEventListener('click', e => {
   if (e.target.closest('[data-pmclear]')) { curTrip.place = null; pmClearPins(); if (pmCur) { try { pmCur.setMap(null); } catch (er) {} pmCur = null; } saveCurTrip(); refreshTrip(); return; }
   const pm = e.target.closest('[data-plsm]');
   if (pm) { const x = sameActPlaces()[Number(pm.dataset.plsm)]; if (x) setPlace(x.p); return; }
-  if (e.target.closest('[data-plsgps]')) { plsGps(); return; }
   if (e.target.closest('[data-setexp]')) { setExp = true; renderHome(); return; }
   if (e.target.closest('[data-setfold]')) { setExp = false; renderHome(); return; }
   // 📅 날짜
