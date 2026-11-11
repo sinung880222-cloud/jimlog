@@ -150,26 +150,117 @@
   .hm-safe a { flex: 1 1 0; display: flex; align-items: center; justify-content: center; min-height: 44px; border-radius: var(--radius-md); border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); font-weight: 700; text-decoration: none; }
   .hm-safe a.sos { background: var(--danger-tint); border-color: var(--danger); color: var(--danger); }
   .rp-t { min-height: 20px; padding: 8px 0 0; color: var(--ink-2); }
-  .sheet.full .tp-body { padding-bottom: 8px; }
-  .tp-sec { margin-bottom: 20px; }
-  .tp-q { margin-bottom: 8px; font-size: 15px; font-weight: 700; }
+  .fl-sub { margin-top: 2px; font-size: 12px; color: var(--ink-2); line-height: 1.5; }
+  .fl-chips { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+  .fl-chip { min-height: 56px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; line-height: 1.3; }
+  .fl-chip small { font-weight: 400; font-size: 11px; color: var(--ink-3); }
+  #flDate { margin-top: 8px; }
+  .fl-lb { margin: 14px 0 6px; font-size: 12px; font-weight: 600; color: var(--ink-2); }
+  .fl-days { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+  .fl-days .chip { min-height: 44px; font-weight: 600; justify-content: center; }
+  .fl-days .chip.on { background: var(--forest); border-color: var(--forest); color: var(--on-forest); }
+  .fl-hint { margin-top: 8px; font-size: var(--fs-meta); color: var(--ink-3); }
+  .fl-past { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 10px 12px; border-radius: var(--radius-md); background: var(--ember-tint); color: var(--ember-ink); font-weight: 600; }
+  .fl-past button { flex: 0 0 auto; min-height: 36px; padding: 0 12px; font-weight: 700; }
+  .cal { --cal-sun: #C0463B; --cal-sat: #3C6EA8; }
+  .act-grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .act-grid4 .chip { min-height: 60px; height: 60px; flex-direction: column; justify-content: center; gap: 2px; padding: 0 2px; }
+  .act-grid4 .ac-e { font-size: 20px; line-height: 1.1; }
+  .act-grid4 .ac-n { font-size: 12px; font-weight: 600; }
+  .act-grid4 .chip.on { background: var(--forest); border-color: var(--forest); color: var(--on-forest); }
+  .st-last { margin-top: 10px; font-size: var(--fs-meta); color: var(--ink-3); }
+  .cal-wrap { position: relative; --cal-sun: #C0463B; --cal-sat: #3C6EA8; }
+  .cal-head { display: flex; align-items: center; justify-content: space-between; margin: 2px 0 6px; font-size: 15px; }
+  .cal-head button { width: 44px; height: 40px; min-height: 0; padding: 0; font-size: 20px; font-weight: 700; }
+  .cal-head button:disabled { opacity: .3; }
+  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+  .cal-dow { padding: 4px 0; text-align: center; font-size: 11px; font-weight: 600; color: var(--ink-3); }
+  .cal-dow.sun, .cal-day.sun .cal-n { color: var(--cal-sun); }
+  .cal-dow.sat, .cal-day.sat .cal-n { color: var(--cal-sat); }
+  .cal-day { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; min-height: 54px; min-width: 0; padding: 3px 0 2px; border: 0; border-radius: var(--radius-md); background: none; color: var(--ink); font-size: 14px; font-weight: 600; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+  .cal-day.today { box-shadow: inset 0 0 0 2px var(--ember); }
+  .cal-day.past { opacity: .3; pointer-events: none; }
+  .cal-day.sel { background: var(--forest); }
+  .cal-day.sel .cal-n, .cal-day.sel .cal-tn { color: var(--on-forest); }
+  .cal-day.pre { background: var(--forest-tint); }
+  .cal-ic { font-size: 14px; line-height: 1.15; }
+  .cal-tn { font-size: 10px; font-weight: 400; color: var(--ink-2); font-variant-numeric: tabular-nums; line-height: 1.1; }
+  .cal-day.far .cal-ic, .cal-day.far .cal-tn { opacity: .55; }
+  .cal-tip { position: absolute; z-index: 20; padding: 6px 10px; border-radius: var(--radius-md); background: var(--ink); color: #fff; font-size: 12px; white-space: nowrap; pointer-events: none; }
+  .cal-sum { margin: 10px 0 8px; padding: 8px 12px; border-radius: var(--radius-md); background: var(--forest-tint); color: var(--forest-ink); font-weight: 600; line-height: 1.5; }
+  .cal-sum small { font-weight: 400; color: var(--ink-2); }
+  .cal-go { width: 100%; }
+  .wx-note.far { margin: 0 0 8px; padding: 6px 10px; border-radius: var(--radius-md); background: var(--ember-tint); color: var(--ember-ink); font-weight: 600; }
+  .card.gp { margin-bottom: 12px; border: 2px solid var(--ember); border-radius: var(--radius-lg); padding: 14px; }
+  .gp-go { width: 100%; margin-top: 8px; }
+  .gp-line { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; padding: 6px 6px 6px 12px; border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--surface); font-weight: 600; }
+  .gp-line .gp-t { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .gp-line button { flex: 0 0 auto; min-height: 32px; padding: 0 12px; font-weight: 700; }
+  .trip-line button.tl-t { display: block; text-align: left; background: none; border: 0; color: inherit; font-weight: 600; padding: 0; min-height: 32px; }
+  .st-n { flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; margin-right: 8px; border-radius: 50%; font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums; vertical-align: middle; }
+  .st-n.cur { border: 2px solid var(--ember); color: var(--ember); background: var(--surface); }
+  .st-n.ok { background: var(--forest); color: var(--on-forest); }
+  .st-n.todo { border: 1.5px solid var(--line-strong); color: var(--ink-3); background: var(--surface); }
+  .st { scroll-margin-top: 64px; }
+  .card.st.cur { border: 2px solid var(--ember); border-radius: var(--radius-lg); padding: 14px; }
+  .st-hd { display: flex; align-items: center; margin-bottom: 8px; font-size: 15px; font-weight: 700; }
+  .st.todo { display: flex; align-items: center; padding: 10px 14px; border: 1.5px dashed var(--line-strong); border-radius: var(--radius-lg); background: transparent; color: var(--ink-3); }
+  .st.todo b { font-size: 14px; font-weight: 700; color: var(--ink-2); }
+  .st.todo small { display: block; margin-top: 1px; font-size: var(--fs-meta); color: var(--ink-3); }
+  .st.done { display: flex; align-items: center; padding: 10px 14px; border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--surface); }
+  .st-sum { flex: 1 1 auto; min-width: 0; font-weight: 600; }
+  .st-chg { flex: 0 0 auto; min-height: 36px; padding: 0 12px; font-weight: 600; }
+  .st.merged { padding: 12px 14px; border-radius: var(--radius-lg); }
+  .mg-top { display: flex; align-items: flex-start; gap: 0; }
+  .mg-t { flex: 1 1 auto; min-width: 0; }
+  .mg-p { font-size: 16px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .mg-d { margin-top: 4px; color: var(--ink-2); display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
+  .mg-d .hm-chip { min-height: 28px; padding: 0 10px; }
+  .pls { display: flex; gap: 8px; }
+  .pls input { flex: 1 1 auto; min-width: 0; font-size: 16px; }
+  .pls-now { margin-bottom: 6px; font-size: var(--fs-meta); color: var(--ink-3); }
+  .pls-res { margin-top: 8px; }
+  .pls-res:empty { display: none; }
+  .pls-lb { margin: 4px 2px; font-size: 12px; font-weight: 600; color: var(--ink-2); }
+  .pls-item { display: block; width: 100%; min-height: 48px; margin-bottom: 6px; padding: 8px 12px; text-align: left; border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--surface); font-weight: 600; }
+  .pls-item small { display: block; margin-top: 2px; font-weight: 400; font-size: var(--fs-meta); color: var(--ink-3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .pls-msg { padding: 6px 2px; color: var(--ink-3); font-size: var(--fs-meta); }
+  .pls-btns { display: flex; gap: 8px; margin-top: 8px; }
+  .pls-btns button { flex: 1 1 0; min-height: 44px; font-weight: 600; }
+  .pls-skip { display: block; margin: 10px auto 0; padding: 6px 10px; min-height: 36px; border: 0; background: none; color: var(--ink-3); font-size: 12px; text-decoration: underline; }
+  .gc-row.static { cursor: default; }
+  .gc-row.open { border-color: var(--forest); border-bottom-left-radius: 0; border-bottom-right-radius: 0; margin-bottom: 0; }
+  .gc-open { margin-bottom: 6px; padding: 10px 12px; border: 1px solid var(--forest); border-top: 0; border-radius: 0 0 var(--radius-md) var(--radius-md); background: var(--surface); }
+  .gc-open .tp-radio { display: block; width: 100%; text-align: left; }
+  .gc-step { flex: 0 0 auto; display: inline-flex; align-items: center; gap: 12px; }
+  .gc-step button { width: 40px; height: 40px; min-height: 0; padding: 0; font-size: 20px; font-weight: 700; }
+  .gc-step b { min-width: 40px; text-align: center; }
+  .gc-link[hidden] { display: none; }
+  .gc-link { display: inline-block; margin-top: 8px; padding: 4px 2px; min-height: 32px; border: 0; background: none; color: var(--forest-ink); font-size: 12px; font-weight: 600; text-decoration: underline; }
+  .card.st .card-title { display: flex; align-items: center; }
+  .gc-desc { margin: -4px 0 8px; }
+  .gc-row { display: flex; align-items: center; gap: 8px; width: 100%; min-height: 56px; margin-bottom: 6px; padding: 8px 12px; text-align: left; border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--surface); }
+  .gc-k { flex: 0 0 44px; font-size: 12px; color: var(--ink-3); font-weight: 600; }
+  .gc-v { flex: 1 1 auto; min-width: 0; font-weight: 600; line-height: 1.4; }
+  .gc-v small { display: block; margin-top: 2px; font-weight: 400; font-size: var(--fs-meta); color: var(--ink-3); }
+  .gc-none { font-weight: 400; color: var(--ink-3); }
+  .gc-auto { flex: 0 0 auto; padding: 1px 7px; border-radius: var(--radius-pill); background: var(--forest-tint); color: var(--forest-ink); font-style: normal; font-size: 10px; font-weight: 600; }
+  .gc-go { flex: 0 0 auto; color: var(--ink-3); font-size: 18px; }
+  .gc-row + .hm-go, .card .gc-row ~ .hm-go { margin-top: 8px; }
+  .pl-mine { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .pl-mine button { min-height: 40px; padding: 0 14px; font-weight: 600; }
+  .pl-mine span { font-size: var(--fs-meta); color: var(--ink-3); }
+  .pl-empty { padding: 12px; color: var(--ink-3); font-size: var(--fs-meta); }
   .tp-acts { display: flex; flex-wrap: wrap; gap: 8px; }
   .tp-act { display: inline-flex; align-items: center; gap: 6px; height: 56px; min-height: 56px; padding: 0 16px; border-radius: var(--radius-md); font-weight: 600; font-size: 14px; }
   .tp-act.on { background: var(--forest); border-color: var(--forest); color: var(--on-forest); }
-  .tp-pl-btns { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-  .tp-pl-btns button { flex: 1 1 auto; min-height: 44px; font-weight: 600; }
-  .tp-when { display: grid; grid-template-columns: 1.5fr 1fr 0.8fr; gap: 8px; }
-  .tp-when .f { min-width: 0; }
-  .tp-when select { width: 100%; min-width: 0; }
   .tp-radio { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; padding: 12px; border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--surface); cursor: pointer; }
   .tp-radio.on { border-color: var(--forest); background: var(--forest-tint); }
   .tp-radio input { flex: 0 0 auto; width: 20px; height: 20px; min-height: 0; margin: 1px 0 0; accent-color: var(--forest); }
   .tp-radio small { display: block; margin-top: 2px; color: var(--ink-3); font-size: var(--fs-meta); }
-  .tp-ft { position: sticky; bottom: 0; padding-top: 8px; background: var(--surface); }
   .tp-go { width: 100%; min-height: 52px; font-size: 16px; }
   .sheet.full { top: 0; max-height: 100%; height: 100%; border-radius: 0; padding-top: 16px; }
   .sheet.full::before { display: none; }
-  .sheet.full .tp-body { overflow-y: auto; max-height: calc(100% - 140px); }
   /* 장소 · 지도 · 길찾기 */
   .place-box { margin-bottom: 12px; }
   .place-line { display: flex; gap: 6px; }
@@ -707,7 +798,6 @@
     .sheet.dlg.open { transform: translate(-50%, -50%); opacity: 1; pointer-events: auto; }
     .sheet.dlg::before { display: none; }
     .sheet.full { top: 50%; height: auto; max-height: 90vh; border-radius: var(--radius-lg); width: min(640px, calc(100vw - 32px)); }
-    .sheet.full .tp-body { max-height: calc(90vh - 160px); }
     #homeBox { gap: 20px; }
     .hdr { padding: env(safe-area-inset-top) 24px 0; }
     .toast { bottom: 24px; }
@@ -896,6 +986,8 @@
   <!-- ① 장비 탭 -->
   <section class="tab" data-tab="stock">
     <div class="trip-line" id="tripLine"></div>
+    <div id="gearPrep"></div>
+    <div class="card" id="hmGear" hidden><div class="card-title">🌤️ 날씨 보고 챙길 것</div></div>
     <div class="card" id="stockCard">
       <div class="stock-banner" id="stockBanner"></div>
       <div class="inst-card" id="instCard" hidden></div>
@@ -1072,15 +1164,12 @@
   <div class="sheet-hd"><b>장소 정하기</b><button id="plClose" aria-label="닫기">✕</button></div>
   <div class="pl-search"><input id="plQuery" placeholder="주소·장소 이름으로 찾기" enterkeyhint="search" autocomplete="off"><button type="button" class="primary" id="plFind">찾기</button></div>
   <div class="pl-results" id="plResults" hidden></div>
+  <div class="pl-mine"><button type="button" id="plMineBtn">⭐ 내 장소</button><span>다녀온 곳에서 골라요</span></div>
+  <div class="pl-results" id="plMineList" hidden></div>
   <div class="pl-map" id="plMap"></div>
   <div class="pl-tools"><button type="button" id="plGps">📍 지금 위치</button><div class="pl-addr" id="plAddr">지도를 눌러 핀을 옮겨요</div></div>
   <label class="f"><span>장소 이름</span><input id="plName" maxlength="30" placeholder="예: 난지캠핑장" autocomplete="off"></label>
   <div class="sheet-ft"><button type="button" id="plClear">장소 지우기</button><button type="button" class="primary" id="plSave">저장</button></div>
-</div>
-<div class="sheet dlg full" id="tripSheet" role="dialog" aria-modal="true" aria-label="나들이 정하기">
-  <div class="sheet-hd"><b id="tpTitle">새 나들이</b><button id="tpClose" aria-label="닫기">✕</button></div>
-  <div class="tp-body" id="tpBody"></div>
-  <div class="tp-ft"><button type="button" class="primary tp-go" id="tpGo">짐 챙기러 가기 →</button></div>
 </div>
 <div class="sheet dlg" id="logSheet" role="dialog" aria-modal="true" aria-label="다녀온 기록 상세">
   <div class="sheet-hd"><b id="lTitle">다녀온 기록</b><button id="lClose" aria-label="닫기">✕</button></div>
@@ -1540,8 +1629,9 @@ function tripLineText() {
 }
 function renderTripLines() {
   const t = tripLineText();
-  $('tripLine').innerHTML = `<span class="tl-t">${esc(t)}</span><button type="button" data-gohome>바꾸기</button>`;
+  $('tripLine').innerHTML = `<button type="button" class="tl-t" data-gohome>${esc(tripLineLong())}</button><button type="button" data-gohome>나들이 ›</button>`;
   $('actNow').textContent = t;
+  renderGearPrep();
 }
 function baseCompareFoot(baseW, n) {   // n = 선택한 장비 수 (비교할 기록이 없을 때 "장비 n품목")
   const none = `<span style="color:#666B64">장비 ${n}품목</span>`;
@@ -1975,7 +2065,7 @@ function revealItem(id) {
   setTimeout(() => el.classList.remove('flash'), 1900);
 }
 
-function renderAll() { renderSummary(); renderPack(); renderList(); renderLog(); renderHome(); }
+function renderAll() { renderSummary(); renderPack(); renderList(); renderLog(); renderHome(); renderGearPrep(); }
 
 /* ── 편집 / 추가 / 삭제 ── */
 function onEdit(el) {
@@ -2631,7 +2721,7 @@ function mountHomeMap(p) {   // 나들이 탭 카드의 작은 지도 (같은 �
   if (!slot || !p) return;
   if (!pbEl) { pbEl = document.createElement('div'); pbEl.className = 'mini-map'; }
   slot.appendChild(pbEl);
-  slot.insertAdjacentHTML('beforeend', '<button type="button" class="mm-tap" data-tripedit aria-label="나들이 수정"></button><span class="mm-hint">눌러서 바꾸기</span>');
+  slot.insertAdjacentHTML('beforeend', '<button type="button" class="mm-tap" data-stedit="all" aria-label="날짜·장소 바꾸기"></button><span class="mm-hint">눌러서 바꾸기</span>');
   const key = p.lat + ',' + p.lng;
   if (pbKey === key && pbMap) { setTimeout(() => { if (window.naver && naver.maps) naver.maps.Event.trigger(pbMap.map, 'resize'); }, 100); return; }
   pbKey = key;
@@ -2654,9 +2744,10 @@ async function openPlaceSheet(target, opts) {
   $('plName').value = init ? init.name : ''; $('plQuery').value = '';
   $('plAddr').textContent = plAddr || '지도를 눌러 핀을 옮겨요';
   $('plClear').hidden = !init; $('plResults').hidden = true;
+  $('plMineList').hidden = true;
   if (opts && opts.mode === 'search') setTimeout(() => $('plQuery').focus(), 400);
+  if (opts && opts.mode === 'mine') plMineToggle(true);
   if (target !== 'cur') $('logSheet').classList.remove('open');   // 기록 상세 위에 겹치지 않게
-  if (plFrom === 'trip') $('tripSheet').classList.remove('open');   // 나들이 정하기 화면 위에 겹치지 않게
   openDlg('placeSheet');
   const box = $('plMap');
   box.innerHTML = '<div class="map-msg">지도를 불러오는 중…</div>';
@@ -2741,17 +2832,37 @@ function plGps() {
     () => toast('위치를 가져오지 못했어요 · 권한을 확인해 주세요'),
     { enableHighAccuracy: true, timeout: 10000, maximumAge: 30000 });
 }
+// ⭐ 내 장소: 다녀온 기록의 장소(같은 장소는 하나로, 최근 순 8곳)에서 고른다
+function myPlaces(limit = 8) {
+  const seen = new Set(), out = [];
+  trips.slice().sort(latestFirst).forEach(x => { if (x.place) { const k = placeKey(x.place); if (!seen.has(k)) { seen.add(k); out.push(x.place); } } });
+  return out.slice(0, limit);
+}
+function plMineToggle(open) {
+  const box = $('plMineList'), list = myPlaces();
+  if (open === undefined) open = box.hidden;
+  if (!open) { box.hidden = true; return; }
+  box._list = list;
+  box.innerHTML = list.length ? list.map((x, i) => `<button type="button" data-plmine="${i}">⭐ ${esc(x.name || x.addr || '이름 없는 곳')}${x.name && x.addr ? `<small> · ${esc(x.addr)}</small>` : ''}</button>`).join('') : '<div class="pl-empty">아직 다녀온 곳이 없어요. 기록에 장소를 넣으면 여기 모여요</div>';
+  box.hidden = false;
+}
+$('plMineBtn').onclick = () => plMineToggle();
+$('plMineList').addEventListener('click', e => {
+  const b = e.target.closest('[data-plmine]'); if (!b) return;
+  const x = ($('plMineList')._list || [])[Number(b.dataset.plmine)]; if (!x) return;
+  plPos = { lat: x.lat, lng: x.lng }; plAddr = x.addr; $('plName').value = x.name; plSave();
+});
 function plFinish(target) {   // 시트를 닫고, 기록 상세·나들이 정하기 화면에서 열었으면 그 화면으로 돌아간다
   const from = plFrom; plFrom = null;
   closeSheet(); plToken++;
   if (target !== 'cur') { renderLogDetail(); $('logSheet').classList.add('open'); $('overlay').classList.add('open'); document.body.style.overflow = 'hidden'; }
-  else { refreshTrip(); if (from === 'trip') { renderTripEditor(); openDlg('tripSheet'); } }
+  else { edit2 = false; refreshTrip(); if (from === 'flow') scrollToStep(); }
 }
 function plSave() {
   if (!plPos) { toast('지도를 눌러 핀을 먼저 찍어 주세요'); return; }
   const target = plTarget;
   const pl = normPlace({ name: $('plName').value.trim(), lat: plPos.lat, lng: plPos.lng, addr: plAddr });
-  if (target === 'cur') { curTrip.place = pl; saveCurTrip(); }
+  if (target === 'cur') { curTrip.place = pl; placeSkip = false; autoActFromPlace(); saveCurTrip(); }
   else { const t = trips.find(x => x.id === Number(target)); if (t) { t.place = pl; saveTrips(); refreshStats(); } }
   plFinish(target);
   toast('장소를 저장했어요 📍');
@@ -2890,7 +3001,7 @@ function wxEnsure(force) {
       if (!j.errors || !j.errors.length) wxStore(all => { all[key] = { t: Date.now(), data: j }; });   // 일부 실패한 응답은 저장하지 않는다(다시 부르면 나아질 수 있어서)
     })
     .catch(() => { if (wx.key === key) { wx.state = 'fail'; wx.data = null; } })
-    .then(() => { if (wx.key === key) renderHome(); });
+    .then(() => { if (wx.key === key) { renderHome(); renderTripLines(); } });
 }
 const PTY_EMOJI = { 1: '🌧️', 2: '🌨️', 3: '❄️', 4: '🌦️' };
 const wxRainy = h => h.kma ? h.kma.pty > 0 : h.met ? (h.met.precip || 0) >= (h.met.ph === 6 ? 0.6 : 0.1) : false;
@@ -2984,7 +3095,7 @@ function wxBody(si) {
   if (wx.state === 'loading' || wx.state === 'idle') return `<div class="wx-load">${jimSVG('wait', 44, true)}<span>날씨 보는 중…</span></div>`;
   if (wx.state === 'fail' || !wx.data) return `<div class="wx-load fail"><span>날씨를 못 불러왔어요</span><button type="button" data-wxretry>다시 시도</button></div>`;
   const d = wxWin(wx.data), errs = d.errors || [], hasKma = d.hours.some(h => h.kma), hasMet = true;
-  let h = '';
+  let h = n >= 4 ? `<div class="wx-note far">출발 ${n}일 전 예보예요 · 3일 전에 다시 확인하세요</div>` : '';
   if (n === 0 && d.now && d.now.t !== null) h += `<div class="wx-now">지금 ${Math.round(d.now.t)}°C${d.now.wsd !== null ? ` · 바람 ${Math.round(d.now.wsd * 10) / 10}m/s` : ''} <span>(${d.now.src} ${d.now.at})</span></div>`;
   h += wxRainLine(d) + wxSlots(t, d, si) + wxCompare(d);
   if (!hasKma && !errs.some(e => e.src === 'kma')) h += `<div class="wx-note">기상청 예보는 출발 3일 전부터 나와요 · 지금은 노르웨이 예보만</div>`;
@@ -3000,132 +3111,380 @@ function wxFoot() {
 
 function renderHome() {
   if (document.body.dataset.tab !== 'home') return;
-  const t = curTrip, a = actOf(t.act), p = t.place, st = lastStats;
-  // a. 머리말
-  let dd = '어디로 떠나 볼까요?', sm = '';
-  if (t.date) {
+  const t = curTrip, p = t.place, a = actOf(t.act), F = stepFlags();
+  const past = !!t.date && dayDiff(t.date) < 0;
+  let h = '';
+  if (past && !trips.some(x => x.date === t.date)) h += `<div class="fl-past"><span>지난 나들이 기록을 남길까요?</span><button type="button" data-flrec>기록 남기기</button></div>`;
+  const placeTxt = p ? '📍 ' + esc(placeLabel(p)) : '📍 장소는 나중에';
+  if (F.all) {
+    // ①②③이 모두 끝났다 → D-day 머리말 + 합친 요약 카드(종류·장소 / 날짜·일정·길찾기 [바꾸기]) + 작은 지도
     const n = dayDiff(t.date);
-    sm = '다음 나들이까지';
-    dd = n > 0 ? `D-${n} · ${WEEK[parseD(t.date).getDay()]}요일에 출발해요` : n === 0 ? '오늘 출발해요 🎉' : '출발일이 지났어요 · 기록을 남겼나요?';
+    h += `<div class="hm-head"><div><div class="hm-sm">다음 나들이까지</div><div class="hm-dd">${n > 0 ? `D-${n} · ${WEEK[parseD(t.date).getDay()]}요일에 출발해요` : '오늘 출발해요 🎉'}</div></div><button type="button" class="hm-new" data-newtrip>＋ 새 나들이</button></div>`;
+    h += `<section class="card st merged"><div class="mg-top">${stN(3, 'ok')}<div class="mg-t"><div class="mg-p">${a.e} ${esc(a.n)} · ${placeTxt}</div><div class="mg-d">📅 ${esc(tripWhenShort(t))}${p ? ` · <button type="button" class="hm-chip" data-route="naver" data-lat="${p.lat}" data-lng="${p.lng}" data-name="${esc(p.name || p.addr || '목적지')}">🧭 길찾기</button>` : ''}</div></div><button type="button" class="st-chg" data-stedit="all">바꾸기</button></div>${p ? '<div class="map-slot" id="hmSlot" style="margin:12px 0 0"></div>' : ''}</section>`;
+  } else {
+    // ① 종류 → ② 어디로 → ③ 달력 (끝난 단계는 한 줄로 접고, ①②가 끝났으면 한 줄로 합친다)
+    if (!F.e1 && !F.e2 && F.P) h += stDone(2, `${a.e} ${esc(a.n)} · ${placeTxt}`, '12');
+    else {
+      h += F.e1 ? stepActHTML() : stDone(1, `🏷️ ${a.e} ${esc(a.n)}`, '1');
+      if (F.e2) h += stepPlaceHTML();
+      else if (F.P) h += stDone(2, placeTxt, '2');
+      else h += stTodo(2, '📍 어디로 가세요?', '종류를 먼저 골라 주세요');
+    }
+    if (F.e3) h += stepCalHTML();
+    else if (F.D) h += stDone(3, '📅 ' + esc(tripWhenShort(t)), '3');
+    else h += stTodo(3, '📅 언제 떠나요?', '장소를 정한 뒤 달력에서 골라요');
   }
-  let h = `<div class="hm-head"><div>${sm ? `<div class="hm-sm">${sm}</div>` : ''}<div class="hm-dd">${dd}</div></div><button type="button" class="primary hm-new" data-newtrip>＋ 새 나들이</button></div>`;
-  // b. 이번 나들이 카드
-  const bagNames = t.bags.map(id => (items.find(x => x.id === id) || {}).name).filter(Boolean);
-  h += `<div class="card"><div class="hm-trip-top"><div class="hm-tile">${a.e}</div><div class="hm-tt"><b>${esc(a.n)}${p ? ' · ' + esc(p.name || p.addr || '선택한 위치') : ''}</b><span>${esc(tripWhenText(t))}</span></div><button type="button" class="hm-edit" data-tripedit>수정</button></div>`;
-  if (!p && !t.date) h += `<p class="hm-hint">장소를 정하면 날씨를 볼 수 있어요</p>${PLACE_EMPTY_HTML}`;
-  else {
-    const route = p ? `<button type="button" class="hm-chip" data-route="naver" data-lat="${p.lat}" data-lng="${p.lng}" data-name="${esc(p.name || p.addr || '목적지')}">🧭 길찾기</button>` : '';
-    h += `<div class="hm-chips">${p && p.addr ? `<span class="hm-chip">📍 ${esc(p.addr)}</span>` : ''}${bagNames.length ? `<span class="hm-chip">🎒 ${esc(bagNames.join(' · '))}</span>` : ''}${route}</div>`;
-    if (!p) h += `<p class="hm-hint">장소를 정하면 날씨를 볼 수 있어요</p>${PLACE_EMPTY_HTML}`;
-    else h += `<div class="map-slot" id="hmSlot" style="margin:12px 0 0"></div>`;
-  }
-  h += `</div>`;
-  // c. 날씨 브리핑: 서버 예보(기상청 + MET Norway) + 일출·일몰(직접 계산) + 링크
-  if (p && t.date) {
+  // ④ 🌤️ 날씨 브리핑 (서버 예보 + 일출·일몰 직접 계산 + 링크) → [🎒 짐 챙기러 가기 →]
+  if (F.all && p) {
     wxEnsure();
     const si = sunInfo(p, t.date), camp = ['backpack', 'camp', 'carcamp'].includes(t.act);
-    h += `<div class="card"><div class="card-title">🌤️ 날씨 브리핑</div>` + wxBody(si)
+    h += `<section class="card st cur wx-card"><div class="st-hd">${stN(4, 'cur')}<b>🌤️ 날씨 브리핑</b></div>` + wxBody(si)
       + (si ? `<div class="hm-sun"><div><span class="sub">🌅 일출</span><b>${si.rise}</b></div><div><span class="sub">🌇 일몰</span><b>${si.set}</b></div></div>
         <div class="hm-rec">${camp ? `⛺ 일몰 40분 전인 ${si.tent}까지 텐트 치는 걸 추천해요` : `🌇 일몰 40분 전인 ${si.tent}까지 이동을 마치는 걸 추천해요`}</div>` : '<div class="hm-hint">이 날짜는 해가 뜨고 지는 시간을 계산할 수 없어요</div>')
-      + `<div class="hm-links"><a href="https://www.windy.com/?${p.lat},${p.lng},11" target="_blank" rel="noopener">Windy</a><a href="https://www.weather.go.kr/w/index.do" target="_blank" rel="noopener">기상청</a><a href="https://www.meteoblue.com/ko/weather/week/${p.lat.toFixed(3)}N${p.lng.toFixed(3)}E" target="_blank" rel="noopener">meteoblue</a></div>` + wxFoot() + `</div>`;
-  }
-  // d. 날씨 보고 챙길 것 (3단계에서 채움, 지금은 숨김)
-  h += `<div class="card" id="hmGear" hidden><div class="card-title">🎒 날씨 보고 챙길 것</div></div>`;
-  // e. 짐 현황
-  const kg = (st.packW / 1000).toFixed(1) + 'kg', vl = Math.round(st.vol) + 'L';
-  const cap = bagCapacity();
-  h += `<div class="card"><div class="card-title">📦 짐 현황</div><div class="hm-pack"><span class="hm-big">${kg} · ${vl}</span><span class="hm-chk">체크 ${st.loadedCount} / ${st.packTotal}</span></div>`
-    + (t.targetW ? barHTML('무게', `${kg} / ${(t.targetW / 1000).toFixed(1)}kg`, st.packW / t.targetW) : `<div class="hm-bar"><div class="hb-lb"><span>무게</span><span>${kg}</span></div></div>`)
-    + (cap > 0 ? barHTML('부피', `${vl} / ${Math.round(cap)}L`, st.vol / cap) : `<div class="hm-bar"><div class="hb-lb"><span>부피</span><span>${vl}</span></div><div class="hm-soon" style="margin-top:2px">가방을 고르면 얼마나 찼는지 보여요</div></div>`)
-    + `<button type="button" class="primary hm-go" data-hmgo="${st.packedCount > 0 ? 'pack' : 'stock'}">${st.packedCount > 0 ? '패킹 이어서 하기 →' : '장비 고르러 가기 →'}</button></div>`;
-  // f. 안전
+      + `<div class="hm-links"><a href="https://www.windy.com/?${p.lat},${p.lng},11" target="_blank" rel="noopener">Windy</a><a href="https://www.weather.go.kr/w/index.do" target="_blank" rel="noopener">기상청</a><a href="https://www.meteoblue.com/ko/weather/week/${p.lat.toFixed(3)}N${p.lng.toFixed(3)}E" target="_blank" rel="noopener">meteoblue</a></div>` + wxFoot() + `</section>`;
+  } else h += stTodo(4, '🌤️ 날씨 브리핑', !F.P ? '장소와 날짜를 정하면 볼 수 있어요' : !t.place ? '장소를 정하면 볼 수 있어요' : '날짜를 정하면 볼 수 있어요');
+  if (F.all) h += `<button type="button" class="primary hm-go" data-hmgo="stock">🎒 짐 챙기러 가기 →</button>`;
+  // 🛟 안전
   const q = encodeURIComponent(((p && (p.name || p.addr)) || '') + ' 응급실');
   h += `<div class="card"><div class="card-title">🛟 안전</div><div class="hm-safe"><a class="sos" href="tel:119">📞 119</a><a href="https://map.naver.com/p/search/${q}" target="_blank" rel="noopener">🏥 가까운 응급실</a></div><div class="hm-soon">사고가 나면 지금 위치를 119에 알려주세요</div><div id="hmGrid" hidden>국가지점번호</div></div>`;
   $('homeBox').innerHTML = h;
   if (p) mountHomeMap(p);
 }
-function refreshTrip() { renderTripLines(); renderHome(); if ($('tripSheet').classList.contains('open')) renderTripEditor(); }
+function refreshTrip() { renderTripLines(); renderHome(); }
 
-// 나들이 정하기 (전체 화면 시트): 새 나들이 / 수정
-var tpMode = 'edit', tpGear = 'keep', tpSecond = 'keep';
-function openTripEditor(mode, gear) {
-  tpMode = mode;
-  tpSecond = mode === 'edit' || gear === 'keep' ? 'keep' : 'empty';
-  tpGear = mode === 'edit' || gear === 'keep' ? 'keep' : (lastTripOf(curTrip.act) ? 'last' : 'empty');
-  $('tpTitle').textContent = mode === 'new' ? '새 나들이' : '나들이 수정';
-  renderTripEditor();
-  openDlg('tripSheet');
+// 나들이 정하는 흐름: 날씨 먼저(언제 → 어디로) → 🎒 짐 챙기기 카드(종류·인원·가방·짐 시작) → 장비 탭
+var gearChoice = null;   // null = 자동(같은 종류 지난 기록이 있으면 불러오기, 없으면 지금 그대로) | 'last' | 'keep' | 'empty'
+var actAuto = false;     // 종류를 자동으로 채웠는지 (사용자가 바꾸면 false)
+var flowDays = null, flowDateOpen = false;   // [1]에서 미리 고른 일정, "날짜 고르기" 입력칸 열림
+const placeKey = pl => pl ? pl.lat.toFixed(3) + ',' + pl.lng.toFixed(3) : '';   // 같은 장소 = 좌표 소수 3자리가 같음
+const latestFirst = (x, y) => y.date.localeCompare(x.date) || (y.recordedAt || '').localeCompare(x.recordedAt || '');
+function autoActFromPlace() {   // 같은 장소로 다녀온 기록이 있으면 그 종류, 없으면 마지막에 쓴 종류(그대로)
+  if (!actAuto || !curTrip.place) return;
+  const k = placeKey(curTrip.place), m = trips.filter(x => x.place && placeKey(x.place) === k).sort(latestFirst)[0];
+  if (m && ACTIVITIES.some(x => x.k === m.activity)) curTrip.act = m.activity;
 }
-function renderTripEditor() {
-  const t = curTrip, p = t.place, a = actOf(t.act), last = lastTripOf(t.act);
-  if (tpGear === 'last' && !last) tpGear = tpSecond;
-  const packed = items.filter(i => i.packed).length;
-  let h = `<div class="tp-sec"><div class="tp-q">어떤 나들이예요?</div><div class="tp-acts">${ACTIVITIES.map(x => `<button type="button" class="tp-act chip${x.k === t.act ? ' on' : ''}" data-tpact="${x.k}"><span>${x.e}</span><span>${x.n}</span></button>`).join('')}</div></div>`;
-  h += `<div class="tp-sec"><div class="tp-q">📍 어디로 가세요?</div><div class="place-line"><button type="button" class="place-row" data-tpplace="map"><span>📍</span><span class="pl-t">${p ? esc(p.name || p.addr || '선택한 위치') : '장소 정하기'}${p && p.name && p.addr ? `<small>${esc(p.addr)}</small>` : ''}</span><span class="pl-go">${p ? '바꾸기' : '정하기'}</span></button>${p ? '<button type="button" class="pl-x" data-tpplaceclear aria-label="장소 지우기">✕</button>' : ''}</div>
-    <div class="tp-pl-btns"><button type="button" data-tpplace="search">🔍 이름·주소로 찾기</button><button type="button" data-tpplace="gps">🎯 지금 위치</button><button type="button" data-tpplace="map">🗺️ 지도에서 찍기</button></div></div>`;
-  h += `<div class="tp-sec"><div class="tp-q">📅 언제 가세요?</div><div class="tp-when">
-    <label class="f"><span>출발일</span><input type="date" id="tpDate" value="${t.date}"></label>
-    <label class="f"><span>일정</span><select id="tpDays">${DAY_LABELS.map((l, i) => `<option value="${i}"${(t.days === null ? 0 : t.days) === i ? ' selected' : ''}>${l}</option>`).join('')}</select></label>
-    <label class="f"><span>인원</span><input id="tpPeople" inputmode="numeric" maxlength="2" value="${t.people}"></label></div></div>`;
-  h += `<div class="tp-sec" id="tpBags" hidden><div class="tp-q">🧳 어디에 싣나요?</div></div>`;   // 2단계에서 채운다
-  const lastTxt = last ? `${shortD(last.date)}${last.place && last.place.name ? ' · ' + esc(last.place.name) : ''} · 장비 ${last.itemIds.length}개 · ${fmtW(last.baseW)}${last.vol > 0 ? ' · ' + fmtV(last.vol) : ''}` : '';
-  const second = tpSecond === 'keep' ? ['keep', '지금 고른 그대로', `장비 ${packed}개`] : ['empty', '빈 상태로 시작', '장비 선택을 모두 비우고 처음부터'];
-  const opts = [...(last ? [['last', `지난 ${a.n} 짐 불러오기`, lastTxt]] : []), second];
-  h += `<div class="tp-sec"><div class="tp-q">🎒 짐은 어떻게 시작할까요?</div>${opts.map(([k, l, sub]) => `<label class="tp-radio${tpGear === k ? ' on' : ''}"><input type="radio" name="tpgear" value="${k}"${tpGear === k ? ' checked' : ''}><span>${l}<small>${sub}</small></span></label>`).join('')}</div>`;
-  $('tpBody').innerHTML = h;
+const gearDefault = () => lastTripOf(curTrip.act) ? 'last' : 'keep';
+function gearNow() { const g = gearChoice || gearDefault(); return g === 'last' && !lastTripOf(curTrip.act) ? 'keep' : g; }
+function lastTripDesc(l) { return `${shortD(l.date)}${l.place && l.place.name ? ' · ' + esc(l.place.name) : ''} · 장비 ${l.itemIds.length}개 · ${fmtW(l.baseW)}${l.vol > 0 ? ' · ' + fmtV(l.vol) : ''}`; }
+const upcomingSat = off => { const d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() + (6 - d.getDay() + 7) % 7 + off * 7); return fmtDate(d); };   // 다가오는 토요일(오늘이 토요일이면 오늘)
+
+// ── 단계 카드: ① 🏷️ 종류 → ② 📍 어디로 → ③ 📅 달력 → ④ 🌤️ 날씨 브리핑 → [🎒 짐 챙기러 가기 →] → 장비 탭 (팝업 없이 그 자리에서)
+const ACT_DAYS = { picnic: 0, hike: 0, travel: 0, backpack: 1, camp: 1, carcamp: 1 };   // 종류별 기본 일정(박)
+var actChosen = false;                // 이번 나들이의 종류를 골랐는지(이미 날짜가 있는 나들이는 고른 것으로 본다)
+var edit1 = false, edit2 = false, edit3 = false;   // [바꾸기]로 단계를 다시 펼침
+var placeSkip = false;                // "장소는 나중에 정할게요"
+var openRow = '';                     // 장비 탭 "이번 짐 준비"에서 펼친 줄(한 번에 한 줄): bags | gear
+var plsQ = '', plsList = null, plsBusy = false, plsMsg = '';   // ② 장소 검색 상태
+var calMonth = '', calStart = '', calEnd = '', calLong = false, calPressT = null;   // ③ 달력 상태
+function stepFlags() {
+  const t = curTrip, D = !!t.date && dayDiff(t.date) >= 0, P = !!t.place || placeSkip, A = actChosen || D;
+  const e1 = !A || edit1, e2 = (A && !P) || edit2, e3 = (A && P && !D) || edit3;
+  return { A, P, D, e1, e2, e3, all: A && P && D && !e1 && !e2 && !e3 };
 }
-function applyTripGear() {   // 고른 시작 방법을 장비 선택에 반영
-  if (tpGear === 'last') {
+const stN = (n, k) => `<span class="st-n ${k}">${k === 'ok' ? '✓' : n}</span>`;   // cur = 주황 숫자 · ok = 초록 ✓ · todo = 회색 숫자
+const stDone = (n, sum, key) => `<div class="st done">${stN(n, 'ok')}<span class="st-sum">${sum}</span><button type="button" class="st-chg" data-stedit="${key}">바꾸기</button></div>`;
+const stTodo = (n, title, hint) => `<div class="st todo">${stN(n, 'todo')}<span class="st-sum"><b>${title}</b>${hint ? `<small>${hint}</small>` : ''}</span></div>`;
+const placeLabel = pl => pl.name || pl.addr || '선택한 위치';
+const nightsLabel = n => DAY_LABELS[Math.max(0, Math.min(3, n))];
+function rangeText(s0, e0) {   // "11/14 (토) ~ 15 (일)"
+  let when = fmtMDW(s0);
+  if (e0 && e0 !== s0) { const s = parseD(s0), e = parseD(e0); when += ` ~ ${e.getMonth() !== s.getMonth() ? (e.getMonth() + 1) + '/' : ''}${e.getDate()} (${WEEK[e.getDay()]})`; }
+  return when;
+}
+function tripWhenShort(t) {   // "11/14 (토) ~ 15 (일) · 1박"
+  return rangeText(t.date, t.days > 0 ? addDaysStr(t.date, t.days) : t.date) + (t.days === null ? '' : ' · ' + DAY_LABELS[t.days]);
+}
+function scrollToStep() {   // 단계가 바뀌면 지금 단계로 부드럽게 스크롤
+  setTimeout(() => { const el = document.querySelector('#homeBox .st.cur'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 60);
+}
+// ① 종류
+function stepActHTML() {
+  const a = actOf(curTrip.act);
+  return `<section class="card st cur" id="st1"><div class="st-hd">${stN(1, 'cur')}<b>🏷️ 어떤 나들이예요?</b></div>
+    <div class="act-grid4">${ACTIVITIES.map(x => `<button type="button" class="chip${actChosen && x.k === curTrip.act ? ' on' : ''}" data-sact="${x.k}"><span class="ac-e">${x.e}</span><span class="ac-n">${x.n}</span></button>`).join('')}</div>
+    <div class="st-last">마지막: ${a.e} ${esc(a.n)} <button type="button" class="gc-link" data-actedit hidden>종류 편집</button></div></section>`;
+}
+function pickAct(k) {
+  curTrip.act = k; actChosen = true; edit1 = false;
+  if (!curTrip.date || dayDiff(curTrip.date) < 0) curTrip.days = ACT_DAYS[k];   // 종류별 기본 일정 (달력에서 바꾸면 그 값)
+  saveCurTrip(); refreshTrip(); scrollToStep();
+}
+// ② 어디로 — 카드 안에서 검색·종류별 갔던 곳·지금 위치, 지도에서 찍기만 전체 화면
+function mineInfo(pl) {
+  const k = placeKey(pl), ms = trips.filter(x => x.place && placeKey(x.place) === k).sort(latestFirst);
+  return ms.length ? { n: ms.length, act: (ACTIVITIES.find(x => x.k === ms[0].activity) || {}).n || '' } : null;
+}
+function sameActPlaces() {   // 같은 종류 기록의 장소(좌표 3자리로 중복 제거), 최근순 5곳 · "N번 · 날짜 · 메모"
+  const seen = new Map();
+  trips.filter(x => x.place && x.activity === curTrip.act).sort(latestFirst).forEach(x => { const k = placeKey(x.place); if (!seen.has(k)) seen.set(k, { p: x.place, n: 0, last: x }); seen.get(k).n++; });
+  return [...seen.values()].slice(0, 5).map(v => ({ p: v.p, line: `${v.n}번 · ${shortD(v.last.date)}${v.last.memo ? ' · ' + String(v.last.memo).slice(0, 24) : ''}`, mine: true }));
+}
+const plsBase = () => plsList || sameActPlaces();
+function plsItemsHTML() {
+  if (plsBusy) return '<div class="pls-msg">찾는 중…</div>';
+  const list = plsBase(), a = actOf(curTrip.act);
+  if (!list.length) return `<div class="pls-msg">${esc(plsMsg || (plsList ? '찾지 못했어요 · 주소를 넣거나 지도에서 찍어 주세요' : `아직 ${a.n}으로 다녀온 곳이 없어요`))}</div>`;
+  return (plsList ? '' : `<div class="pls-lb">⭐ ${a.e} ${esc(a.n)}으로 갔던 곳</div>`) + list.map((x, i) => `<button type="button" class="pls-item" data-plsi="${i}"><span class="pls-t">${x.mine ? '⭐ ' : ''}${esc(placeLabel(x.p))}</span><small>${esc(x.line || (x.mine && x.mine.n ? `${x.mine.n}번 다녀옴${x.mine.act ? ' · 지난번 ' + x.mine.act : ''}` : x.p.addr))}</small></button>`).join('') + (plsMsg ? `<div class="pls-msg">${esc(plsMsg)}</div>` : '');
+}
+function renderPls() { const b = $('plsRes'); if (b) b.innerHTML = plsItemsHTML(); }
+function stepPlaceHTML() {
+  const p = curTrip.place;
+  return `<section class="card st cur" id="st2"><div class="st-hd">${stN(2, 'cur')}<b>📍 어디로 가세요?</b></div>
+    ${p ? `<div class="pls-now">지금: ${esc(placeLabel(p))}</div>` : ''}
+    <div class="pls"><input id="plsQ" type="text" placeholder="캠핑장·산 이름이나 주소" enterkeyhint="search" autocomplete="off" value="${esc(plsQ)}"><button type="button" class="primary" data-plsgo>찾기</button></div>
+    <div class="pls-res" id="plsRes">${plsItemsHTML()}</div>
+    <div class="pls-btns"><button type="button" data-plsgps>🎯 지금 위치</button><button type="button" data-plsmap>🗺️ 지도에서 찍기</button></div>
+    <button type="button" class="pls-skip" data-plsskip>장소는 나중에 정할게요 → 달력으로</button></section>`;
+}
+function setPlace(pl) {   // 장소를 골랐다 → ②를 접고 ③ 달력으로
+  curTrip.place = pl; placeSkip = false; edit2 = false;
+  plsList = null; plsQ = ''; plsMsg = '';
+  saveCurTrip(); refreshTrip(); scrollToStep(); toast('장소를 저장했어요 📍');
+}
+async function plsSearch() {
+  const q = (($('plsQ') || {}).value || '').trim(); plsQ = q; plsMsg = '';
+  if (!q) { plsList = null; renderPls(); return; }
+  plsBusy = true; renderPls();
+  const out = [], seen = new Set();
+  const add = x => { const pl = normPlace(x); if (!pl) return; const k = placeKey(pl); if (seen.has(k)) return; seen.add(k); out.push({ p: pl, mine: mineInfo(pl) }); };
+  const ql = q.toLowerCase();
+  myPlaces(50).filter(pl => ((pl.name || '') + ' ' + (pl.addr || '')).toLowerCase().includes(ql)).forEach(add);
+  try {   // 주소로 찾기(네이버)
+    if (navigator.onLine && await loadNaverMaps() && naver.maps.Service) {
+      const list = await new Promise(res => naver.maps.Service.geocode({ query: q }, (status, resp) => res(status === naver.maps.Service.Status.OK && resp && resp.v2 && resp.v2.addresses || [])));
+      list.slice(0, 3).forEach(f => add({ name: '', lat: Number(f.y), lng: Number(f.x), addr: f.roadAddress || f.jibunAddress || q }));
+    }
+  } catch (e) {}
+  if (out.length < 5) {   // 이름으로 찾기(OpenStreetMap)
+    try { (await plNameSearch(q)).forEach(x => { const parts = String(x.display_name || '').split(','); add({ name: String(x.name || parts[0]).trim(), lat: Number(x.lat), lng: Number(x.lon), addr: parts.slice(1, 4).join(',').trim() }); }); }
+    catch (e) { plsMsg = '이름 검색에 연결하지 못했어요 · 주소로 찾거나 지도에서 찍어 주세요'; }
+  }
+  out.sort((x, y) => (y.mine ? 1 : 0) - (x.mine ? 1 : 0));   // ⭐ 내 장소를 맨 위로
+  plsList = out.slice(0, 5); plsBusy = false; renderPls();
+}
+function plsGps() {
+  if (!navigator.geolocation) { toast('이 기기에서는 위치를 쓸 수 없어요'); return; }
+  navigator.geolocation.getCurrentPosition(async pos => {   // 버튼을 눌렀을 때만 위치 권한을 요청
+    const lat = pos.coords.latitude, lng = pos.coords.longitude;
+    let addr = '';
+    try {
+      if (navigator.onLine && await loadNaverMaps() && naver.maps.Service) {
+        addr = await new Promise(res => naver.maps.Service.reverseGeocode({ coords: new naver.maps.LatLng(lat, lng), orders: [naver.maps.Service.OrderType.ROAD_ADDR, naver.maps.Service.OrderType.ADDR].join(',') }, (status, r) => res(status === naver.maps.Service.Status.OK && r && r.v2 && r.v2.address ? (r.v2.address.roadAddress || r.v2.address.jibunAddress || '') : '')));
+      }
+    } catch (e) {}
+    const pl = normPlace({ name: '현재 위치', lat, lng, addr });
+    if (pl) setPlace(pl); else toast('위치를 가져오지 못했어요');
+  }, () => toast('위치를 가져오지 못했어요 · 권한을 확인해 주세요'), { enableHighAccuracy: true, timeout: 10000, maximumAge: 30000 });
+}
+
+// ③ 📅 달력 — 출발일 → 돌아오는 날, 장소가 있으면 오늘부터 10일까지 날씨 아이콘 + 최저기온
+const DAILY_EMOJI = { sun: '☀️', partly: '⛅', cloud: '☁️', rain: '🌧️', snow: '❄️', shower: '🌦️' };
+var daily = { key: '', state: 'idle', byDate: {}, t: 0 };
+function dailyEnsure() {
+  const p = curTrip.place; if (!p || !WEATHER_API) return;
+  const key = placeKey(p);
+  if (daily.key === key && (daily.state === 'loading' || daily.state === 'fail' || (daily.state === 'ok' && Date.now() - daily.t < WX_TTL))) return;
+  daily = { key, state: 'loading', byDate: {}, t: 0 };
+  fetch(`${WEATHER_API}/daily?lat=${p.lat}&lng=${p.lng}`)
+    .then(r => r.json().then(j => { if (!r.ok) throw new Error(j.error || '오류'); return j; }))
+    .then(j => { if (daily.key !== key) return; const m = {}; (j.days || []).forEach(x => { m[x.date] = x; }); daily = { key, state: 'ok', byDate: m, t: Date.now() }; })
+    .catch(() => { if (daily.key === key) daily.state = 'fail'; })
+    .then(() => { if (daily.key === key && curTrip.place && placeKey(curTrip.place) === key && $('calBox')) renderHome(); });
+}
+const dailyOf = ds => { const d = curTrip.place && daily.key === placeKey(curTrip.place) && daily.state === 'ok' ? daily.byDate[ds] : null; const n = dayDiff(ds); return d && d.icon && n >= 0 && n <= 10 ? d : null; };
+const calEffEnd = () => (calStart ? (calEnd || addDaysStr(calStart, ACT_DAYS[curTrip.act] || 0)) : '');
+function calInit() {
+  const D = curTrip.date && dayDiff(curTrip.date) >= 0;
+  calStart = D ? curTrip.date : ''; calEnd = D ? addDaysStr(curTrip.date, curTrip.days || 0) : '';
+  calMonth = (D ? curTrip.date : todayStr()).slice(0, 7);
+}
+function calTap(ds) {
+  if (ds < todayStr()) return;
+  if (!calStart || calEnd) { calStart = ds; calEnd = ''; }   // 출발일부터 새로 고른다
+  else if (ds === calStart) calEnd = ds;                      // 같은 날을 두 번 = 당일
+  else if (ds < calStart) calStart = ds;                      // 더 이른 날 = 출발일을 바꾼다
+  else calEnd = ds;                                           // 돌아오는 날
+  renderHome();
+}
+function calSummary() {
+  if (!calStart) return `출발일을 누르고, 돌아오는 날을 눌러 주세요<br><small>${esc(actOf(curTrip.act).n)} 기본 일정은 ${DAY_LABELS[ACT_DAYS[curTrip.act] || 0]}이에요</small>`;
+  const e = calEffEnd(), nights = Math.round((parseD(e) - parseD(calStart)) / DAY_MS), dates = [];
+  for (let i = 0; i <= Math.min(nights, 10); i++) dates.push(addDaysStr(calStart, i));
+  const infos = dates.map(dailyOf);
+  let wx = '';
+  if (infos.every(Boolean)) {
+    const bad = infos.findIndex(x => ['rain', 'shower', 'snow'].includes(x.icon));
+    if (bad >= 0) return `${calEnd ? '✅' : '☑️'} ${esc(rangeText(calStart, e))} · ${nightsLabel(nights)} · ${infos[bad].icon === 'snow' ? '❄️' : '🌧️'} ${WEEK[parseD(dates[bad]).getDay()]}요일에 ${infos[bad].icon === 'snow' ? '눈' : '비'} 소식${nights > 3 ? '<br><small>최대 3박+로 저장돼요</small>' : ''}`;
+    wx = infos.every(x => ['sun', 'partly'].includes(x.icon)) ? (dates.length === 1 ? ' · 맑음' : dates.length === 2 ? ' · 둘 다 맑음' : ' · 모두 맑음') : ' · 대체로 흐려요';
+  }
+  return `${calEnd ? '✅' : '☑️'} ${esc(rangeText(calStart, e))} · ${nightsLabel(nights)}${wx}${nights > 3 ? '<br><small>최대 3박+로 저장돼요</small>' : ''}`;
+}
+function stepCalHTML() {
+  if (!calMonth) calInit();
+  dailyEnsure();
+  const m0 = parseD(calMonth + '-01'), y = m0.getFullYear(), mo = m0.getMonth(), today = todayStr();
+  const nDays = new Date(y, mo + 1, 0).getDate(), e = calEffEnd(), pre = !!calStart && !calEnd;
+  let cells = '';
+  for (let i = 0; i < m0.getDay(); i++) cells += '<span></span>';
+  for (let d = 1; d <= nDays; d++) {
+    const ds = `${y}-${pad2(mo + 1)}-${pad2(d)}`, dow = (m0.getDay() + d - 1) % 7, n = dayDiff(ds), inf = dailyOf(ds);
+    const sel = calStart && ds >= calStart && ds <= e;
+    cells += `<button type="button" class="cal-day${dow === 0 ? ' sun' : dow === 6 ? ' sat' : ''}${ds === today ? ' today' : ''}${ds < today ? ' past' : ''}${sel ? (pre && ds !== calStart ? ' pre' : ' sel') : ''}${inf && n >= 8 ? ' far' : ''}" data-cal="${ds}"${inf ? ` data-info="${ds}"` : ''}><span class="cal-n">${d}</span>${inf ? `<span class="cal-ic">${DAILY_EMOJI[inf.icon] || ''}</span><span class="cal-tn">${inf.tmin !== null && inf.tmin !== undefined ? Math.round(inf.tmin) + '°' : ''}</span>` : ''}</button>`;
+  }
+  const curM = today.slice(0, 7);
+  return `<section class="card st cur" id="st3"><div class="st-hd">${stN(3, 'cur')}<b>📅 언제 떠나요?</b></div>
+    <div class="cal-wrap" id="calBox"><div class="cal-head"><button type="button" data-calnav="-1" aria-label="이전 달"${calMonth <= curM ? ' disabled' : ''}>‹</button><b>${y}년 ${mo + 1}월</b><button type="button" data-calnav="1" aria-label="다음 달">›</button></div>
+    <div class="cal-grid">${['일', '월', '화', '수', '목', '금', '토'].map((w, i) => `<span class="cal-dow${i === 0 ? ' sun' : i === 6 ? ' sat' : ''}">${w}</span>`).join('')}${cells}</div></div>
+    <div class="cal-sum">${calSummary()}</div>
+    <button type="button" class="primary cal-go" data-calgo${calStart ? '' : ' disabled'}>이 날짜로 날씨 보기</button></section>`;
+}
+function calGo() {
+  if (!calStart) return;
+  const nights = Math.round((parseD(calEffEnd()) - parseD(calStart)) / DAY_MS);
+  curTrip.date = calStart; curTrip.days = Math.max(0, Math.min(3, nights));
+  edit3 = false; calMonth = ''; calStart = ''; calEnd = '';
+  saveCurTrip(); refreshTrip(); scrollToStep();
+}
+function showCalTip(cell) {   // 날짜 칸 길게 누르기: 그날 최저·최고·강수확률 말풍선
+  const ds = cell.dataset.info, d = daily.byDate[ds], box = $('calBox'); if (!d || !box) return;
+  hideCalTip();
+  const tip = document.createElement('div'); tip.className = 'cal-tip'; tip.id = 'calTip';
+  tip.textContent = `${fmtMDW(ds)} · 최저 ${d.tmin !== null ? Math.round(d.tmin) + '°' : '-'} · 최고 ${d.tmax !== null ? Math.round(d.tmax) + '°' : '-'} · 강수 ${d.pop !== null && d.pop !== undefined ? d.pop + '%' : '-'}`;
+  box.appendChild(tip);
+  const r = cell.getBoundingClientRect(), b = box.getBoundingClientRect();
+  tip.style.top = Math.max(0, r.top - b.top - 34) + 'px';
+  tip.style.left = Math.max(0, Math.min(b.width - tip.offsetWidth, r.left - b.left + r.width / 2 - tip.offsetWidth / 2)) + 'px';
+  setTimeout(hideCalTip, 3000);
+}
+function hideCalTip() { const t = $('calTip'); if (t) t.remove(); }
+document.addEventListener('pointerdown', e => {
+  clearTimeout(calPressT); calLong = false;
+  const c = e.target.closest('.cal-day[data-info]');
+  if (!c) { hideCalTip(); return; }
+  calPressT = setTimeout(() => { calLong = true; showCalTip(c); }, 500);
+});
+['pointerup', 'pointercancel', 'pointermove'].forEach(ev => document.addEventListener(ev, e => { if (ev !== 'pointermove' || Math.abs(e.movementX) + Math.abs(e.movementY) > 6) clearTimeout(calPressT); }));
+document.addEventListener('contextmenu', e => { if (e.target.closest('.cal-day')) e.preventDefault(); });
+
+// ── 장비 탭 맨 위: 날씨 한 줄 요약 + 🎒 이번 짐 준비 (인원 / 가방 / 짐 시작 → [이대로 시작])
+var gearMemSig = '';
+const GEAR_START_KEY = 'backpacking-gearstart-v1';   // 짐 준비를 시작한 나들이의 서명(날짜|장소|종류), 새 나들이면 다시 펼쳐진다
+const curTripSig = () => [curTrip.date, curTrip.place ? placeKey(curTrip.place) : '', curTrip.act].join('|');
+function gearStarted() { let v = ''; try { v = localStorage.getItem(GEAR_START_KEY) || ''; } catch (e) {} return (gearMemSig || v) === curTripSig(); }
+function markGearStarted(on) { gearMemSig = on ? curTripSig() : ''; try { if (on) localStorage.setItem(GEAR_START_KEY, gearMemSig); else localStorage.removeItem(GEAR_START_KEY); } catch (e) {} }
+function tripLineWeather() {   // " · 🌙 최저 1°C · 💨 돌풍 13m/s" (날씨가 없으면 빈 글자)
+  const q = wxQuery(); if (!q || !WEATHER_API || dayDiff(q.date) < 0 || dayDiff(q.date) > 10) return '';
+  wxEnsure();
+  if (wx.state !== 'ok' || !wx.data || wx.key !== wxKeyOf(q)) return '';
+  const d = wxWin(wx.data), mins = [], gusts = [], winds = [];
+  d.days.forEach(x => { [x.kma && x.kma.tmin, x.met && x.met.tmin].forEach(v => { if (v !== null && v !== undefined) mins.push(v); }); });
+  d.hours.forEach(h => { if (h.met && h.met.gust !== null && h.met.gust !== undefined) gusts.push(h.met.gust); [h.kma && h.kma.wsd, h.met && h.met.wsd].forEach(v => { if (v !== null && v !== undefined) winds.push(v); }); });
+  const bits = [];
+  if (mins.length) bits.push(`🌙 최저 ${Math.round(Math.min(...mins))}°C`);
+  if (gusts.length) bits.push(`💨 돌풍 ${Math.round(Math.max(...gusts))}m/s`); else if (winds.length) bits.push(`💨 풍속 ${Math.round(Math.max(...winds))}m/s`);
+  return bits.length ? ' · ' + bits.join(' · ') : '';
+}
+function tripLineLong() {   // "🎒 백패킹 · 굴업도 · 11/20 (금) 1박"
+  const a = actOf(curTrip.act), p = curTrip.place, ok = curTrip.date && dayDiff(curTrip.date) >= 0;
+  return [`${a.e} ${a.n}`, p && placeLabel(p), ok && fmtMDW(curTrip.date) + (curTrip.days === null ? '' : ' ' + DAY_LABELS[curTrip.days])].filter(Boolean).join(' · ') + (ok && p ? tripLineWeather() : '');
+}
+function gearPrepHTML() {
+  const t = curTrip;
+  if (!(t.date && dayDiff(t.date) >= 0)) return '';
+  const a = actOf(t.act), g = gearNow(), last = lastTripOf(t.act), packed = items.filter(i => i.packed).length;
+  const bagNames = t.bags.map(id => (items.find(x => x.id === id) || {}).name).filter(Boolean);
+  const gLabel = g === 'last' ? `지난 ${a.n} 짐` : g === 'empty' ? '빈 상태로 시작' : '지금 고른 그대로';
+  if (gearStarted()) return `<div class="gp-line"><span class="gp-t">👥 ${t.people}명${bagNames.length ? ' · 🎒 ' + esc(bagNames.join(' · ')) : ''} · ${esc(gLabel)}</span><button type="button" data-gpchg>바꾸기</button></div>`;
+  const auto = '<i class="gc-auto">자동</i>';
+  const gv = g === 'last' ? `지난 ${esc(a.n)} 짐 불러오기<small>${lastTripDesc(last)}</small>` : g === 'empty' ? '빈 상태로 시작<small>장비 선택을 모두 비우고 처음부터</small>' : `지금 고른 그대로<small>장비 ${packed}개</small>`;
+  const row = (k, lb, v, au, body) => `<button type="button" class="gc-row${openRow === k ? ' open' : ''}" data-gcrow="${k}"><span class="gc-k">${lb}</span><span class="gc-v">${v}</span>${au ? auto : ''}<span class="gc-go">${openRow === k ? '⌃' : '⌄'}</span></button>${openRow === k ? `<div class="gc-open">${body}</div>` : ''}`;
+  const opts = [...(last ? [['last', `지난 ${a.n} 짐 불러오기`, lastTripDesc(last)]] : []), ['keep', '지금 고른 그대로', `장비 ${packed}개`], ['empty', '빈 상태로 시작', '장비 선택을 모두 비우고 처음부터']];
+  return `<section class="card gp"><div class="card-title">🎒 이번 짐 준비</div>`
+    + `<div class="gc-row static"><span class="gc-k">인원</span><span class="gc-v"></span><span class="gc-step"><button type="button" data-gcpp="-1" aria-label="한 명 줄이기">−</button><b>${t.people}명</b><button type="button" data-gcpp="1" aria-label="한 명 늘리기">＋</button></span></div>`
+    + row('bags', '가방', bagNames.length ? esc(bagNames.join(' · ')) : '<span class="gc-none">아직 정하지 않았어요</span>', false, `<div class="hm-soon" style="margin:0;font-size:13px;line-height:1.6">가방(배낭)을 등록하고 고르는 기능은 다음 단계에서 열려요. 지금은 비워 둬도 돼요.</div>`)
+    + row('gear', '짐 시작', gv, gearChoice === null, opts.map(([k, l, sub]) => `<button type="button" class="tp-radio${g === k ? ' on' : ''}" data-gcgear="${k}"><span>${l}<small>${sub}</small></span></button>`).join(''))
+    + `<button type="button" class="primary gp-go" data-gpstart>이대로 시작</button></section>`;
+}
+function renderGearPrep() { const b = $('gearPrep'); if (b) b.innerHTML = gearPrepHTML(); }
+function applyTripGear(g) {   // 고른 시작 방법을 장비 선택에 반영
+  if (g === 'last') {
     const l = lastTripOf(curTrip.act);
     if (l) { items.forEach(it => { it.packed = l.itemIds.includes(it.id); resetLoaded(it); }); pkOpen.clear(); save(); }
-  } else if (tpGear === 'empty') {
+  } else if (g === 'empty') {
     items.forEach(it => { it.packed = false; resetLoaded(it); });
     supplies = []; editingSid = null; pkOpen.clear(); save(); saveSupplies();
   }
 }
-function beginNewTrip(gear) {   // 날짜·장소·제목은 비우고 종류·가방·인원은 남긴다
+function gearStart() {   // [이대로 시작]
+  const g = gearNow(), packed = items.filter(i => i.packed).length;
+  if (g === 'last' && packed && !confirm(`지금 고른 장비 ${packed}개가 지난 ${actOf(curTrip.act).n} 짐으로 바뀌어요. 계속할까요?`)) return;
+  if (g === 'empty' && packed && !confirm(`지금 고른 장비 ${packed}개와 식량·소모품이 비워져요. 계속할까요?`)) return;
+  saveCurTrip(); applyTripGear(g); gearChoice = 'keep'; openRow = '';   // 한 번 적용했으면 다시 불러와 덮어쓰지 않게 "지금 그대로"로
+  markGearStarted(true); renderAll(); renderTripLines();
+  toast('짐을 챙겨 볼까요? 🎒');
+}
+function resetSteps() { edit1 = edit2 = edit3 = false; placeSkip = false; openRow = ''; plsList = null; plsQ = ''; plsMsg = ''; calMonth = ''; calStart = calEnd = ''; actChosen = false; markGearStarted(false); }
+function beginNewTrip(choice) {   // [＋ 새 나들이]는 ①부터: 날짜·장소·제목은 비우고 종류·가방·인원은 남긴다
   curTrip = Object.assign(DEFAULT_TRIP(), { act: curTrip.act, bags: curTrip.bags.slice(), people: curTrip.people });
-  saveCurTrip(); refreshTrip();
-  openTripEditor('new', gear);
+  gearChoice = choice; resetSteps();
+  saveCurTrip(); goTab('home'); refreshTrip(); window.scrollTo(0, 0);
 }
 async function startNewTrip() {
   const n = items.filter(i => i.packed).length;
-  if (!n) { beginNewTrip('empty'); return; }
+  if (!n) { beginNewTrip(null); return; }
   const ch = await gAsk('지금 고른 장비는 어떻게 할까요?', `새 나들이를 만들어요. 지금 고른 장비는 ${n}개예요.`, '지금 고른 그대로 쓰기', '비우고 새로 시작');
   if (ch === 'a') beginNewTrip('keep'); else if (ch === 'b') beginNewTrip('empty');
 }
-function startNextTrip() {   // 기록을 남긴 뒤 "다음 나들이를 만들까요?" → 날짜·장소·제목은 비우고 종류·가방은 남긴다
+function startNextTrip() {   // 기록을 남긴 뒤 "다음 나들이를 만들까요?" → 날짜·장소·제목·일정은 비우고 종류·가방은 남기고 ①부터
   Object.assign(curTrip, { date: '', place: null, name: '', days: null });
-  saveCurTrip(); goTab('home'); refreshTrip();
-  openTripEditor('new', 'keep');
+  gearChoice = 'keep'; resetSteps();
+  saveCurTrip(); goTab('home'); refreshTrip(); window.scrollTo(0, 0);
+}
+function editSteps(which) {   // 한 줄 요약의 [바꾸기] → 그 단계를 다시 펼친다
+  if (which === '1' || which === '12' || which === 'all') edit1 = true;
+  if (which === '2' || which === '12' || which === 'all') edit2 = true;
+  if (which === '3' || which === 'all') { edit3 = true; calMonth = ''; }
+  goTab('home'); renderHome(); scrollToStep();
 }
 document.addEventListener('click', e => {
   if (e.target.closest('[data-newtrip]')) { startNewTrip(); return; }
-  if (e.target.closest('[data-tripedit]')) { openTripEditor('edit'); return; }
+  const se = e.target.closest('[data-stedit]');
+  if (se) { editSteps(se.dataset.stedit); return; }
   if (e.target.closest('[data-gohome]')) { goTab('home'); return; }
   if (e.target.closest('[data-wxretry]')) { wxEnsure(true); renderHome(); return; }
+  if (e.target.closest('[data-flrec]')) { openRec(false); return; }
+  // ① 종류
+  const sa = e.target.closest('[data-sact]');
+  if (sa) { pickAct(sa.dataset.sact); return; }
+  // ② 장소
+  if (e.target.closest('[data-plsgo]')) { plsSearch(); return; }
+  const pi = e.target.closest('[data-plsi]');
+  if (pi) { const x = plsBase()[Number(pi.dataset.plsi)]; if (x) setPlace(x.p); return; }
+  if (e.target.closest('[data-plsgps]')) { plsGps(); return; }
+  if (e.target.closest('[data-plsmap]')) { openPlaceSheet('cur', { from: 'flow', mode: 'map' }); return; }
+  if (e.target.closest('[data-plsskip]')) { placeSkip = true; edit2 = false; refreshTrip(); scrollToStep(); return; }
+  // ③ 달력
+  const cd = e.target.closest('[data-cal]');
+  if (cd) { if (calLong) { calLong = false; return; } calTap(cd.dataset.cal); return; }
+  const cn = e.target.closest('[data-calnav]');
+  if (cn) { const m = parseD(calMonth + '-01'); m.setMonth(m.getMonth() + Number(cn.dataset.calnav)); calMonth = fmtDate(m).slice(0, 7); renderHome(); return; }
+  if (e.target.closest('[data-calgo]')) { calGo(); return; }
+  // 장비 탭 이번 짐 준비
+  const gr = e.target.closest('[data-gcrow]');
+  if (gr) { openRow = openRow === gr.dataset.gcrow ? '' : gr.dataset.gcrow; renderGearPrep(); return; }
+  const gg = e.target.closest('[data-gcgear]');
+  if (gg) { gearChoice = gg.dataset.gcgear; openRow = ''; renderGearPrep(); return; }
+  const pp = e.target.closest('[data-gcpp]');
+  if (pp) { curTrip.people = Math.max(1, Math.min(99, curTrip.people + Number(pp.dataset.gcpp))); saveCurTrip(); refreshTrip(); return; }
+  if (e.target.closest('[data-gpstart]')) { gearStart(); return; }
+  if (e.target.closest('[data-gpchg]')) { markGearStarted(false); openRow = ''; renderGearPrep(); return; }
   const go = e.target.closest('[data-hmgo]');
   if (go) { goTab(go.dataset.hmgo); return; }
-  const pl = e.target.closest('[data-tpplace]');
-  if (pl) { openPlaceSheet('cur', { from: 'trip', mode: pl.dataset.tpplace }); return; }
-  if (e.target.closest('[data-tpplaceclear]')) { curTrip.place = null; saveCurTrip(); refreshTrip(); return; }
-  const ta = e.target.closest('[data-tpact]');
-  if (ta) { curTrip.act = ta.dataset.tpact; saveCurTrip(); refreshTrip(); }
 });
-$('tpBody').addEventListener('change', e => {
-  if (e.target.id === 'tpDate') curTrip.date = DATE_RE.test(e.target.value) ? e.target.value : '';
-  else if (e.target.id === 'tpDays') curTrip.days = Number(e.target.value);
-  else if (e.target.id === 'tpPeople') { curTrip.people = Math.max(1, Math.min(99, Math.round(Number(String(e.target.value).replace(/[^\d]/g, ''))) || 1)); e.target.value = curTrip.people; }
-  else if (e.target.name === 'tpgear') { tpGear = e.target.value; document.querySelectorAll('#tpBody .tp-radio').forEach(r => r.classList.toggle('on', r.querySelector('input').checked)); return; }
-  else return;
-  saveCurTrip(); renderTripLines(); renderHome();
+document.addEventListener('keydown', e => { if (e.target.id === 'plsQ' && e.key === 'Enter') { e.preventDefault(); plsSearch(); } });
+document.addEventListener('focusin', e => {   // 검색칸에 포커스가 가면 카드가 위쪽에 오게 (키보드에 결과가 가리지 않게)
+  if (e.target.id === 'plsQ') setTimeout(() => { const c = $('st2'); if (c) c.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 350);
 });
-$('tpClose').onclick = () => closeSheet();
-$('tpGo').onclick = () => {
-  saveCurTrip(); applyTripGear();
-  closeSheet(); renderAll(); goTab('stock');
-  toast('짐을 챙겨 볼까요? 🎒');
-};
 /* ═══ /나들이 탭 ═════════════════════════════════════════════════════════ */
 
 /* ═══ 홈 화면 설치 안내 ═══════════════════════════════════════════════════

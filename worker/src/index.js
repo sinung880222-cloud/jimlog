@@ -213,6 +213,69 @@ async function handleWeather(url, env, ctx, origin) {
   return json(body, 200, origin, { 'Cache-Control': 'public, max-age=300' });
 }
 
+
+/* ── /daily: 오늘부터 10일 뒤까지 날짜별 아이콘·기온 (달력용) ── */
+const KMA_ICON = { 1: 'rain', 2: 'rain', 3: 'snow', 4: 'shower' };
+const skyIcon = v => (v === 1 ? 'sun' : v === 3 ? 'partly' : v === 4 ? 'cloud' : null);
+const cloudIcon = c => (c === null || c === undefined ? null : c < 25 ? 'sun' : c < 70 ? 'partly' : 'cloud');
+export function parseMetDaily(j) {   // KST 날짜별: 최저·최고, 낮(9~18시) 구름·강수, 강수확률
+  const days = {};
+  for (const e of (j.properties && j.properties.timeseries) || []) {
+    const k = kst(Date.parse(e.time)), d = ymdDash(k), hr = k.getUTCHours();
+    const o = days[d] || (days[d] = { temps: [], dayCloud: [], dayRate: [], pop: [] });
+    const det = (e.data && e.data.instant && e.data.instant.details) || {};
+    if (det.air_temperature !== undefined) o.temps.push(det.air_temperature);
+    const n1 = e.data && e.data.next_1_hours && e.data.next_1_hours.details, n6 = e.data && e.data.next_6_hours && e.data.next_6_hours.details;
+    const rate = n1 && n1.precipitation_amount !== undefined ? n1.precipitation_amount : n6 && n6.precipitation_amount !== undefined ? n6.precipitation_amount / 6 : null;
+    const pp = n1 && n1.probability_of_precipitation !== undefined ? n1.probability_of_precipitation : n6 && n6.probability_of_precipitation !== undefined ? n6.probability_of_precipitation : null;
+    if (pp !== null) o.pop.push(pp);
+    if (hr >= 9 && hr <= 18) { if (det.cloud_area_fraction !== undefined) o.dayCloud.push(det.cloud_area_fraction); if (rate !== null) o.dayRate.push(rate); }
+  }
+  const out = {};
+  for (const d of Object.keys(days)) {
+    const o = days[d];
+    if (!o.temps.length) continue;
+    const t = o.temps, mean = t.reduce((a, b) => a + b, 0) / t.length, rate = o.dayRate.length ? Math.max(...o.dayRate) : 0;
+    const cloud = o.dayCloud.length ? o.dayCloud.reduce((a, b) => a + b, 0) / o.dayCloud.length : null;
+    out[d] = { tmin: round1(Math.min(...t)), tmax: round1(Math.max(...t)), pop: o.pop.length ? Math.max(...o.pop) : null, icon: rate >= 0.1 ? (mean <= 1 ? 'snow' : 'rain') : cloudIcon(cloud) };
+  }
+  return out;
+}
+export function buildDaily({ fcst, metDays, today, count = 11 }) {   // 기상청 단기예보가 닿는 날은 기상청, 그 뒤는 MET
+  const out = [], base = new Date(today + 'T00:00:00Z').getTime();
+  for (let i = 0; i < count; i++) {
+    const date = new Date(base + i * 86400000).toISOString().slice(0, 10);
+    const hs = fcst ? Object.keys(fcst.hours).filter(k => k.startsWith(date)).sort().map(k => [Number(k.slice(11, 13)), fcst.hours[k]]) : [];
+    if (hs.length && hs.some(([, h]) => h.sky !== null || h.pty)) {
+      const noon = hs.filter(([hr]) => hr >= 12 && hr <= 15), pool = noon.length ? noon : hs.filter(([hr]) => hr >= 9 && hr <= 18).length ? hs.filter(([hr]) => hr >= 9 && hr <= 18) : hs;
+      const rainy = pool.find(([, h]) => h.pty > 0), skyH = pool.find(([, h]) => h.sky !== null);
+      const ts = hs.map(([, h]) => h.t).filter(v => v !== null), pops = hs.map(([, h]) => h.pop).filter(v => v !== null);
+      out.push({ date, icon: rainy ? (KMA_ICON[rainy[1].pty] || 'rain') : skyH ? skyIcon(skyH[1].sky) : null,
+        tmin: fcst.tmn[date] ?? (ts.length ? Math.min(...ts) : null), tmax: fcst.tmx[date] ?? (ts.length ? Math.max(...ts) : null), pop: pops.length ? Math.max(...pops) : null, src: 'kma' });
+    } else if (metDays && metDays[date]) out.push({ date, ...metDays[date], src: 'met' });
+    else out.push({ date, icon: null, tmin: null, tmax: null, pop: null, src: null });
+  }
+  return out;
+}
+async function handleDaily(url, env, ctx, origin) {
+  const lat = num(url.searchParams.get('lat')), lng = num(url.searchParams.get('lng'));
+  if (lat === null || lng === null || lat < 20 || lat > 45 || lng < 115 || lng > 135) return json({ error: 'lat, lng(한국 부근 좌표)가 필요해요' }, 400, origin);
+  const grid = toGrid(lat, lng), errors = [], key = String(env.KMA_KEY || '').trim().replace(/^["']|["']$/g, '');
+  const fb = fcstBase(), gridOk = grid.nx >= 1 && grid.nx <= 149 && grid.ny >= 1 && grid.ny <= 253;
+  const [fc, mt] = await Promise.allSettled([
+    (async () => {
+      if (!key) throw new Error('KMA_KEY가 설정되지 않았어요');
+      if (!gridOk) throw new Error('기상청 예보 구역 밖이에요');
+      return parseFcst(await kmaFetch('getVilageFcst', { numOfRows: 1500, base_date: fb.date, base_time: fb.time, nx: grid.nx, ny: grid.ny }, key, `kma-fcst/${grid.nx},${grid.ny}/${fb.date}${fb.time}`, 3600, ctx));
+    })(),
+    (async () => parseMetDaily(await metFetch(lat, lng, ctx)))(),
+  ]);
+  if (fc.status === 'rejected') errors.push({ src: 'kma', msg: scrub(fc.reason && fc.reason.message, key) });
+  if (mt.status === 'rejected') errors.push({ src: 'met', msg: scrub(mt.reason && mt.reason.message, key) });
+  const days = buildDaily({ fcst: fc.status === 'fulfilled' ? fc.value : null, metDays: mt.status === 'fulfilled' ? mt.value : null, today: ymdDash(kst()) });
+  return json({ updatedAt: new Date().toISOString(), grid, days, errors }, 200, origin, { 'Cache-Control': 'public, max-age=600' });
+}
+
 export default {
   async fetch(request, env, ctx) {
     const origin = request.headers.get('Origin');
@@ -221,6 +284,10 @@ export default {
     const url = new URL(request.url);
     if (url.pathname === '/weather') {
       try { return await handleWeather(url, env, ctx, origin); }
+      catch (e) { return json({ error: scrub(e && e.message, env.KMA_KEY) }, 500, origin); }
+    }
+    if (url.pathname === '/daily') {
+      try { return await handleDaily(url, env, ctx, origin); }
       catch (e) { return json({ error: scrub(e && e.message, env.KMA_KEY) }, 500, origin); }
     }
     if (url.pathname === '/') return json({ app: 'jimlog-weather', ok: true }, 200, origin);

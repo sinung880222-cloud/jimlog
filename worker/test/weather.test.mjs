@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict';
 import { toGrid } from '../src/grid.js';
 import { fcstBase, ncstBase } from '../src/time.js';
-import { parseFcst, parseNcst, parseMet, combine } from '../src/index.js';
+import { parseFcst, parseNcst, parseMet, combine, parseMetDaily, buildDaily } from '../src/index.js';
 
 // 격자 변환
 const cases = [['서울시청', 37.5665, 126.978, 60, 127], ['굴업도(근처)', 37.19, 125.99, 0, 0]];
@@ -36,4 +36,18 @@ const out = combine({ fcst: fc, met, date: '2026-11-10', days: 1 });
 assert.equal(out.hours.length, 2); assert.equal(out.hours.find(h => h.time === '2026-11-10T21:00').kma, null);
 assert.equal(out.days.length, 2); assert.deepEqual([out.days[0].kma.tmin, out.days[0].kma.tmax], [-1, 12]); assert.equal(out.days[0].met.tmin, 3.1);
 assert.equal(out.kmaRange, '2026-11-10T15:00');
+// /daily: 기상청이 닿는 날은 kma, 그 뒤는 met
+const fcD = parseFcst([mk('TMP', '20261111', '1200', '9'), mk('SKY', '20261111', '1200', '1'), mk('PTY', '20261111', '1200', '0'), mk('POP', '20261111', '1200', '10'), mk('TMP', '20261111', '1300', '10'), mk('SKY', '20261111', '1300', '3'),
+  mk('TMN', '20261111', '0600', '2'), mk('TMX', '20261111', '1500', '11'), mk('TMP', '20261112', '1400', '8'), mk('SKY', '20261112', '1400', '4'), mk('PTY', '20261112', '1400', '1'), mk('POP', '20261112', '1400', '80')]);
+const metD = parseMetDaily({ properties: { timeseries: [
+  { time: '2026-11-13T03:00:00Z', data: { instant: { details: { air_temperature: 4, cloud_area_fraction: 10 } }, next_1_hours: { details: { precipitation_amount: 0, probability_of_precipitation: 5 } } } },
+  { time: '2026-11-13T06:00:00Z', data: { instant: { details: { air_temperature: 9, cloud_area_fraction: 20 } }, next_1_hours: { details: { precipitation_amount: 0 } } } },
+  { time: '2026-11-14T03:00:00Z', data: { instant: { details: { air_temperature: 5, cloud_area_fraction: 90 } }, next_6_hours: { details: { precipitation_amount: 3 } } } }] } });
+const dl = buildDaily({ fcst: fcD, metDays: metD, today: '2026-11-11' });
+assert.equal(dl.length, 11);
+assert.deepEqual([dl[0].src, dl[0].icon, dl[0].tmin, dl[0].tmax, dl[0].pop], ['kma', 'sun', 2, 11, 10]);
+assert.deepEqual([dl[1].src, dl[1].icon], ['kma', 'rain']);
+assert.deepEqual([dl[2].src, dl[2].icon, dl[2].tmin, dl[2].tmax], ['met', 'sun', 4, 9]);
+assert.deepEqual([dl[3].src, dl[3].icon], ['met', 'rain']);
+assert.equal(dl[10].src, null);
 console.log('모두 통과');
