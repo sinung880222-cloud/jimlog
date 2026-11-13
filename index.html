@@ -116,9 +116,15 @@
   .wx-now { margin-bottom: 8px; font-weight: 700; font-size: 15px; }
   .wx-now span { font-weight: 400; font-size: 11px; color: var(--ink-3); }
   .wx-rain { margin-bottom: 8px; padding: 8px 12px; border-radius: var(--radius-md); background: #E6EEF7; color: #2B4E75; font-weight: 600; }
-  .wx-tabs { display: flex; gap: 6px; margin-bottom: 8px; overflow-x: auto; }
-  .wx-tabs button { flex: 0 0 auto; min-height: 32px; padding: 0 12px; border: 1px solid var(--line-strong); border-radius: var(--radius-pill); background: var(--surface); color: var(--ink-2); font-size: 12px; font-weight: 600; }
-  .wx-tabs button.on { background: var(--forest); border-color: var(--forest); color: var(--on-forest); }
+  .wx-tabs { display: flex; gap: 6px; margin-bottom: 8px; }
+  .wx-tabs.scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .wx-tabs button { flex: 1 1 0; min-width: 72px; display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 6px 4px; border: 1px solid var(--line-strong); border-radius: var(--radius-md); background: var(--surface); color: var(--ink-2); font-size: 11px; font-variant-numeric: tabular-nums; }
+  .wx-tabs.scroll button { flex: 0 0 88px; }
+  .wx-tabs button .wt-d { font-size: 12px; font-weight: 700; color: var(--ink); white-space: nowrap; }
+  .wx-tabs button .wt-r.blue { color: #2F6FB3; font-weight: 700; }
+  .wx-tabs button.windy { border-color: var(--ember); box-shadow: inset 0 0 0 1px var(--ember); }
+  .wx-tabs button.on { background: var(--forest-tint); border-color: var(--forest); box-shadow: inset 0 0 0 1px var(--forest); }
+  .wx-tabs button.on.windy { border-color: var(--ember); box-shadow: inset 0 0 0 1px var(--ember); }
   .wh-row { display: flex; gap: 4px; align-items: stretch; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 6px; margin-bottom: 8px; }
   .wh-c { flex: 0 0 56px; padding: 8px 2px; border-radius: var(--radius-md); background: var(--surface-sunken); text-align: center; font-size: 11px; font-variant-numeric: tabular-nums; }
   .wh-c.past { opacity: .4; }
@@ -188,17 +194,6 @@
   .cal-head button:disabled { opacity: .3; }
   .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
   .cal-dow { padding: 4px 0; text-align: center; font-size: 11px; font-weight: 600; color: var(--ink-3); }
-  .ds-row { display: flex; gap: 8px; margin: 0 0 16px; }
-  .ds-row.scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 4px; }
-  .ds-c { flex: 1 1 0; min-width: 0; padding: 10px 6px; border-radius: var(--radius-lg); background: var(--surface); border: 1px solid var(--line); text-align: center; font-size: 12px; }
-  .ds-row.scroll .ds-c { flex: 0 0 104px; }
-  .ds-h { font-weight: 700; margin-bottom: 4px; }
-  .ds-w { font-size: 12px; margin-bottom: 4px; } .ds-w span { font-size: 18px; }
-  .ds-t, .ds-r, .ds-d { margin-top: 2px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
-  .ds-t b { color: var(--ink); }
-  .ds-r.blue { color: #2F6FB3; font-weight: 700; }
-  .ds-d.warn { color: var(--ember-ink); background: var(--ember-tint); border-radius: var(--radius-md); font-weight: 700; padding: 2px 0; }
-  .ds-no { margin-top: 6px; color: var(--ink-3); font-size: 11px; line-height: 1.4; }
   .cal-dow.sun, .cal-day.sun .cal-n { color: var(--cal-sun); }
   .cal-dow.sat, .cal-day.sat .cal-n { color: var(--cal-sat); }
   .cal-day { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; min-height: 44px; min-width: 0; padding: 2px 0 1px; border: 0; border-radius: var(--radius-md); background: none; color: var(--ink); font-size: 13px; font-weight: 600; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
@@ -291,7 +286,14 @@
   .card.set { padding: 14px; border-radius: var(--radius-lg); }
   #hmSlot .mini-map { height: 120px; }
   .wx-card .card-title { display: flex; align-items: center; }
-  .wx-route { margin-left: auto; min-height: 28px; padding: 0 10px; }
+  .rt-fab { position: absolute; right: 8px; bottom: 8px; z-index: 30; display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+  .rt-btns { display: flex; height: 36px; border-radius: var(--radius-pill); background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,.25); overflow: hidden; }
+  .rt-btns button { border: 0; background: #fff; color: var(--ink); font-size: 12px; font-weight: 700; white-space: nowrap; }
+  .rt-go { padding: 0 12px 0 14px; } .rt-more { padding: 0 12px 0 6px; border-left: 1px solid var(--line) !important; color: var(--ink-3) !important; }
+  .rt-menu { display: flex; flex-direction: column; border-radius: var(--radius-md); background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,.25); overflow: hidden; }
+  .rt-menu[hidden] { display: none; }
+  .rt-menu button { min-height: 40px; padding: 0 16px; border: 0; background: #fff; color: var(--ink); font-size: 13px; text-align: left; white-space: nowrap; }
+  .rt-menu button.on { background: var(--forest-tint); color: var(--forest-ink); font-weight: 700; }
   .st-n { flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; margin-right: 8px; border-radius: 50%; font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums; vertical-align: middle; }
   .st-n.cur { border: 2px solid var(--ember); color: var(--ember); background: var(--surface); }
   .st-n.ok { background: var(--forest); color: var(--on-forest); }
@@ -2792,18 +2794,35 @@ function loadNaverMaps() {
 
 // 길찾기: 앱 스킴으로 열고, 앱이 없으면(또는 PC면) 웹 주소로 대체
 const isMobileUA = () => /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-function routeLinks(p) {   // 길찾기는 네이버지도 하나만
+const ROUTE_KEY = 'backpacking-routemode-v1', ROUTE_APPNAME = 'https://sinung880222-cloud.github.io/jimlog';
+const ROUTE_MODES = { car: { e: '🚗', n: '자동차', web: 'car' }, public: { e: '🚌', n: '대중교통', web: 'transit' }, walk: { e: '🚶', n: '도보', web: 'walk' } };
+function routeMode() { let m = ''; try { m = localStorage.getItem(ROUTE_KEY) || ''; } catch (e) {} return ROUTE_MODES[m] ? m : 'car'; }
+function setRouteMode(m) { if (!ROUTE_MODES[m]) return; try { localStorage.setItem(ROUTE_KEY, m); } catch (e) {} }
+function routeLinks(p, mode) {   // 길찾기는 네이버지도 하나만. 출발지는 넣지 않는다(앱이 현재 위치를 씀)
+  mode = ROUTE_MODES[mode] ? mode : routeMode();
   const nm = encodeURIComponent(p.name || p.addr || '목적지');
-  return { scheme: `nmap://route/car?dlat=${p.lat}&dlng=${p.lng}&dname=${nm}&appname=${encodeURIComponent(APP_URL)}`,
-           web: `https://map.naver.com/p/directions/-/${p.lng},${p.lat},${nm}/-/car` };
+  return { scheme: `nmap://route/${mode}?dlat=${p.lat}&dlng=${p.lng}&dname=${nm}&appname=${ROUTE_APPNAME}`,
+           web: `https://map.naver.com/p/directions/-/${p.lng},${p.lat},${nm},,/-/${ROUTE_MODES[mode].web}` };
 }
-function openRoute(p) {
-  const L = routeLinks(p);
-  if (!isMobileUA()) { window.open(L.web, '_blank', 'noopener'); return; }   // PC: 웹 길찾기
-  const t = setTimeout(() => { if (!document.hidden) window.open(L.web, '_blank', 'noopener'); }, 1600);   // 앱이 안 열리면 웹으로
-  document.addEventListener('visibilitychange', () => { if (document.hidden) clearTimeout(t); }, { once: true });
+function openRoute(p, mode) {
+  const L = routeLinks(p, mode);
+  if (!isMobileUA()) { window.open(L.web, '_blank', 'noopener'); return; }   // PC: 바로 웹 길찾기
+  const onHide = () => { if (document.hidden) { clearTimeout(t); document.removeEventListener('visibilitychange', onHide); } };
+  const t = setTimeout(() => { document.removeEventListener('visibilitychange', onHide); if (!document.hidden) window.open(L.web, '_blank', 'noopener'); }, 1500);   // 1.5초 안에 페이지가 숨겨지지 않으면 앱이 없는 것 → 웹
+  document.addEventListener('visibilitychange', onHide);
   location.href = L.scheme;
 }
+function routeFabHTML(p) {   // 나들이 탭 작은 지도 오른쪽 아래 [🧭 길찾기 · 🚗] [▾]
+  const m = routeMode(), at = `data-lat="${p.lat}" data-lng="${p.lng}" data-name="${esc(p.name || p.addr || '목적지')}"`;
+  return `<div class="rt-fab"><div class="rt-menu" id="rtMenu" hidden>${Object.keys(ROUTE_MODES).map(k => `<button type="button" data-rtmode="${k}"${k === m ? ' class="on"' : ''}>${ROUTE_MODES[k].e} ${ROUTE_MODES[k].n}</button>`).join('')}</div>`
+    + `<div class="rt-btns"><button type="button" class="rt-go" data-route="naver" ${at}>🧭 길찾기 · ${ROUTE_MODES[m].e}</button><button type="button" class="rt-more" data-rtmenu aria-label="이동 수단 고르기">▾</button></div></div>`;
+}
+var rtPressT = null, rtLong = false;
+document.addEventListener('pointerdown', e => {
+  clearTimeout(rtPressT); rtLong = false;
+  if (e.target.closest('.rt-go')) rtPressT = setTimeout(() => { rtLong = true; const m = $('rtMenu'); if (m) m.hidden = false; }, 500);
+});
+['pointerup', 'pointercancel'].forEach(ev => document.addEventListener(ev, () => clearTimeout(rtPressT)));
 function routeButtonsHTML(p) {
   const at = `data-lat="${p.lat}" data-lng="${p.lng}" data-name="${esc(p.name || p.addr || '목적지')}"`;
   return `<div class="route-btns"><button type="button" class="route-btn" data-route="naver" ${at}>🟢 네이버지도로 길찾기</button></div>`;
@@ -3030,7 +3049,12 @@ async function renderLogMap() {
 }
 
 document.addEventListener('click', e => {
+  const rm = e.target.closest('[data-rtmode]');
+  if (rm) { setRouteMode(rm.dataset.rtmode); renderHome(); return; }
+  if (e.target.closest('[data-rtmenu]')) { const m = $('rtMenu'); if (m) m.hidden = !m.hidden; return; }
+  if (!e.target.closest('.rt-fab')) { const m = $('rtMenu'); if (m) m.hidden = true; }
   const r = e.target.closest('[data-route]');
+  if (r && rtLong) { rtLong = false; return; }
   if (r) { openRoute({ lat: Number(r.dataset.lat), lng: Number(r.dataset.lng), name: r.dataset.name }); return; }
   const pe = e.target.closest('[data-placeedit]');
   if (pe) { if (pe.dataset.placeedit === 'cur') gotoSet('place'); else openPlaceSheet(pe.dataset.placeedit); return; }
@@ -3151,7 +3175,12 @@ function wxHourly(t, data) {
   if (!dates.includes(wxDay)) wxDay = dates[0];
   const day = wxDay, today = todayStr(), nowH = new Date().getHours(), si = sunInfo(t.place, day);
   const rise = si ? hmMin(si.rise) : 360, set = si ? hmMin(si.set) : 1140;
-  const tabs = dates.length > 1 ? `<div class="wx-tabs">${dates.map(ds => { const d = parseD(ds); return `<button type="button" class="${ds === day ? 'on' : ''}" data-wxday="${ds}">${WEEK[d.getDay()]} ${d.getDate()}</button>`; }).join('')}</div>` : '';
+  const dOk = daily.key === placeKey(t.place) && daily.state === 'ok';
+  const tabs = `<div class="wx-tabs${dates.length > 3 ? ' scroll' : ''}">${dates.map(ds => {
+    const d = parseD(ds), inf = dOk ? daily.byDate[ds] : null, has = inf && inf.icon, deg = v => v === null || v === undefined ? '-' : Math.round(v) + '°', pop = has ? inf.pop : null;
+    return `<button type="button" class="${ds === day ? 'on' : ''}${windy(inf) ? ' windy' : ''}" data-wxday="${ds}"><span class="wt-d">${WEEK[d.getDay()]} ${d.getDate()}${has ? ` ${DAILY_EMOJI[inf.icon] || ''}${windy(inf) ? '💨' : ''}` : ''}</span>`
+      + (has ? `<span class="wt-t">${deg(inf.tmax)} / ${deg(inf.tmin)}</span><span class="wt-r${pop !== null && pop !== undefined && pop >= 60 ? ' blue' : ''}">💧${pop !== null && pop !== undefined ? pop + '%' : '-'}</span>` : '') + `</button>`;
+  }).join('')}</div>`;
   const hs = data.hours.filter(h => h.time.slice(0, 10) === day && (h.kma || h.met));
   if (!hs.length) return tabs + `<div class="wx-note">이 날은 아직 예보가 없어요</div>`;
   const kmaDay = hs.some(h => h.kma), step = kmaDay ? 3 : 6, cells = [];
@@ -3250,13 +3279,12 @@ function renderHome() {
   // 정하기 영역: 🏷️ 종류 · 📍 장소 · 📅 날짜 (아무 순서로 고르고, 다 정해지면 한 줄로 접힌다)
   h += `<section class="card set">${actRowHTML()}${placeRowHTML()}${dateRowHTML()}</section>`;   // 접고 펼치기 없이 늘 열어 둔다
   if (p) dailyEnsure();
-  h += daySumHTML();   // [3] 고른 날짜 요약 (달력 바로 아래)
   // [5] 장소와 날짜가 둘 다 있으면 작은 지도 → 🌤️ 날씨 브리핑
   if (planned && p) {
     wxEnsure();
     const si = sunInfo(p, t.date), camp = actDays(t.act) >= 1;
-    h += `<div class="map-slot" id="hmSlot"></div>`
-      + `<section class="card wx-card"><div class="card-title">🌤️ 날씨 브리핑<button type="button" class="hm-chip wx-route" data-route="naver" data-lat="${p.lat}" data-lng="${p.lng}" data-name="${esc(p.name || p.addr || '목적지')}">🧭 길찾기</button></div>` + wxBody(si)
+    h += `<div class="map-slot" id="hmSlot">${routeFabHTML(p)}</div>`
+      + `<section class="card wx-card"><div class="card-title">🌤️ 날씨 브리핑</div>` + wxBody(si)
       + (si ? `<div class="hm-sun"><div><span class="sub">🌅 일출</span><b>${si.rise}</b></div><div><span class="sub">🌇 일몰</span><b>${si.set}</b></div></div>
         <div class="hm-rec">${camp ? `⛺ 일몰 40분 전인 ${si.tent}까지 텐트 치는 걸 추천해요` : `🌇 일몰 40분 전인 ${si.tent}까지 이동을 마치는 걸 추천해요`}</div>` : '<div class="hm-hint">이 날짜는 해가 뜨고 지는 시간을 계산할 수 없어요</div>')
       + `<div class="hm-links"><a href="https://www.windy.com/?${p.lat},${p.lng},11" target="_blank" rel="noopener">Windy</a><a href="https://www.weather.go.kr/w/index.do" target="_blank" rel="noopener">기상청</a><a href="https://www.meteoblue.com/ko/weather/week/${p.lat.toFixed(3)}N${p.lng.toFixed(3)}E" target="_blank" rel="noopener">meteoblue</a></div>` + wxFoot() + `</section>`;
@@ -3499,41 +3527,13 @@ function calTap(ds) {
 function calSummary() {
   const t = curTrip;
   if (!isPlanned()) return `출발일을 누르고, 돌아오는 날을 눌러 주세요 <small>· ${esc(actOf(t.act).n)} 기본 일정은 ${DAY_LABELS[actDays(t.act)]}</small>`;
-  const e = calEnd || addDaysStr(t.date, t.days || 0), nights = Math.round((parseD(e) - parseD(t.date)) / DAY_MS), dates = [];
-  for (let i = 0; i <= Math.min(nights, 10); i++) dates.push(addDaysStr(t.date, i));
+  const e = calEnd || addDaysStr(t.date, t.days || 0), nights = Math.round((parseD(e) - parseD(t.date)) / DAY_MS);
   const head = `${esc(rangeText(t.date, e))} · ${nightsLabel(nights)}`, over = nights > 3 ? '<br><small>최대 3박+로 저장돼요</small>' : '';
-  const infos = dates.map(dailyOf);
-  if (infos.every(Boolean)) {
-    const bad = infos.findIndex(x => ['rain', 'shower', 'snow'].includes(x.icon));
-    if (bad >= 0) return `${head} · ${infos[bad].icon === 'snow' ? '❄️' : '🌧️'} ${WEEK[parseD(dates[bad]).getDay()]}요일에 ${infos[bad].icon === 'snow' ? '눈' : '비'} 소식${over}`;
-    return `${head} · ${infos.every(x => ['sun', 'partly'].includes(x.icon)) ? (dates.length === 1 ? '맑음' : dates.length === 2 ? '둘 다 맑음' : '모두 맑음') : '대체로 흐려요'}${over}`;
-  }
   return head + over;
 }
 
 // ── 고른 날짜 요약 [3] + 달력 💨 표시 기준
 const windy = d => !!d && ((d.wsdMax !== null && d.wsdMax !== undefined && d.wsdMax >= 7) || (d.gustMax !== null && d.gustMax !== undefined && d.gustMax >= 10));
-const DAILY_WORD = { sun: '맑음', partly: '구름 조금', cloud: '흐림', rain: '비', snow: '눈', shower: '소나기' };
-function daySumHTML() {
-  const t = curTrip; if (!isPlanned()) return '';
-  const e = calPending ? t.date : (calEnd || addDaysStr(t.date, t.days || 0)), dates = [];
-  for (let i = 0, n = Math.round((parseD(e) - parseD(t.date)) / DAY_MS); i <= n; i++) dates.push(addDaysStr(t.date, i));
-  const p = t.place, ok = p && daily.key === placeKey(p) && daily.state === 'ok';
-  const cards = dates.map(ds => {
-    const d = parseD(ds), head = `<div class="ds-h">${WEEK[d.getDay()]} ${d.getMonth() + 1}/${d.getDate()}</div>`, n = dayDiff(ds), inf = ok ? daily.byDate[ds] : null;
-    if (n > 10) return `<div class="ds-c">${head}<div class="ds-no">예보는 출발 10일 전부터 나와요</div></div>`;
-    if (!p) return `<div class="ds-c">${head}<div class="ds-no">장소를 정하면 날씨가 나와요</div></div>`;
-    if (!ok) return `<div class="ds-c">${head}<div class="ds-no">${daily.state === 'fail' ? '날씨를 못 불러왔어요' : '불러오는 중…'}</div></div>`;
-    if (!inf || !inf.icon) return `<div class="ds-c">${head}<div class="ds-no">예보가 아직 없어요</div></div>`;
-    const deg = v => v === null || v === undefined ? '-' : Math.round(v) + '°', pop = inf.pop, wsd = inf.wsdMax, g = inf.gustMax;
-    const wy = windy(inf), rn = pop !== null && pop !== undefined && pop >= 60;
-    return `<div class="ds-c">${head}<div class="ds-w"><span>${DAILY_EMOJI[inf.icon] || ''}</span> ${DAILY_WORD[inf.icon] || ''}</div>`
-      + `<div class="ds-t">🌡️ <b>${deg(inf.tmax)}</b> / ${deg(inf.tmin)}</div>`
-      + `<div class="ds-r${rn ? ' blue' : ''}">💧 ${pop !== null && pop !== undefined ? pop + '%' : '-'}</div>`
-      + `<div class="ds-d${wy ? ' warn' : ''}">💨 ${wsd !== null && wsd !== undefined ? Math.round(wsd * 10) / 10 + 'm/s' : '-'}${g !== null && g !== undefined ? `<br>돌풍 ${Math.round(g)}` : ''}${wy ? ' ⚠' : ''}</div></div>`;
-  }).join('');
-  return `<div class="ds-row${dates.length > 3 ? ' scroll' : ''}" style="--n:${dates.length}">${cards}</div>`;
-}
 function dateRowHTML() {
   const t = curTrip, today = todayStr(), planned = isPlanned(), open = isCalOpen(), pre = calPending;
   const e = planned ? (calEnd || addDaysStr(t.date, t.days || 0)) : '';
