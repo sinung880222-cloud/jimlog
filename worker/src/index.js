@@ -222,9 +222,11 @@ export function parseMetDaily(j) {   // KST 날짜별: 최저·최고, 낮(9~18�
   const days = {};
   for (const e of (j.properties && j.properties.timeseries) || []) {
     const k = kst(Date.parse(e.time)), d = ymdDash(k), hr = k.getUTCHours();
-    const o = days[d] || (days[d] = { temps: [], dayCloud: [], dayRate: [], pop: [] });
+    const o = days[d] || (days[d] = { temps: [], dayCloud: [], dayRate: [], pop: [], wsd: [], gust: [] });
     const det = (e.data && e.data.instant && e.data.instant.details) || {};
     if (det.air_temperature !== undefined) o.temps.push(det.air_temperature);
+    if (det.wind_speed !== undefined) o.wsd.push(det.wind_speed);
+    if (det.wind_speed_of_gust !== undefined) o.gust.push(det.wind_speed_of_gust);
     const n1 = e.data && e.data.next_1_hours && e.data.next_1_hours.details, n6 = e.data && e.data.next_6_hours && e.data.next_6_hours.details;
     const rate = n1 && n1.precipitation_amount !== undefined ? n1.precipitation_amount : n6 && n6.precipitation_amount !== undefined ? n6.precipitation_amount / 6 : null;
     const pp = n1 && n1.probability_of_precipitation !== undefined ? n1.probability_of_precipitation : n6 && n6.probability_of_precipitation !== undefined ? n6.probability_of_precipitation : null;
@@ -237,7 +239,7 @@ export function parseMetDaily(j) {   // KST 날짜별: 최저·최고, 낮(9~18�
     if (!o.temps.length) continue;
     const t = o.temps, mean = t.reduce((a, b) => a + b, 0) / t.length, rate = o.dayRate.length ? Math.max(...o.dayRate) : 0;
     const cloud = o.dayCloud.length ? o.dayCloud.reduce((a, b) => a + b, 0) / o.dayCloud.length : null;
-    out[d] = { tmin: round1(Math.min(...t)), tmax: round1(Math.max(...t)), pop: o.pop.length ? Math.max(...o.pop) : null, icon: rate >= 0.1 ? (mean <= 1 ? 'snow' : 'rain') : cloudIcon(cloud) };
+    out[d] = { tmin: round1(Math.min(...t)), tmax: round1(Math.max(...t)), pop: o.pop.length ? Math.max(...o.pop) : null, wsdMax: o.wsd.length ? round1(Math.max(...o.wsd)) : null, gustMax: o.gust.length ? round1(Math.max(...o.gust)) : null, icon: rate >= 0.1 ? (mean <= 1 ? 'snow' : 'rain') : cloudIcon(cloud) };
   }
   return out;
 }
@@ -251,9 +253,10 @@ export function buildDaily({ fcst, metDays, today, count = 11 }) {   // 기상�
       const rainy = pool.find(([, h]) => h.pty > 0), skyH = pool.find(([, h]) => h.sky !== null);
       const ts = hs.map(([, h]) => h.t).filter(v => v !== null), pops = hs.map(([, h]) => h.pop).filter(v => v !== null);
       out.push({ date, icon: rainy ? (KMA_ICON[rainy[1].pty] || 'rain') : skyH ? skyIcon(skyH[1].sky) : null,
-        tmin: fcst.tmn[date] ?? (ts.length ? Math.min(...ts) : null), tmax: fcst.tmx[date] ?? (ts.length ? Math.max(...ts) : null), pop: pops.length ? Math.max(...pops) : null, src: 'kma' });
+        tmin: fcst.tmn[date] ?? (ts.length ? Math.min(...ts) : null), tmax: fcst.tmx[date] ?? (ts.length ? Math.max(...ts) : null), pop: pops.length ? Math.max(...pops) : null,
+        wsdMax: (() => { const w = hs.map(([, h]) => h.wsd).filter(v => v !== null); return w.length ? Math.max(...w) : null; })(), gustMax: null, src: 'kma' });
     } else if (metDays && metDays[date]) out.push({ date, ...metDays[date], src: 'met' });
-    else out.push({ date, icon: null, tmin: null, tmax: null, pop: null, src: null });
+    else out.push({ date, icon: null, tmin: null, tmax: null, pop: null, wsdMax: null, gustMax: null, src: null });
   }
   return out;
 }

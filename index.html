@@ -116,6 +116,19 @@
   .wx-now { margin-bottom: 8px; font-weight: 700; font-size: 15px; }
   .wx-now span { font-weight: 400; font-size: 11px; color: var(--ink-3); }
   .wx-rain { margin-bottom: 8px; padding: 8px 12px; border-radius: var(--radius-md); background: #E6EEF7; color: #2B4E75; font-weight: 600; }
+  .wx-tabs { display: flex; gap: 6px; margin-bottom: 8px; overflow-x: auto; }
+  .wx-tabs button { flex: 0 0 auto; min-height: 32px; padding: 0 12px; border: 1px solid var(--line-strong); border-radius: var(--radius-pill); background: var(--surface); color: var(--ink-2); font-size: 12px; font-weight: 600; }
+  .wx-tabs button.on { background: var(--forest); border-color: var(--forest); color: var(--on-forest); }
+  .wh-row { display: flex; gap: 4px; align-items: stretch; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 6px; margin-bottom: 8px; }
+  .wh-c { flex: 0 0 56px; padding: 8px 2px; border-radius: var(--radius-md); background: var(--surface-sunken); text-align: center; font-size: 11px; font-variant-numeric: tabular-nums; }
+  .wh-c.past { opacity: .4; }
+  .wh-l { color: var(--ink-3); white-space: nowrap; }
+  .wh-e { font-size: 20px; line-height: 1.4; }
+  .wh-t { font-size: 14px; font-weight: 700; }
+  .wh-r, .wh-w { margin-top: 2px; color: var(--ink-2); white-space: nowrap; }
+  .wh-r.blue { color: #2F6FB3; font-weight: 700; }
+  .wh-w.warn { color: var(--ember-ink); background: var(--ember-tint); border-radius: var(--radius-md); font-weight: 700; margin: 2px 2px 0; }
+  .wh-sun { flex: 0 0 auto; align-self: center; writing-mode: vertical-rl; padding: 4px 0; font-size: 10px; color: var(--ember-ink); white-space: nowrap; }
   .wx-slots { display: grid; gap: 6px; margin-bottom: 8px; }
   .wx-slots.n4 { grid-template-columns: repeat(4, 1fr); }
   .wx-slots.n3 { grid-template-columns: repeat(3, 1fr); }
@@ -175,18 +188,28 @@
   .cal-head button:disabled { opacity: .3; }
   .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
   .cal-dow { padding: 4px 0; text-align: center; font-size: 11px; font-weight: 600; color: var(--ink-3); }
+  .ds-row { display: flex; gap: 8px; margin: 0 0 16px; }
+  .ds-row.scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 4px; }
+  .ds-c { flex: 1 1 0; min-width: 0; padding: 10px 6px; border-radius: var(--radius-lg); background: var(--surface); border: 1px solid var(--line); text-align: center; font-size: 12px; }
+  .ds-row.scroll .ds-c { flex: 0 0 104px; }
+  .ds-h { font-weight: 700; margin-bottom: 4px; }
+  .ds-w { font-size: 12px; margin-bottom: 4px; } .ds-w span { font-size: 18px; }
+  .ds-t, .ds-r, .ds-d { margin-top: 2px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+  .ds-t b { color: var(--ink); }
+  .ds-r.blue { color: #2F6FB3; font-weight: 700; }
+  .ds-d.warn { color: var(--ember-ink); background: var(--ember-tint); border-radius: var(--radius-md); font-weight: 700; padding: 2px 0; }
+  .ds-no { margin-top: 6px; color: var(--ink-3); font-size: 11px; line-height: 1.4; }
   .cal-dow.sun, .cal-day.sun .cal-n { color: var(--cal-sun); }
   .cal-dow.sat, .cal-day.sat .cal-n { color: var(--cal-sat); }
   .cal-day { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; min-height: 44px; min-width: 0; padding: 2px 0 1px; border: 0; border-radius: var(--radius-md); background: none; color: var(--ink); font-size: 13px; font-weight: 600; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
   .cal-day.today { box-shadow: inset 0 0 0 2px var(--ember); }
   .cal-day.past { opacity: .3; pointer-events: none; }
   .cal-day.sel { background: var(--forest); }
-  .cal-day.sel .cal-n, .cal-day.sel .cal-tn { color: var(--on-forest); }
+  .cal-day.sel .cal-n { color: var(--on-forest); }
   .cal-day.pre { background: var(--forest-tint); }
   .cal-ic { font-size: 12px; line-height: 1.1; }
-  .cal-tn { font-size: 9px; font-weight: 400; color: var(--ink-2); font-variant-numeric: tabular-nums; line-height: 1.1; }
-  .cal-day.far .cal-ic, .cal-day.far .cal-tn { opacity: .55; }
-  .cal-tip { position: absolute; z-index: 20; padding: 6px 10px; border-radius: var(--radius-md); background: var(--ink); color: #fff; font-size: 12px; white-space: nowrap; pointer-events: none; }
+  .cal-wd { font-style: normal; font-size: 8px; margin-left: 1px; vertical-align: top; }
+  .cal-day.far .cal-ic { opacity: .55; }
   .cal-sum { margin: 10px 0 8px; padding: 8px 12px; border-radius: var(--radius-md); background: var(--forest-tint); color: var(--forest-ink); font-weight: 600; line-height: 1.5; }
   .cal-sum small { font-weight: 400; color: var(--ink-2); }
   .cal-go { width: 100%; }
@@ -3120,35 +3143,44 @@ function wxWin(data) {
   const d0 = curTrip.date, d1 = addDaysStr(d0, curTrip.days || 0);
   return Object.assign({}, data, { hours: data.hours.filter(h => h.time.slice(0, 10) >= d0 && h.time.slice(0, 10) <= d1), days: data.days.filter(x => x.date >= d0 && x.date <= d1) });
 }
-// 칸 정의: [이름, 날짜, 시작시, 끝시, 'min'|'max']  밤·새벽(저녁)은 그 시간의 최저기온, 오전·오후는 최고기온
-function wxSlotDefs(t) {
-  const N = t.days || 0, day = i => addDaysStr(t.date, i);
-  if (N === 0) return [['오전', day(0), 6, 12, 'max'], ['오후', day(0), 12, 18, 'max'], ['저녁', day(0), 18, 24, 'min']];
-  const defs = [], pre = N > 1;   // 1박은 "첫날 오후 / 밤 / 둘째날 새벽 / 둘째날 오전", 2박 이상은 마지막 밤·아침까지 이어 붙인다
-  for (let i = 0; i <= N; i++) {
-    const nm = NTH[i] || `${i + 1}째`;
-    if (i === 0) defs.push([`${nm}날 오후`, day(i), 12, 18, 'max']);
-    else { defs.push([`${nm}날 새벽`, day(i), 0, 6, 'min']); defs.push([`${nm}날 오전`, day(i), 6, 12, 'max']); if (i < N) defs.push([`${nm}날 오후`, day(i), 12, 18, 'max']); }
-    if (i < N) defs.push([pre ? `${nm}날 밤` : '밤', day(i), 18, 24, 'min']);
+// [4] 시간대별 날씨: 날짜 탭 + 가로 스크롤 줄 (기상청 예보가 있는 날은 3시간마다, 없는 날은 MET 6시간 칸 4개)
+var wxDay = '';
+const hmMin = str => { const a = String(str).split(':'); return Number(a[0]) * 60 + Number(a[1]); };
+function wxHourly(t, data) {
+  const N = t.days || 0, dates = []; for (let i = 0; i <= N; i++) dates.push(addDaysStr(t.date, i));
+  if (!dates.includes(wxDay)) wxDay = dates[0];
+  const day = wxDay, today = todayStr(), nowH = new Date().getHours(), si = sunInfo(t.place, day);
+  const rise = si ? hmMin(si.rise) : 360, set = si ? hmMin(si.set) : 1140;
+  const tabs = dates.length > 1 ? `<div class="wx-tabs">${dates.map(ds => { const d = parseD(ds); return `<button type="button" class="${ds === day ? 'on' : ''}" data-wxday="${ds}">${WEEK[d.getDay()]} ${d.getDate()}</button>`; }).join('')}</div>` : '';
+  const hs = data.hours.filter(h => h.time.slice(0, 10) === day && (h.kma || h.met));
+  if (!hs.length) return tabs + `<div class="wx-note">이 날은 아직 예보가 없어요</div>`;
+  const kmaDay = hs.some(h => h.kma), step = kmaDay ? 3 : 6, cells = [];
+  const warnW = w => w !== null && w !== undefined && w >= 7;
+  for (let a = 0; a < 24; a += step) {
+    const grp = hs.filter(h => wxHour(h) >= a && wxHour(h) < a + step);
+    if (!grp.length) continue;
+    const night = (a + (kmaDay ? 0 : 3)) * 60 < rise || (a + (kmaDay ? 0 : 3)) * 60 >= set;
+    let em, tv, rain, rn, wsd, lb, src = '';
+    if (kmaDay) {
+      const h = grp.find(x => wxHour(x) === a) || grp[0], k = h.kma;
+      lb = `${pad2(a)}시`; em = wxEmoji(h, night);
+      if (k) { tv = k.t; rain = k.pop !== null ? `${k.pop}%` : ''; rn = k.pop !== null && k.pop >= 60; wsd = k.wsd; }
+      else { tv = h.met.t; const mm = (h.met.precip || 0) / (h.met.ph === 6 ? 6 : 1); rain = mm >= 0.1 ? mm.toFixed(1) + 'mm' : '0'; rn = wxRainy(h); wsd = h.met.wsd; src = '노르웨이'; }
+    } else {
+      const mt = grp.map(x => x.met).filter(Boolean); if (!mt.length) continue;
+      const mid = grp[Math.floor(grp.length / 2)], temps = mt.map(m => m.t).filter(v => v !== null), ws = mt.map(m => m.wsd).filter(v => v !== null);
+      const mm = grp.reduce((sum, x) => sum + ((x.met && x.met.precip) || 0) / (x.met && x.met.ph === 6 ? 6 : 1), 0);
+      lb = ['새벽', '오전', '오후', '밤'][a / 6]; em = wxEmoji(mid, night);
+      tv = temps.length ? avg(temps) : null; wsd = ws.length ? Math.max(...ws) : null; rain = mm >= 0.1 ? mm.toFixed(1) + 'mm' : '0'; rn = grp.some(wxRainy);
+    }
+    cells.push({ a, html: `<div class="wh-c${day === today && a + step <= nowH ? ' past' : ''}"><div class="wh-l">${lb}</div><div class="wh-e">${em}</div><div class="wh-t">${tv !== null && tv !== undefined ? Math.round(tv) + '°' : '—'}</div>`
+      + `<div class="wh-r${rn ? ' blue' : ''}">💧${rain || '-'}</div><div class="wh-w${warnW(wsd) ? ' warn' : ''}">💨${wsd !== null && wsd !== undefined ? Math.round(wsd) : '-'}${warnW(wsd) ? '⚠' : ''}</div>${src ? `<div class="wx-src">${src}</div>` : ''}</div>` });
   }
-  return defs;
-}
-function wxSlots(t, data, si) {
-  const defs = wxSlotDefs(t), rise = si ? parseInt(si.rise, 10) : 6, set = si ? parseInt(si.set, 10) : 19;
-  return `<div class="wx-slots ${defs.length > 4 ? 'scroll' : 'n' + defs.length}">` + defs.map(([lb, d, a, b, mode]) => {
-    const hs = data.hours.filter(h => h.time.slice(0, 10) === d && wxHour(h) >= a && wxHour(h) < b && (h.kma || h.met));
-    if (!hs.length) return `<div class="wx-cell"><div class="wx-lb">${lb}</div><div class="wx-em">—</div><div class="wx-s">예보 없음</div></div>`;
-    const kmaHs = hs.filter(h => h.kma), useKma = kmaHs.length > 0, src = useKma ? kmaHs : hs;
-    const mid = src[Math.floor(src.length / 2)], hr = wxHour(mid), night = hr < rise || hr >= set;
-    const temps = src.map(h => (useKma ? h.kma.t : h.met.t)).filter(x => x !== null && x !== undefined);
-    const winds = src.map(h => (useKma ? h.kma.wsd : h.met.wsd)).filter(x => x !== null && x !== undefined);
-    let rain;
-    if (useKma) { const p = src.map(h => h.kma.pop).filter(x => x !== null); rain = p.length ? `💧${Math.max(...p)}%` : ''; }
-    else { const mm = hs.reduce((s, h) => s + ((h.met && h.met.precip) || 0) / (h.met && h.met.ph === 6 ? 6 : 1), 0); rain = `💧${mm >= 0.1 ? mm.toFixed(1) + 'mm' : '0'}`; }
-    const tv = temps.length ? Math.round(mode === 'min' ? Math.min(...temps) : Math.max(...temps)) + '°' : '—';
-    return `<div class="wx-cell"><div class="wx-lb">${lb}</div><div class="wx-em">${wxEmoji(mid, night)}</div><div class="wx-t"><span class="wx-tl">${mode === 'min' ? '최저' : '최고'}</span>${tv}</div>`
-      + `<div class="wx-s">${rain}${winds.length ? `<br>💨${Math.round(Math.max(...winds))}m/s` : ''}</div>${useKma ? '' : '<div class="wx-src">노르웨이</div>'}</div>`;
-  }).join('') + `</div>`;
+  const ev = [[rise, `🌅 ${si ? si.rise : ''}`], [set, `🌇 ${si ? si.set : ''}`]].filter(() => si), used = new Set();
+  let row = '';
+  cells.forEach(c => { ev.forEach((e, i) => { if (!used.has(i) && c.a * 60 > e[0]) { used.add(i); row += `<div class="wh-sun">${e[1]}</div>`; } }); row += c.html; });
+  ev.forEach((e, i) => { if (!used.has(i)) row += `<div class="wh-sun">${e[1]}</div>`; });
+  return tabs + `<div class="wh-row">${row}</div>` + (kmaDay ? '' : `<div class="wx-note">가까워지면 3시간 간격으로 자세히 나와요</div>`);
 }
 function wxRainLine(data) {
   const hs = data.hours.filter(h => h.kma || h.met), i = hs.findIndex(wxRainy);
@@ -3191,7 +3223,7 @@ function wxBody(si) {
   const d = wxWin(wx.data), errs = d.errors || [], hasKma = d.hours.some(h => h.kma), hasMet = true;
   let h = n >= 4 ? `<div class="wx-note far">출발 ${n}일 전 예보예요 · 3일 전에 다시 확인하세요</div>` : '';
   if (n === 0 && d.now && d.now.t !== null) h += `<div class="wx-now">지금 ${Math.round(d.now.t)}°C${d.now.wsd !== null ? ` · 바람 ${Math.round(d.now.wsd * 10) / 10}m/s` : ''} <span>(${d.now.src} ${d.now.at})</span></div>`;
-  h += wxRainLine(d) + wxSlots(t, d, si) + wxCompare(d);
+  h += wxRainLine(d) + wxHourly(t, d) + wxCompare(d);
   if (!hasKma && !errs.some(e => e.src === 'kma')) h += `<div class="wx-note">기상청 예보는 출발 3일 전부터 나와요 · 지금은 노르웨이 예보만</div>`;
   if (errs.some(e => e.src === 'kma')) h += `<div class="wx-note warn">기상청 예보를 못 불러왔어요</div>`;
   if (errs.some(e => e.src === 'met')) h += `<div class="wx-note warn">노르웨이 예보를 못 불러왔어요</div>`;
@@ -3218,6 +3250,7 @@ function renderHome() {
   // 정하기 영역: 🏷️ 종류 · 📍 장소 · 📅 날짜 (아무 순서로 고르고, 다 정해지면 한 줄로 접힌다)
   h += `<section class="card set">${actRowHTML()}${placeRowHTML()}${dateRowHTML()}</section>`;   // 접고 펼치기 없이 늘 열어 둔다
   if (p) dailyEnsure();
+  h += daySumHTML();   // [3] 고른 날짜 요약 (달력 바로 아래)
   // [5] 장소와 날짜가 둘 다 있으면 작은 지도 → 🌤️ 날씨 브리핑
   if (planned && p) {
     wxEnsure();
@@ -3262,7 +3295,7 @@ const upcomingSat = off => { const d = new Date(); d.setHours(0, 0, 0, 0); d.set
 // ── 나들이 탭 = 한 화면에 다 열어 두기: 🏷️ 종류 · 📍 장소 · 📅 날짜를 아무 순서로 고른다 (팝업·단계 없음, 고르는 즉시 저장)
 const ACT_DAYS = { picnic: 0, hike: 0, travel: 0, backpack: 1, camp: 1, carcamp: 1 };   // 종류별 기본 일정(박)
 var openRow = '';                     // 장비 탭 "이번 짐 준비"에서 펼친 줄(한 번에 한 줄): bags | gear
-var calMonth = '', calOpen = null, calPending = false, calEnd = '', calLong = false, calPressT = null;      // 📅 달력 상태
+var calMonth = '', calOpen = null, calPending = false, calEnd = '';      // 📅 달력 상태
 const placeLabel = pl => pl.name || pl.addr || '선택한 위치';
 const nightsLabel = n => DAY_LABELS[Math.max(0, Math.min(3, n))];
 function rangeText(s0, e0) {   // "11/14 (토) ~ 15 (일)"
@@ -3477,12 +3510,36 @@ function calSummary() {
   }
   return head + over;
 }
+
+// ── 고른 날짜 요약 [3] + 달력 💨 표시 기준
+const windy = d => !!d && ((d.wsdMax !== null && d.wsdMax !== undefined && d.wsdMax >= 7) || (d.gustMax !== null && d.gustMax !== undefined && d.gustMax >= 10));
+const DAILY_WORD = { sun: '맑음', partly: '구름 조금', cloud: '흐림', rain: '비', snow: '눈', shower: '소나기' };
+function daySumHTML() {
+  const t = curTrip; if (!isPlanned()) return '';
+  const e = calPending ? t.date : (calEnd || addDaysStr(t.date, t.days || 0)), dates = [];
+  for (let i = 0, n = Math.round((parseD(e) - parseD(t.date)) / DAY_MS); i <= n; i++) dates.push(addDaysStr(t.date, i));
+  const p = t.place, ok = p && daily.key === placeKey(p) && daily.state === 'ok';
+  const cards = dates.map(ds => {
+    const d = parseD(ds), head = `<div class="ds-h">${WEEK[d.getDay()]} ${d.getMonth() + 1}/${d.getDate()}</div>`, n = dayDiff(ds), inf = ok ? daily.byDate[ds] : null;
+    if (n > 10) return `<div class="ds-c">${head}<div class="ds-no">예보는 출발 10일 전부터 나와요</div></div>`;
+    if (!p) return `<div class="ds-c">${head}<div class="ds-no">장소를 정하면 날씨가 나와요</div></div>`;
+    if (!ok) return `<div class="ds-c">${head}<div class="ds-no">${daily.state === 'fail' ? '날씨를 못 불러왔어요' : '불러오는 중…'}</div></div>`;
+    if (!inf || !inf.icon) return `<div class="ds-c">${head}<div class="ds-no">예보가 아직 없어요</div></div>`;
+    const deg = v => v === null || v === undefined ? '-' : Math.round(v) + '°', pop = inf.pop, wsd = inf.wsdMax, g = inf.gustMax;
+    const wy = windy(inf), rn = pop !== null && pop !== undefined && pop >= 60;
+    return `<div class="ds-c">${head}<div class="ds-w"><span>${DAILY_EMOJI[inf.icon] || ''}</span> ${DAILY_WORD[inf.icon] || ''}</div>`
+      + `<div class="ds-t">🌡️ <b>${deg(inf.tmax)}</b> / ${deg(inf.tmin)}</div>`
+      + `<div class="ds-r${rn ? ' blue' : ''}">💧 ${pop !== null && pop !== undefined ? pop + '%' : '-'}</div>`
+      + `<div class="ds-d${wy ? ' warn' : ''}">💨 ${wsd !== null && wsd !== undefined ? Math.round(wsd * 10) / 10 + 'm/s' : '-'}${g !== null && g !== undefined ? `<br>돌풍 ${Math.round(g)}` : ''}${wy ? ' ⚠' : ''}</div></div>`;
+  }).join('');
+  return `<div class="ds-row${dates.length > 3 ? ' scroll' : ''}" style="--n:${dates.length}">${cards}</div>`;
+}
 function dateRowHTML() {
   const t = curTrip, today = todayStr(), planned = isPlanned(), open = isCalOpen(), pre = calPending;
   const e = planned ? (calEnd || addDaysStr(t.date, t.days || 0)) : '';
   const cell = (ds, dow) => {
     const n = dayDiff(ds), inf = dailyOf(ds), sel = planned && ds >= t.date && ds <= e;
-    return `<button type="button" class="cal-day${dow === 0 ? ' sun' : dow === 6 ? ' sat' : ''}${ds === today ? ' today' : ''}${ds < today ? ' past' : ''}${sel ? (pre && ds !== t.date ? ' pre' : ' sel') : ''}${inf && n >= 8 ? ' far' : ''}" data-cal="${ds}"${inf ? ` data-info="${ds}"` : ''}><span class="cal-n">${Number(ds.slice(8))}</span>${inf ? `<span class="cal-ic">${DAILY_EMOJI[inf.icon] || ''}</span><span class="cal-tn">${inf.tmin !== null && inf.tmin !== undefined ? Math.round(inf.tmin) + '°' : ''}</span>` : ''}</button>`;
+    return `<button type="button" class="cal-day${dow === 0 ? ' sun' : dow === 6 ? ' sat' : ''}${ds === today ? ' today' : ''}${ds < today ? ' past' : ''}${sel ? (pre && ds !== t.date ? ' pre' : ' sel') : ''}${inf && n >= 8 ? ' far' : ''}" data-cal="${ds}"><span class="cal-n">${Number(ds.slice(8))}</span>${inf ? `<span class="cal-ic">${DAILY_EMOJI[inf.icon] || ''}${windy(inf) ? '<i class="cal-wd">💨</i>' : ''}</span>` : ''}</button>`;
   };
   let head = '', cells = '';
   if (open) {
@@ -3500,25 +3557,6 @@ function dateRowHTML() {
     <div class="cal-sum span">${calSummary()}</div>
   </div>`;
 }
-function showCalTip(cell) {   // 날짜 칸 길게 누르기: 그날 최저·최고·강수확률 말풍선
-  const ds = cell.dataset.info, d = daily.byDate[ds], box = $('calBox'); if (!d || !box) return;
-  hideCalTip();
-  const tip = document.createElement('div'); tip.className = 'cal-tip'; tip.id = 'calTip';
-  tip.textContent = `${fmtMDW(ds)} · 최저 ${d.tmin !== null ? Math.round(d.tmin) + '°' : '-'} · 최고 ${d.tmax !== null ? Math.round(d.tmax) + '°' : '-'} · 강수 ${d.pop !== null && d.pop !== undefined ? d.pop + '%' : '-'}`;
-  box.appendChild(tip);
-  const r = cell.getBoundingClientRect(), b = box.getBoundingClientRect();
-  tip.style.top = Math.max(0, r.top - b.top - 34) + 'px';
-  tip.style.left = Math.max(0, Math.min(b.width - tip.offsetWidth, r.left - b.left + r.width / 2 - tip.offsetWidth / 2)) + 'px';
-  setTimeout(hideCalTip, 3000);
-}
-function hideCalTip() { const t = $('calTip'); if (t) t.remove(); }
-document.addEventListener('pointerdown', e => {
-  clearTimeout(calPressT); calLong = false;
-  const c = e.target.closest('.cal-day[data-info]');
-  if (!c) { hideCalTip(); return; }
-  calPressT = setTimeout(() => { calLong = true; showCalTip(c); }, 500);
-});
-['pointerup', 'pointercancel', 'pointermove'].forEach(ev => document.addEventListener(ev, e => { if (ev !== 'pointermove' || Math.abs(e.movementX) + Math.abs(e.movementY) > 6) clearTimeout(calPressT); }));
 document.addEventListener('contextmenu', e => { if (e.target.closest('.cal-day')) e.preventDefault(); });
 
 // ── 장비 탭 맨 위: 날씨 한 줄 요약 + 🎒 이번 짐 준비 (인원 / 가방 / 짐 시작 → [이대로 시작])
@@ -3599,6 +3637,7 @@ function startNextTrip() {   // 기록을 남긴 뒤 "다음 나들이를 만들
 document.addEventListener('click', e => {
   if (e.target.closest('[data-newtrip]')) { startNewTrip(); return; }
   if (e.target.closest('[data-gohome]')) { goTab('home'); return; }
+  const wd = e.target.closest('[data-wxday]'); if (wd) { wxDay = wd.dataset.wxday; renderHome(); return; }
   if (e.target.closest('[data-wxretry]')) { wxEnsure(true); renderHome(); return; }
   if (e.target.closest('[data-flrec]')) { openRec(false); return; }
   // 🏷️ 종류
@@ -3630,7 +3669,7 @@ document.addEventListener('click', e => {
   if (pm) { const x = sameActPlaces()[Number(pm.dataset.plsm)]; if (x) setPlace(x.p); return; }
   // 📅 날짜
   const cd = e.target.closest('[data-cal]');
-  if (cd) { if (calLong) { calLong = false; return; } calTap(cd.dataset.cal); return; }
+  if (cd) { calTap(cd.dataset.cal); return; }
   const cn = e.target.closest('[data-calnav]');
   if (cn) { const m = parseD(calMonth + '-01'); m.setMonth(m.getMonth() + Number(cn.dataset.calnav)); calMonth = fmtDate(m).slice(0, 7); renderHome(); return; }
   // 장비 탭 이번 짐 준비
